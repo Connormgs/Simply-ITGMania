@@ -1,7 +1,7 @@
 local t = Def.ActorFrame{}
 
 local bnhelp = Def.ActorFrame{}
-
+local Players = GAMESTATE:GetHumanPlayers()
 bnhelp[#bnhelp+1] = Def.ActorFrame{
 	Condition=GAMESTATE:IsHumanPlayer(PLAYER_1) and GAMESTATE:GetPlayMode()=="PlayMode_Regular" and GAMESTATE:GetCurrentSteps(PLAYER_1):GetDifficulty()=="Difficulty_Beginner" or GAMESTATE:IsHumanPlayer(PLAYER_2) and GAMESTATE:GetPlayMode()=="PlayMode_Regular" and GAMESTATE:GetCurrentSteps(PLAYER_2):GetDifficulty()=="Difficulty_Beginner";
 	InitCommand=function(s) s:xy(SCREEN_CENTER_X, SCREEN_CENTER_Y-30) end;
@@ -95,4 +95,32 @@ end
 t[#t+1] = LoadActor("dangeractor");
 t[#t+1] = LoadActor("dead");
 
+for player in ivalues(Players) do
+	t[#t+1] = LoadActor("./PerPlayer/Danger.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/StepStatistics/default.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/BackgroundFilter.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/nice.lua", player)
+end
+
+-- UI elements shared by both players
+t[#t+1] = LoadActor("./Shared/VersusStepStatistics.lua")
+t[#t+1] = LoadActor("./Shared/Header.lua")
+t[#t+1] = LoadActor("./Shared/SongInfoBar.lua") -- song title and progress bar
+
+-- per-player UI elements
+for player in ivalues(Players) do
+	t[#t+1] = LoadActor("./PerPlayer/UpperNPSGraph.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/Score.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/DifficultyMeter.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/LifeMeter/default.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/TargetScore/default.lua", player)
+
+	-- All NoteField specific actors are contained in this file.
+	t[#t+1] = LoadActor("./PerPlayer/NoteField/default.lua", player)
+end
+
+-- add to the ActorFrame last; overlapped by StepStatistics otherwise
+t[#t+1] = LoadActor("./Shared/BPMDisplay.lua")
+
 return t;
+
