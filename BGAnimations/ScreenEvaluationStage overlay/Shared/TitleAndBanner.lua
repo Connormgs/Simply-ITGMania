@@ -14,25 +14,7 @@ local y_offset = SL.Global.GameMode=="Casual" and 50 or 46
 
 local af = Def.ActorFrame{ InitCommand=function(self) self:xy(_screen.cx, y_offset) end }
 
-if SongOrCourse and SongOrCourse:HasBanner() then
-	--song or course banner, if there is one
-	af[#af+1] = Def.Banner{
-		Name="Banner",
-		InitCommand=function(self)
-			if GAMESTATE:IsCourseMode() then
-				self:LoadFromCourse( GAMESTATE:GetCurrentCourse() )
-			else
-				self:LoadFromSong( GAMESTATE:GetCurrentSong() )
-			end
-			self:y(66):setsize(banner.width, 164):zoom(banner.zoom)
-		end,
-	}
-else
-	--fallback banner
-	af[#af+1] = LoadActor(banner.directory .. "/banner" .. SL.Global.ActiveColorIndex .. " (doubleres).png")..{
-		InitCommand=function(self) self:y(66):zoom(banner.zoom) end
-	}
-end
+
 
 -- quad behind the song/course title text
 af[#af+1] = Def.Quad{

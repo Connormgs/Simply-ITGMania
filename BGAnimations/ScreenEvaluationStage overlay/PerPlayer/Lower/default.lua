@@ -7,7 +7,7 @@ local pane_spacing = 10
 local small_pane_w = 300
 
 -- smaller width (used when both players are joined) by default
-local pane_width = 300
+local pane_width = 200
 local pane_height  = 180
 
 -- if only one player is joined, use more screen width to draw two
@@ -26,7 +26,7 @@ local af = Def.ActorFrame{
 			self:x(_screen.cx + ((small_pane_w + pane_spacing) * (player==PLAYER_1 and -0.5 or 0.5)))
 
 		else
-			self:x(_screen.cx - ((small_pane_w + pane_spacing) * 0.5))
+			self:x(_screen.cx - ((small_pane_w + pane_spacing-380) * 0.5))
 		end
 	end
 }

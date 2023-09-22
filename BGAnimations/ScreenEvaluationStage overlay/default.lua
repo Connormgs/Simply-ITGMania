@@ -85,7 +85,7 @@ for player in ivalues(PlayerNumber) do
 			LoadActor( THEME:GetPathG("","ScreenEvaluation grade frame"), player )..{
 				InitCommand=function(self)
 					local margin = GAMESTATE:GetPlayMode() == "PlayMode_Rave" and 164 or 145
-					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player)) ),SCREEN_CENTER_Y+54)
+					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player))-120 ),SCREEN_CENTER_Y+54)
 				end,
 				OnCommand=function(self)
 					self:addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
@@ -269,15 +269,14 @@ t[#t+1] = LoadActor("./Shared/GlobalStorage.lua")
 
 -- help text that appears if we're in Casual gamemode
 t[#t+1] = LoadActor("./Shared/CasualHelpText.lua")
-t[#t+1] = LoadActor("./Panes/default.lua", NumPanes)
 for player in ivalues(Players) do
 
 	-- the per-player upper half of ScreenEvaluation, including: letter grade, nice
 	-- stepartist, difficulty text, difficulty meter, machine/personal HighScore text
 	t[#t+1] = LoadActor("./PerPlayer/Upper/default.lua", player)
-	
+	t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
 
 end
-
+t[#t+1] = LoadActor("./Panes/default.lua", NumPanes)
 collectgarbage()
 return t
