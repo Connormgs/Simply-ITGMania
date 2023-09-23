@@ -273,7 +273,42 @@ for player in ivalues(PlayerNumber) do
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 		CancelMessageCommand=function(self) if GAMESTATE:Env()["WorkoutMode"] then self:linear(0.3):zoomy(0) end end
+		
+		}
+		t[#t+1] = Def.ActorFrame{
+		
+			InitCommand=function(self)
+		SL.Global.GameplayReloadCheck = false
+
+		-- While other SM versions don't need this, Outfox resets the
+		-- the music rate to 1 between songs, but we want to be using
+		-- the preselected music rate.
+		local songOptions = GAMESTATE:GetSongOptionsObject("ModsLevel_Preferred")
+		songOptions:MusicRate(SL.Global.ActiveModifiers.MusicRate)
+	end,
+
+	PlayerProfileSetMessageCommand=function(self, params)
+		if not PROFILEMAN:IsPersistentProfile(params.Player) then
+			LoadGuest(params.Player)
+		end
+		ApplyMods(params.Player)
+	end,
+
+	PlayerJoinedMessageCommand=function(self, params)
+		if not PROFILEMAN:IsPersistentProfile(params.Player) then
+			LoadGuest(params.Player)
+		end
+		ApplyMods(params.Player)
+	end,
+	LoadActor("./PreserveMenuTimer.lua"),
+	LoadActor("./PlayerModifiers.lua"),
+	LoadActor("./PaneDisplay.lua"),
+	LoadActor("./PerPlayer/default.lua"),
 	}
+	
 end
 
 return t
+
+
+

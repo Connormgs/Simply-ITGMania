@@ -63,7 +63,7 @@ return Def.ActorFrame{
 	-- colored background quad
 	Def.Quad{
 		Name="BackgroundQuad",
-		InitCommand=function(self) self:zoomto(175, _screen.h/28):x(113):diffuse(color("#000000")) end,
+		InitCommand=function(self) self:zoomto(175, _screen.h/28):x(9999):diffuse(color("#000000")) end,
 		ResetCommand=function(self)
 			local StepsOrTrail = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player) or GAMESTATE:GetCurrentSteps(player)
 
@@ -77,15 +77,6 @@ return Def.ActorFrame{
 	},
 
 	--STEPS label
-	LoadFont("Common Normal")..{
-		Text=GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("STEPS"),
-		InitCommand=function(self)
-			self:diffuse(0,0,0,1):horizalign(left):x(30):maxwidth(40):zoom(0.8)
-		end,
-		UpdateTrailTextMessageCommand=function(self, params)
-			self:settext( THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index) )
-		end
-	},
 
 	--stepartist text
 	LoadFont("Common Normal")..{

@@ -1,5 +1,4 @@
 local style = ThemePrefs.Get("ITG1") and "ITG1/" or ""
-
 local function IsValidUSBProfileFolder( Player )
 	if GAMESTATE:GetCurrentSong() == nil then return false end
 	if type(PROFILEMAN:GetProfile(Player):GetDisplayName()) ~= "string" then return false end
@@ -315,4 +314,6 @@ return Def.ActorFrame{
 	OffCommand=function(s) s:sleep(0.2):accelerate(0.6):addx( IsUsingWideScreen() and -225 or -150) end,
 	CancelMessageCommand=function(s) if GAMESTATE:Env()["WorkoutMode"] then s:sleep(0.2):accelerate(0.6):addx( IsUsingWideScreen() and -225 or -150) end end,
 	},
+	
 }
+

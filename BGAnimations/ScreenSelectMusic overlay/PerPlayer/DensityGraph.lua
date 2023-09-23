@@ -52,9 +52,11 @@ local af = Def.ActorFrame{
 -- Background quad for the density graph
 af[#af+1] = Def.Quad{
 	InitCommand=function(self)
+	self:x(99999)
 		self:diffuse(color("#1e282f")):zoomto(width, height)
 		if ThemePrefs.Get("RainbowMode") then
 			self:diffusealpha(0.9)
+			
 		end
 	end
 }
@@ -98,7 +100,7 @@ local af2 = af[#af]
 af2[#af2+1] = NPS_Histogram(player, width, height)..{
 	Name="DensityGraph",
 	OnCommand=function(self)
-		self:addx(-width/2):addy(height/2)
+		self:addx(300):addy(120)
 	end,
 	HideCommand=function(self)
 		self:visible(false)
@@ -162,7 +164,8 @@ af2[#af2+1] = Def.ActorFrame{
 	Def.Quad{
 		InitCommand=function(self)
 			local bgHeight = 17
-			self:diffuse(color("#000000")):zoomto(width, bgHeight):diffusealpha(0.5)
+			self:diffuse(color("#00762F")):zoomto(width, bgHeight):diffusealpha(0.5)
+			self:x(99999)
 		end
 	},
 
@@ -172,6 +175,7 @@ af2[#af2+1] = Def.ActorFrame{
 		InitCommand=function(self)
 			local textZoom = 0.8
 			self:maxwidth(width/textZoom):zoom(textZoom)
+			self:xy(380,-45)
 		end,
 		HideCommand=function(self)
 			self:settext("")
@@ -222,7 +226,8 @@ af2[#af2+1] = Def.ActorFrame{
 	-- Only shown in 1 Player mode
 	Def.Quad{
 		InitCommand=function(self)
-			self:diffuse(color("#1e282f")):zoomto(width, height)
+			self:diffuse(color("#00762F")):zoomto(width, height)
+			self:x(999999)
 		end,
 	}
 }
@@ -235,12 +240,12 @@ local layout = {
 	{"Brackets", "Total Stream"},
 }
 
-local colSpacing = 150
+local colSpacing = 155
 local rowSpacing = 20
 
 for i, row in ipairs(layout) do
 	for j, col in pairs(row) do
-		af3[#af3+1] = LoadFont("Common normal")..{
+		af3[#af3+1] = LoadFont("_eurostile normal")..{
 			Text=col ~= "Total Stream" and "0" or "None (0.0%)",
 			Name=col .. "Value",
 			InitCommand=function(self)
@@ -250,7 +255,7 @@ for i, row in ipairs(layout) do
 				if col == "Total Stream" then
 					self:maxwidth(100)
 				end
-				self:xy(-width/2 + 40, -height/2 + 13)
+				self:xy(430,-90)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
 			end,
@@ -276,14 +281,14 @@ for i, row in ipairs(layout) do
 			end
 		}
 
-		af3[#af3+1] = LoadFont("Common Normal")..{
+		af3[#af3+1] = LoadFont("_eurostile normal")..{
 			Text=col,
 			Name=col,
 			InitCommand=function(self)
 				local textHeight = 17
-				local textZoom = 0.8
+				local textZoom = 0.7
 				self:maxwidth(width/textZoom):zoom(textZoom):horizalign(left)
-				self:xy(-width/2 + 50, -height/2 + 13)
+				self:xy(290,-90)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
 			end,
