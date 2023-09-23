@@ -17,15 +17,15 @@ local af = Def.ActorFrame{ InitCommand=function(self) self:xy(_screen.cx, y_offs
 
 
 -- quad behind the song/course title text
-af[#af+1] = Def.Quad{
-	InitCommand=function(self) self:diffuse(color("#1E282F")):setsize(banner.width,25):zoom(banner.zoom) end,
-}
+
 
 -- song/course title text
-af[#af+1] = LoadFont("Common Normal")..{
+af[#af+1] = LoadFont("_eurostile normal")..{
 	InitCommand=function(self)
 		local songtitle = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle()) or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
-		if songtitle then self:settext(songtitle):maxwidth(banner.width*banner.zoom) end
+		if songtitle then self:settext(songtitle):maxwidth(banner.width*banner.zoom)
+		self:y(-5)
+		end
 	end
 }
 

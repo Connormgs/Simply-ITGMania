@@ -76,10 +76,6 @@ t[#t+1] = Def.ActorFrame{
 			UpdateCommand=function(self,parent) self:setstate( SetFrameDifficulty(player,true) ) end,
 		},
 
-		LoadActor( THEME:GetPathG("_name","frame"), player )..{
-			Condition=ThemePrefs.Get("ITG1"),
-			OnCommand=function(self) self:y(30) end
-		},
 
 		Def.BitmapText{
 			Font="Common Normal",
@@ -171,7 +167,7 @@ t[#t+1] = Def.ActorFrame{
 	Def.BitmapText{
 		Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
 		 Font="_eurostile normal", Text=optionslist, OnCommand=function(self)
-			self:xy(45,-112+(itgstylemargin*2.7)):zoom(0.5):shadowlength(2):wrapwidthpixels(400)
+			self:xy(12,-112+(itgstylemargin*2.7)):zoom(0.5):shadowlength(2):wrapwidthpixels(400)
 		end
 	},
 

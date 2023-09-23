@@ -50,8 +50,7 @@ af[#af+1] = Def.Quad{
 -- "Look at this graph."  –Some sort of meme on The Internet
 af[#af+1] = LoadActor("./Graphs.lua", player)
 
--- list of modifiers used by this player for this song
-af[#af+1] = LoadActor("./PlayerModifiers.lua", player)
+
 
 -- was this player disqualified from ranking?
 af[#af+1] = LoadActor("./Disqualified.lua", player)

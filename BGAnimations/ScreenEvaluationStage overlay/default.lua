@@ -52,7 +52,7 @@ local function side(pn)
 end
 
 local function Gradeside(pn)
-	local s = -230+(itgstylemargin*1.2)
+	local s = -365+(itgstylemargin*1.2)
 	if pn == PLAYER_2 then s = 56+(itgstylemargin*-1.3) end
 	return s
 end
@@ -173,17 +173,7 @@ t[#t+1] = Def.ActorFrame{
 		end
 	},
 
-	LoadActor( THEME:GetPathB("","_frame 3x1"), {"banner mask",194,1} )..{
-		Condition=ThemePrefs.Get("ITG1"),
-		InitCommand=function(self) self:xy(SCREEN_CENTER_X-1,SCREEN_CENTER_Y-126) end,
-		OnCommand=function(self)
-			-- self:zwrite(1):z(1):blend("BlendMode_NoEffect")
-			self:y(-100):sleep(3):decelerate(0.3):y(SCREEN_CENTER_Y-148)
-		end,
-		OffCommand=function(self)
-			self:accelerate(0.3):addy(-SCREEN_CENTER_X)
-		end
-	},
+
 
 	Def.Sprite{
 		InitCommand=function(self)
@@ -213,16 +203,7 @@ t[#t+1] = Def.ActorFrame{
 		end
 	},
 
-	LoadActor( THEME:GetPathB("","_frame 3x1"), {"banner frame",194} )..{
-		Condition=ThemePrefs.Get("ITG1"),
-		InitCommand=function(self) self:xy(SCREEN_CENTER_X-1,SCREEN_CENTER_Y-126) end,
-		OnCommand=function(self)
-			self:y(SCREEN_TOP-100):sleep(3):decelerate(0.3):y(SCREEN_CENTER_Y-148)
-		end,
-		OffCommand=function(self)
-			self:accelerate(0.3):addy(-SCREEN_CENTER_X)
-		end
-	},
+
 	
 	LoadActor( THEME:GetPathG("","ScreenEvaluation banner frame") )..{
 		Condition=not ThemePrefs.Get("ITG1"),

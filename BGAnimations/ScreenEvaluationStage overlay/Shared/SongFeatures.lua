@@ -2,12 +2,9 @@
 if SL.Global.GameMode == "Casual" then return end
 
 return Def.ActorFrame{
-	InitCommand=function(self) self:xy(_screen.cx, 175) end,
+	InitCommand=function(self) self:xy(440, 170) end,
 
-	--quad behind the MusicRate text
-	Def.Quad{
-		InitCommand=function(self) self:diffuse( color("#1E282F") ):setsize(418,16):zoom(0.7) end,
-	},
+	
 
 	-- text for BPM (and maybe music rate if ~= 1.0)
 	LoadFont("Common Normal")..{

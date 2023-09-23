@@ -98,8 +98,8 @@ local Prefs =
 	},
 	ITG1 = 
 	{
-		Default = false,
-		Choices = { "ITG1", "ITG2" },
+		Default = true,
+		Choices = { "ITG2", "ITG1" },
 		Values = { true, false }
 	},
 }

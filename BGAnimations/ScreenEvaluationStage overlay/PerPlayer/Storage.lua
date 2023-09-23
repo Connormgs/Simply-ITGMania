@@ -51,12 +51,12 @@ return Def.Actor{
 
 		if GAMESTATE:IsCourseMode() then
 			storage.steps      = GAMESTATE:GetCurrentTrail(player)
-			storage.difficulty = storage.steps:GetDifficulty()
+		
 			storage.meter      = storage.steps:GetMeter()
 			storage.stepartist = GAMESTATE:GetCurrentCourse(player):GetScripter()
 		else
 			storage.steps      = GAMESTATE:GetCurrentSteps(player)
-			storage.difficulty = pss:GetPlayedSteps()[1]:GetDifficulty()
+			
 			storage.meter      = pss:GetPlayedSteps()[1]:GetMeter()
 			storage.stepartist = pss:GetPlayedSteps()[1]:GetAuthorCredit()
 		end
