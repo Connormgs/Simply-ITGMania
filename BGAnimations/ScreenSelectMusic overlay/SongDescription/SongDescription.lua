@@ -17,133 +17,23 @@ local af = Def.ActorFrame{
 	CurrentTrailP2ChangedMessageCommand=function(self) self:playcommand("Set") end,
 }
 
--- background Quad for Artist, BPM, and Song Length
-af[#af+1] = Def.Quad{
-	InitCommand=function(self)
-		self:setsize( _w, 50 )
-		self:diffuse(color("#1e282f"))
-
-		if ThemePrefs.Get("RainbowMode") then self:diffusealpha(0.9) end
-	end
-}
 
 -- ActorFrame for Artist, BPM, and Song length
 af[#af+1] = Def.ActorFrame{
 	InitCommand=function(self) self:xy(-110,-6) end,
 
-	-- ----------------------------------------
-	-- Artist Label
-	LoadFont("Common Normal")..{
-		Text=THEME:GetString("SongDescription", GAMESTATE:IsCourseMode() and "NumSongs" or "Artist"):upper(),
-		InitCommand=function(self) self:align(1,0):y(-11):maxwidth(44):diffuse(0.5,0.5,0.5,1) end,
-	},
-
-	-- Song Artist (or number of Songs in this Course, if CourseMode)
-	LoadFont("Common Normal")..{
-		InitCommand=function(self) self:align(0,0):xy(5,-11) end,
-		SetCommand=function(self)
-			local maxwidth = _w - 60
-
-			if GAMESTATE:IsCourseMode() then
-				local course = GAMESTATE:GetCurrentCourse()
-				self:settext( course and #course:GetCourseEntries() or "" )
-			else
-				local song = GAMESTATE:GetCurrentSong()
-				self:settext( song and song:GetDisplayArtist() or "" )
-
-				if not GAMESTATE:IsEventMode() and song and (song:IsLong() or song:IsMarathon()) then
-					-- make room for the "COUNTS AS 2/3 ROUNDS" bubble
-					maxwidth = maxwidth - 120
-				end
-			end
-
-			self:maxwidth(maxwidth)
-		end
-	},
 
 	-- ----------------------------------------
-	-- BPM Label
-	LoadFont("Common Normal")..{
-		Text=THEME:GetString("SongDescription", "BPM"):upper(),
-		InitCommand=function(self)
-			self:align(1,0):y(10):diffuse(0.5,0.5,0.5,1)
-		end
-	},
 
-	-- BPM value
-	LoadFont("Common Normal")..{
-		InitCommand=function(self)
-			-- vertical align has to be middle for BPM value in case of split BPMs having a line break
-			self:align(0, 0.5)
-			self:xy(5,17):diffuse(1,1,1,1):vertspacing(-8)
-		end,
-		SetCommand=function(self)
 
-			if MusicWheel then SelectedType = MusicWheel:GetSelectedType() end
-
-			-- we only want to try to show BPM values for Songs and Courses
-			-- not Section, Roulette, Random, Portal, Sort, or Custom
-			-- (aside: what is "WheelItemDataType_Custom"?  I need to look into that.)
-			if not (SelectedType=="WheelItemDataType_Song" or SelectedType=="WheelItemDataType_Course") then
-				self:settext("")
-				return
-			end
-
-			-- if only one player is joined, stringify the DisplayBPMs and return early
-			if #GAMESTATE:GetHumanPlayers() == 1 then
-				-- StringifyDisplayBPMs() is defined in ./Scipts/SL-BPMDisplayHelpers.lua
-				self:settext(StringifyDisplayBPMs() or ""):zoom(1)
-				return
-			end
-
-			-- otherwise there is more than one player joined and the possibility of split BPMs
-			local p1bpm = StringifyDisplayBPMs(PLAYER_1)
-			local p2bpm = StringifyDisplayBPMs(PLAYER_2)
-
-			-- it's likely that BPM range is the same for both charts
-			-- no need to show BPM ranges for both players if so
-			if p1bpm == p2bpm then
-				self:settext(p1bpm):zoom(1)
-
-			-- different BPM ranges for the two players
-			else
-				-- show the range for both P1 and P2 split by a newline character, shrunk slightly to fit the space
-				self:settext( "P1 ".. p1bpm .. "\n" .. "P2 " .. p2bpm ):zoom(0.8)
-				-- the "P1 " and "P2 " segments of the string should be grey
-				self:AddAttribute(0,             {Length=3, Diffuse={0.60,0.60,0.60,1}})
-				self:AddAttribute(3+p1bpm:len(), {Length=3, Diffuse={0.60,0.60,0.60,1}})
-
-				if GAMESTATE:IsCourseMode() then
-					-- P1 and P2's BPM text in CourseMode is white until I have time to figure CourseMode out
-					self:AddAttribute(3,             {Length=p1bpm:len(), Diffuse={1,1,1,1}})
-					self:AddAttribute(7+p1bpm:len(), {Length=p2bpm:len(), Diffuse={1,1,1,1}})
-
-				else
-					-- P1 and P2's BPM text is the color of their difficulty
-					if GAMESTATE:GetCurrentSteps(PLAYER_1) then
-						self:AddAttribute(3,             {Length=p1bpm:len(), Diffuse=DifficultyColor(GAMESTATE:GetCurrentSteps(PLAYER_1):GetDifficulty())})
-					end
-					if GAMESTATE:GetCurrentSteps(PLAYER_2) then
-						self:AddAttribute(7+p1bpm:len(), {Length=p2bpm:len(), Diffuse=DifficultyColor(GAMESTATE:GetCurrentSteps(PLAYER_2):GetDifficulty())})
-					end
-				end
-			end
-		end
-	},
 
 	-- ----------------------------------------
-	-- Song Duration Label
-	LoadFont("Common Normal")..{
-		Text=THEME:GetString("SongDescription", "Length"):upper(),
-		InitCommand=function(self)
-			self:align(1,0):diffuse(0.5,0.5,0.5,1)
-			self:x(_w-130):y(10)
-		end
-	},
+
 
 	-- Song Duration Value
-	LoadFont("Common Normal")..{
-		InitCommand=function(self) self:align(0,0):xy(_w-130 + 5, 10) end,
+	LoadFont("_eurostile normal")..{
+		InitCommand=function(self) self:align(0,0):xy(532,20) end,
+		OnCommand=function(s) s:shadowlength(2):zoom(0.6):diffusealpha(0.5) end,
 		SetCommand=function(self)
 			if MusicWheel == nil then MusicWheel = SCREENMAN:GetTopScreen():GetMusicWheel() end
 

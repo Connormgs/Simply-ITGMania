@@ -304,6 +304,9 @@ for player in ivalues(PlayerNumber) do
 	LoadActor("./PlayerModifiers.lua"),
 	LoadActor("./PaneDisplay.lua"),
 	LoadActor("./PerPlayer/default.lua"),
+	LoadActor("./SongDescription/SongDescription.lua"),
+	LoadActor("./Leaderboard.lua"),
+	LoadActor("./SongSearch/default.lua"),
 	}
 	
 end

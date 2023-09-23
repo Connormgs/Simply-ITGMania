@@ -282,29 +282,11 @@ return Def.ActorFrame{
 		},
 
 		-- need to figure out how to get pop
-		Def.BitmapText{ Text="POP", Font="_eurostile normal",
+		Def.BitmapText{ Text="LENGTH", Font="_eurostile normal",
 		OnCommand=function(s) s:shadowlength(2):zoom(0.5):xy(150,-30):diffusealpha(0.5) end;
 		},
 
-		-- Ordinal Number conversion based on einpoklum's c++ implementation.
-		-- https://stackoverflow.com/a/40350026
-		Def.BitmapText{ Font="_eurostile normal",
-		OnCommand=function(s) s:shadowlength(2):zoom(0.6):xy(138,-16):diffusealpha(1):halign(0) end;
-		CurrentSongChangedMessageCommand=function(s)
-			local sufixes = {"th","st","nd","rd"}
-			local song = GAMESTATE:GetCurrentSong()
-			local val = ""
-			if song and SONGMAN:GetSongRank(song) then
-				local ord = SONGMAN:GetSongRank(song) % 100
-				if (ord / 10 == 1) then ord = 0 end
-				ord = ord % 10
-				if (ord > 3) then ord = 0 end
-				val = SONGMAN:GetSongRank(song) .. THEME:GetString("OrdinalNumbers",sufixes[ord+1])
-			end
-			s:settext(val)
-		end;
-		},
-
+	
 	},
 	Def.Sprite{ Texture="../ScreenSelectMusic wheel mask",
 		InitCommand=function(s) s:xy(-420,1):zwrite(true):z(1):blend("BlendMode_NoEffect") end;
