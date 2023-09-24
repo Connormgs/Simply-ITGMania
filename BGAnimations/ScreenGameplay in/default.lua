@@ -16,12 +16,7 @@ t[#t+1] = Def.ActorFrame{
 		end;
 		},
 
-		LoadActor( THEME:GetPathB("","_frame 3x1"), {"name entry",100} )..{
-			Condition=ThemePrefs.Get("ITG1") and not GAMESTATE:IsDemonstration();
-			OnCommand=function(self)
-				self:xy(SCREEN_CENTER_X,SCREEN_BOTTOM-40):addy(300):sleep(1.2):decelerate(0.3):addy(-300)
-			end;
-		};
+
 		LoadActor( THEME:GetPathG( "","StageAndCourses/ITG1" ) )..{
 			Condition=ThemePrefs.Get("ITG1") and not GAMESTATE:IsDemonstration(),
 			OnCommand=function(self)

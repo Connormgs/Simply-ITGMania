@@ -48,8 +48,8 @@ t[#t+1] = LoadActor("./Shared/Header.lua")
 -- per-player UI elements
 for player in ivalues(Players) do
 	t[#t+1] = LoadActor("./PerPlayer/UpperNPSGraph.lua", player)
-	t[#t+1] = LoadActor("./PerPlayer/Score.lua", player)
-	t[#t+1] = LoadActor("./PerPlayer/DifficultyMeter.lua", player)
+
+
 	
 	t[#t+1] = LoadActor("./PerPlayer/TargetScore/default.lua", player)
 

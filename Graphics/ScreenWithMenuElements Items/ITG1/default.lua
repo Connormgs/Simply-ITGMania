@@ -8,7 +8,7 @@ if not GAMESTATE:IsEventMode() then
 		t[#t+1] = Def.Sprite{ Texture="_stage "..StageIndexBySegment(reverseindex), OnCommand=function(s) s:x(64) end; };
 	end
 else
-	t[#t+1] = Def.Sprite{ Texture="_stage event", OnCommand=function(s) end; };
+
 end
 
 t[#t+1] = Def.Sprite{

@@ -45,10 +45,10 @@ local SingleBPMDisplay = function()
 	return Def.ActorFrame{
 		InitCommand=function(self) self:SetUpdateFunction(UpdateSingleBPM) end,
 
-		LoadFont("Common Normal")..{
+		LoadFont("_eurostile normal")..{
 			Name="BPMDisplay",
 			InitCommand=function(self)
-				self:zoom(1)
+				self:zoom(.8)
 				bpmDisplay = self
 			end
 		}
@@ -59,14 +59,14 @@ local DualBPMDisplay = function()
 	return Def.ActorFrame{
 		InitCommand=function(self) self:SetUpdateFunction(Update2PBPM) end,
 
-		LoadFont("Common Normal")..{
+		LoadFont("_eurostile normal")..{
 			Name="DisplayP1",
 			InitCommand=function(self)
 				self:x(-18):zoom(1):shadowlength(1)
 				dispP1 = self
 			end
 		},
-		LoadFont("Common Normal")..{
+		LoadFont("_eurostile normal")..{
 			Name="DisplayP2",
 			InitCommand=function(self)
 				self:x(18):zoom(1):shadowlength(1)
@@ -95,7 +95,7 @@ local t = Def.ActorFrame{
 		end
 	end,
 
-	LoadFont("Common Normal")..{
+	LoadFont("_eurostile normal")..{
 		Name="RatemodDisplay",
 		Text=MusicRate ~= 1 and MusicRate.."x rate" or "",
 		InitCommand=function(self)
