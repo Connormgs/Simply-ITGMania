@@ -100,7 +100,8 @@ local af2 = af[#af]
 af2[#af2+1] = NPS_Histogram(player, width, height)..{
 	Name="DensityGraph",
 	OnCommand=function(self)
-		self:addx(300):addy(120)
+		self:addx(290):addy(135)
+		self:rotationz(-5)
 	end,
 	HideCommand=function(self)
 		self:visible(false)
@@ -117,13 +118,13 @@ af2[#af2+1] = NPS_Histogram(player, width, height)..{
 af2[#af2]["CurrentSteps"..pn.."ChangedMessageCommand"] = nil
 
 -- The Peak NPS text
-af2[#af2+1] = LoadFont("Common Normal")..{
+af2[#af2+1] = LoadFont("_eurostile normal")..{
 	Name="NPS",
 	Text="Peak NPS: ",
 	InitCommand=function(self)
-		self:horizalign(left):zoom(0.8)
+		self:horizalign(left):zoom(0.5)
 		if player == PLAYER_1 then
-			self:addx(60):addy(-41)
+			self:xy(490,-70)
 		else
 			self:addx(-136):addy(-41)
 		end
@@ -151,6 +152,7 @@ af2[#af2+1] = Def.ActorFrame{
 	InitCommand=function(self)
 		local actorHeight = 17
 		self:addy(height/2 - actorHeight/2)
+
 	end,
 	HideCommand=function(self)
 		self:visible(false)
@@ -169,13 +171,14 @@ af2[#af2+1] = Def.ActorFrame{
 		end
 	},
 
-	LoadFont("Common Normal")..{
+	LoadFont("_eurostile normal")..{
 		Text="",
 		Name="BreakdownText",
 		InitCommand=function(self)
 			local textZoom = 0.8
 			self:maxwidth(width/textZoom):zoom(textZoom)
-			self:xy(380,-45)
+			self:xy(425,-45)
+			
 		end,
 		HideCommand=function(self)
 			self:settext("")
@@ -258,6 +261,8 @@ for i, row in ipairs(layout) do
 				self:xy(430,-90)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
+				self:rotationz(-1)
+				self:zoom(0.7)
 			end,
 			HideCommand=function(self)
 				if col ~= "Total Stream" then
@@ -286,11 +291,12 @@ for i, row in ipairs(layout) do
 			Name=col,
 			InitCommand=function(self)
 				local textHeight = 17
-				local textZoom = 0.7
+				local textZoom = 0.65
 				self:maxwidth(width/textZoom):zoom(textZoom):horizalign(left)
 				self:xy(290,-90)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
+				self:rotationz(-1)
 			end,
 		}
 

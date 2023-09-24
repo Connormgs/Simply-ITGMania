@@ -32,7 +32,7 @@ af[#af+1] = Def.ActorFrame{
 
 	-- Song Duration Value
 	LoadFont("_eurostile normal")..{
-		InitCommand=function(self) self:align(0,0):xy(532,20) end,
+		InitCommand=function(self) self:align(0,0):xy(512,20) end,
 		OnCommand=function(s) s:shadowlength(2):zoom(0.6):diffusealpha(0.5) end,
 		SetCommand=function(self)
 			if MusicWheel == nil then MusicWheel = SCREENMAN:GetTopScreen():GetMusicWheel() end
