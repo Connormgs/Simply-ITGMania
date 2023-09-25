@@ -42,7 +42,7 @@ end
 
 -- UI elements shared by both players
 t[#t+1] = LoadActor("./Shared/VersusStepStatistics.lua")
-t[#t+1] = LoadActor("./Shared/Header.lua")
+
 
 
 -- per-player UI elements
