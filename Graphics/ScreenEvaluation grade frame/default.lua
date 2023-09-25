@@ -189,20 +189,7 @@ local JudgmentInfo = {
 	RadarVal = { "Jumps", "Holds", "Mines", "Hands", "Rolls" },
 };
 
-for index, ValTC in ipairs(JudgmentInfo.Types) do
-	t[#t+1] = Def.ActorFrame{
-		Condition=not GAMESTATE:Env()["WorkoutMode"],
-		OnCommand=function(self) self:xy(-128,31-18+itgstylemargin) end;
-		Def.BitmapText{ Font="_eurostile normal", Text=THEME:GetString("TapNoteScore",ValTC),
-		OnCommand=function(s)
-			s:y(16*index):zoom(0.5):horizalign(left):shadowlength(0):maxwidth(130)
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-				s:xy(60,-94+15.8*index)
-			end
-		end;
-		};
-	};
-end
+
 
 local PColor = {
 	["PlayerNumber_P1"] = color("#836002"),

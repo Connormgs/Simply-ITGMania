@@ -85,12 +85,14 @@ for player in ivalues(PlayerNumber) do
 			LoadActor( THEME:GetPathG("","ScreenEvaluation grade frame"), player )..{
 				InitCommand=function(self)
 					local margin = GAMESTATE:GetPlayMode() == "PlayMode_Rave" and 164 or 145
-					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player))-120 ),SCREEN_CENTER_Y+54)
+					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player)) ),SCREEN_CENTER_Y+54)
 				end,
 				OnCommand=function(self)
 					self:addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
 					:sleep(3):decelerate(0.3)
 					:addx( (DoublesIsOn and SCREEN_WIDTH/1.2 or SCREEN_WIDTH/2)*side(player) )
+					if player == PLAYER_1 then self:x(165) end
+					if player == PLAYER_2 then self:x(720) end
 				end,
 				OffCommand=function(self)
 					self:accelerate(0.3):addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )

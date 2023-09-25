@@ -45,25 +45,7 @@ local t = Def.ActorFrame{
 	end,
 }
 
-local windows = SL[pn].ActiveModifiers.TimingWindows
 
---  labels: W1, W2, W3, W4, W5, Miss
-for i=1, #TapNoteScores.Types do
-	-- no need to add BitmapText actors for TimingWindows that were turned off
-	if windows[i] or i==#TapNoteScores.Types then
-
-		t[#t+1] = LoadFont("Common Normal")..{
-			Text=TapNoteScores.Names[i]:upper(),
-			InitCommand=function(self) self:zoom(0.833):horizalign(right):maxwidth(76) end,
-			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and 28) or -28 )
-				self:y((i-1)*28 -16)
-				-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
-				self:diffuse( SL.JudgmentColors[SL.Global.GameMode][i] )
-			end
-		}
-	end
-end
 
 -- labels: hands/ex, holds, mines, rolls
 for index, label in ipairs(RadarCategories) do
@@ -79,9 +61,7 @@ for index, label in ipairs(RadarCategories) do
 				self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 			end
 		}
-	else
-		local performance = stats:GetRadarActual():GetValue( "RadarCategory_"..firstToUpper(EnglishRadarCategories[label]) )
-		local possible = stats:GetRadarPossible():GetValue( "RadarCategory_"..firstToUpper(EnglishRadarCategories[label]) )
+
 
 		t[#t+1] = LoadFont("Common Normal")..{
 			Text=label,
@@ -92,6 +72,33 @@ for index, label in ipairs(RadarCategories) do
 			end
 		}
 	end
+	
+
+	
+	local itgstylemargin = ThemePrefs.Get("ITG1") and -10 or 0
+	local JudgmentInfo = {
+	Types = { 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' },
+	Names = { "Fantastic", "Excellent", "Great", "Decent", "Way Off", "Miss" },
+	RadarVal = { "Jumps", "Holds", "Mines", "Hands", "Rolls" },
+};
+
+	for index, ValTC in ipairs(JudgmentInfo.Types) do
+	t[#t+1] = Def.ActorFrame{
+		Condition=not GAMESTATE:Env()["WorkoutMode"],
+		OnCommand=function(self) self:xy(-290,95) end;
+		Def.BitmapText{ Font="_eurostile normal", Text=THEME:GetString("TapNoteScore",ValTC),
+		OnCommand=function(s)
+			s:y(16*index):zoom(0.5):horizalign(left):shadowlength(0):maxwidth(130)
+			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
+				s:xy(60,-94+15.8*index)
+			end
+		end;
+		};
+	};
+end
+
+
+	
 end
 
 return t
