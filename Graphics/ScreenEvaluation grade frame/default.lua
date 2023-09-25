@@ -196,24 +196,6 @@ local PColor = {
 	["PlayerNumber_P2"] = color("#2F8425"),
 };
 
-for index, ScWin in ipairs(JudgmentInfo.Types) do
-	t[#t+1] = Def.ActorFrame{
-		Condition=not GAMESTATE:Env()["WorkoutMode"],
-		OnCommand=function(self) self:xy(-18,31-16+itgstylemargin) end;
-		Def.BitmapText{ Font="ScreenEvaluation judge",
-		OnCommand=function(self)
-			self:y(16*index):zoom(0.5):halign(1):diffuse( PlayerColor(player) )
-			local sco = GetPSStageStats(player):GetTapNoteScores("TapNoteScore_"..ScWin)
-			self:settext(("%04.0f"):format( sco )):diffuse( PlayerColor(player) )
-			local leadingZeroAttr = { Length=4-tonumber(tostring(sco):len()); Diffuse=PColor[player] }
-			self:AddAttribute(0, leadingZeroAttr )
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-				self:xy(84,-96+15.8*index)
-			end
-		end;
-		};
-	};
-end
 
 
 for index, RCType in ipairs(JudgmentInfo.RadarVal) do
