@@ -45,6 +45,25 @@ local t = Def.ActorFrame{
 	end,
 }
 
+local windows = SL[pn].ActiveModifiers.TimingWindows
+
+--  labels: W1, W2, W3, W4, W5, Miss
+for i=1, #TapNoteScores.Types do
+	-- no need to add BitmapText actors for TimingWindows that were turned off
+	if windows[i] or i==#TapNoteScores.Types then
+
+		t[#t+1] = LoadFont("Common Normal")..{
+			Text=TapNoteScores.Names[i]:upper(),
+			InitCommand=function(self) self:zoom(0.833):horizalign(right):maxwidth(76) end,
+			BeginCommand=function(self)
+				self:x( (controller == PLAYER_1 and 28) or -28 )
+				self:y((i-1)*28 -16)
+				-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
+				self:diffuse( SL.JudgmentColors[SL.Global.GameMode][i] )
+			end
+		}
+	end
+end
 
 
 -- labels: hands/ex, holds, mines, rolls
@@ -56,20 +75,25 @@ for index, label in ipairs(RadarCategories) do
 			Text="EX",
 			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -160) or 90 )
+				self:x( (controller == PLAYER_1 and -160) or 20 )
 				self:y(38)
 				self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 			end
 		}
+	else
+		local performance = stats:GetRadarActual():GetValue( "RadarCategory_"..firstToUpper(EnglishRadarCategories[label]) )
+		local possible = stats:GetRadarPossible():GetValue( "RadarCategory_"..firstToUpper(EnglishRadarCategories[label]) )
 
-
-		t[#t+1] = LoadFont("Common Normal")..{
-			Text=label,
-			InitCommand=function(self) self:zoom(0.833):horizalign(right) end,
+		t[#t+1] = Def.ActorFrame{
+		Condition=not GAMESTATE:Env()["WorkoutMode"],
+		OnCommand=function(self) self:xy(0,0) end;
+		Def.BitmapText{ Font="_eurostile normal", Text=label,
+			InitCommand=function(self) self:zoom(0.55):horizalign(left) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -160) or 90 )
-				self:y((index-1)*28 + 41)
+				self:x( (controller == PLAYER_1 and -155) or 20 )
+				self:y((index-1)*21 + 110)
 			end
+		}
 		}
 	end
 	
@@ -82,6 +106,7 @@ for index, label in ipairs(RadarCategories) do
 	RadarVal = { "Jumps", "Holds", "Mines", "Hands", "Rolls" },
 };
 
+--Fantastic etc. text
 	for index, ValTC in ipairs(JudgmentInfo.Types) do
 	t[#t+1] = Def.ActorFrame{
 		Condition=not GAMESTATE:Env()["WorkoutMode"],
@@ -103,6 +128,54 @@ local PColor = {
 	["PlayerNumber_P1"] = color("#836002"),
 	["PlayerNumber_P2"] = color("#2F8425"),
 };
+
+
+--Hands etc  values
+for index, RCType in ipairs(JudgmentInfo.RadarVal) do
+	local performance = GetPSStageStats(player):GetRadarActual():GetValue( "RadarCategory_"..RCType )
+	local possible = GetPSStageStats(player):GetRadarPossible():GetValue( "RadarCategory_"..RCType )
+
+	t[#t+1] = Def.ActorFrame{
+		Condition=not GAMESTATE:Env()["WorkoutMode"],
+		OnCommand=function(self)
+			self:xy(-35,110-16+itgstylemargin)
+			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
+				self:xy(66,32-18+itgstylemargin)
+			end
+		end;
+
+		Def.BitmapText{ Font="ScreenEvaluation judge",
+		OnCommand=function(self)
+			self:xy( -40, 16*index ):zoom(0.5):halign(1)
+			self:settext(("%03.0f"):format(performance)):diffuse( PlayerColor(player) )
+			local leadingZeroAttr = { Length=3-tonumber(tostring(performance):len()); Diffuse=PColor[player] }
+			self:AddAttribute(0, leadingZeroAttr )
+			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
+		end;
+		};
+		
+		Def.BitmapText{ Font="ScreenEvaluation judge",
+		OnCommand=function(self)
+			self:y( 16*index ):zoom(0.5):halign(1)
+			self:settext(("%03.0f"):format(possible)):diffuse( PlayerColor(player) )
+			local leadingZeroAttr = { Length=3-tonumber(tostring(possible):len()); Diffuse=PColor[player] }
+			self:AddAttribute(0, leadingZeroAttr )
+			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
+		end;
+		};
+
+	
+		Def.BitmapText{ Font="ScreenEvaluation judge", Text="/",
+		OnCommand=function(self)
+			self:xy( -40, 16*index -1 ):zoom(0.5):halign(0):diffuse( PlayerColor(player) )
+			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
+		end;
+		};
+
+	};
+end
+
+--player judgment values
 for index, ScWin in ipairs(JudgmentInfo.Types) do
 	t[#t+1] = Def.ActorFrame{
 		Condition=not GAMESTATE:Env()["WorkoutMode"],
@@ -120,8 +193,10 @@ for index, ScWin in ipairs(JudgmentInfo.Types) do
 		end;
 		};
 	};
-end
 	
 end
 
+end
+
 return t
+

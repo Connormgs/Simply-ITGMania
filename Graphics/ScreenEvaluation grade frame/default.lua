@@ -198,55 +198,6 @@ local PColor = {
 
 
 
-for index, RCType in ipairs(JudgmentInfo.RadarVal) do
-	local performance = GetPSStageStats(player):GetRadarActual():GetValue( "RadarCategory_"..RCType )
-	local possible = GetPSStageStats(player):GetRadarPossible():GetValue( "RadarCategory_"..RCType )
-
-	t[#t+1] = Def.ActorFrame{
-		Condition=not GAMESTATE:Env()["WorkoutMode"],
-		OnCommand=function(self)
-			self:xy(128,31-16+itgstylemargin)
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-				self:xy(66,32-18+itgstylemargin)
-			end
-		end;
-
-		Def.BitmapText{ Font="ScreenEvaluation judge",
-		OnCommand=function(self)
-			self:xy( -40, 16*index ):zoom(0.5):halign(1)
-			self:settext(("%03.0f"):format(performance)):diffuse( PlayerColor(player) )
-			local leadingZeroAttr = { Length=3-tonumber(tostring(performance):len()); Diffuse=PColor[player] }
-			self:AddAttribute(0, leadingZeroAttr )
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
-		end;
-		};
-		
-		Def.BitmapText{ Font="ScreenEvaluation judge",
-		OnCommand=function(self)
-			self:y( 16*index ):zoom(0.5):halign(1)
-			self:settext(("%03.0f"):format(possible)):diffuse( PlayerColor(player) )
-			local leadingZeroAttr = { Length=3-tonumber(tostring(possible):len()); Diffuse=PColor[player] }
-			self:AddAttribute(0, leadingZeroAttr )
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
-		end;
-		};
-
-		Def.BitmapText{ Font="Common Normal", Text=THEME:GetString("RadarCategory",RCType),
-		OnCommand=function(self)
-			self:xy( -125, 16*index -1 ):zoom(0.5):halign(0)
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:xy(-134,-1+15.8*index) end
-		end;
-		};
-
-		Def.BitmapText{ Font="ScreenEvaluation judge", Text="/",
-		OnCommand=function(self)
-			self:xy( -40, 16*index -1 ):zoom(0.5):halign(0):diffuse( PlayerColor(player) )
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
-		end;
-		};
-
-	};
-end
 
 -- Max Combo
 t[#t+1] = Def.ActorFrame{
