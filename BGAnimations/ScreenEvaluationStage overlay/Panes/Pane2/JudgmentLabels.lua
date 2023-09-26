@@ -51,7 +51,9 @@ local t = Def.ActorFrame{
 		self:xy(50 * (controller==PLAYER_1 and 1 or -1), _screen.cy-24)
 	end,
 }
-
+t[#t+1] = LoadActor("base2.png")..{
+	OnCommand=function(self) self:xy(-160, 70) end
+}
 -- The FA+ window shares the status as the FA window.
 -- If the FA window is disabled, then we consider the FA+ window disabled as well.
 local windows = {SL[pn].ActiveModifiers.TimingWindows[1]}
@@ -101,6 +103,7 @@ for index, label in ipairs(RadarCategories) do
 			self:y(index*28 + 41)
 		end
 	}
+	
 end
 
 return t
