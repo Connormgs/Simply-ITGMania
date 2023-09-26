@@ -20,17 +20,21 @@ TapNoteScores.Types = { 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' }
 TapNoteScores.Names = map(GetTNSStringFromTheme, TapNoteScores.Types)
 
 local RadarCategories = {
+	THEME:GetString("ScreenEvaluation", 'Jumps'),
 	THEME:GetString("ScreenEvaluation", 'Hands'),
 	THEME:GetString("ScreenEvaluation", 'Holds'),
 	THEME:GetString("ScreenEvaluation", 'Mines'),
-	THEME:GetString("ScreenEvaluation", 'Rolls')
+	THEME:GetString("ScreenEvaluation", 'Rolls'),
+	
 }
 
 local EnglishRadarCategories = {
+	[THEME:GetString("ScreenEvaluation", 'Jumps')] = "Jumps",
 	[THEME:GetString("ScreenEvaluation", 'Hands')] = "Hands",
 	[THEME:GetString("ScreenEvaluation", 'Holds')] = "Holds",
 	[THEME:GetString("ScreenEvaluation", 'Mines')] = "Mines",
 	[THEME:GetString("ScreenEvaluation", 'Rolls')] = "Rolls",
+	
 }
 
 local scores_table = {}
@@ -47,20 +51,70 @@ local t = Def.ActorFrame{
 
 local windows = SL[pn].ActiveModifiers.TimingWindows
 
---  labels: W1, W2, W3, W4, W5, Miss
-for i=1, #TapNoteScores.Types do
-	-- no need to add BitmapText actors for TimingWindows that were turned off
-	if windows[i] or i==#TapNoteScores.Types then
+local itgstylemargin = ThemePrefs.Get("ITG1") and -10 or 0
+local battlegraphloc = ThemePrefs.Get("ITG1") and "ITG1/" or ""
+t[#t+1] = Def.Sprite{
+	Condition=GAMESTATE:GetPlayMode() == "PlayMode_Rave",
+	Texture=THEME:GetPathG("ScreenEvaluation grade frame/battle/"..battlegraphloc.."graph","frame"),
+	OnCommand=function(self)
+		self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+500)
+		:sleep(2.8):decelerate(0.5)
+		:y(SCREEN_CENTER_Y+54+itgstylemargin*1.8)
+	end,
+	OffCommand=function(self)
+		self:accelerate(0.3):addy(500)
+	end
+}
 
-		t[#t+1] = LoadFont("Common Normal")..{
-			Text=TapNoteScores.Names[i]:upper(),
-			InitCommand=function(self) self:zoom(0.833):horizalign(right):maxwidth(76) end,
-			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and 28) or -28 )
-				self:y((i-1)*28 -16)
-				-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
-				self:diffuse( SL.JudgmentColors[SL.Global.GameMode][i] )
-			end
+-- Grade and Frame Info
+
+local function side(pn)
+	local s = 1
+	if pn == PLAYER_1 then return s end
+	return s*(-1)
+end
+local function Gradeside(pn)
+	local s = -365+(itgstylemargin*1.2)
+	if pn == PLAYER_2 then s = 56+(itgstylemargin*-1.3) end
+	return s
+end
+local DoublesIsOn = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides"
+for player in ivalues(PlayerNumber) do
+	if GAMESTATE:IsPlayerEnabled(player) then
+		t[#t+1] = Def.ActorFrame{
+			LoadActor( THEME:GetPathG("","ScreenEvaluation grade frame"), player )..{
+				InitCommand=function(self)
+					local margin = GAMESTATE:GetPlayMode() == "PlayMode_Rave" and 164 or 145
+					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player)) ),SCREEN_CENTER_Y-160)
+				end,
+				OnCommand=function(self)
+					self:addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
+					:sleep(3):decelerate(0.3)
+					:addx( (DoublesIsOn and SCREEN_WIDTH/1.2 or SCREEN_WIDTH/2)*side(player) )
+					if player == PLAYER_1 then self:x(-160) end
+					if player == PLAYER_2 then self:x(720) end
+				end,
+				OffCommand=function(self)
+					self:accelerate(0.3):addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
+				end,
+			}
+		}
+
+t[#t+1] = Def.ActorFrame{
+			Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
+			OnCommand=function(self)
+				self:xy( DoublesIsOn and SCREEN_CENTER_X or (SCREEN_CENTER_X+(-145*side(player)) ),SCREEN_CENTER_Y-60)
+				:zoom(2):addx( (-SCREEN_WIDTH)*side(player) ):decelerate(0.5)
+				:addx( SCREEN_WIDTH*side(player) ):sleep(2.2):decelerate(0.5):zoom(0.9)
+				self:xy( DoublesIsOn and SCREEN_CENTER_X-80 or (SCREEN_CENTER_X+Gradeside(player) ) ,SCREEN_CENTER_Y-255+(itgstylemargin*2))
+				if player == PLAYER_1 then self:x(-260) end
+					if player == PLAYER_2 then self:x(720) end
+			end,
+			OffCommand=function(self)
+				self:accelerate(0.3):addx((DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player))
+			end,
+			
+			LoadActor( THEME:GetPathG("", "_grade models/"..STATSMAN:GetCurStageStats():GetPlayerStageStats(player):GetGrade()..".lua" ) )
 		}
 	end
 end
@@ -91,7 +145,7 @@ for index, label in ipairs(RadarCategories) do
 			InitCommand=function(self) self:zoom(0.55):horizalign(left) end,
 			BeginCommand=function(self)
 				self:x( (controller == PLAYER_1 and -155) or 20 )
-				self:y((index-1)*21 + 110)
+				self:y((index-1)*17 + 108)
 			end
 		}
 		}
@@ -123,13 +177,114 @@ for index, label in ipairs(RadarCategories) do
 	};
 end
 
+local function side(pn)
+	local s = 1
+	if pn == PLAYER_1 then return s end
+	return s*(-1)
+end
+
+local function Gradeside(pn)
+	local s = -365+(itgstylemargin*1.2)
+	if pn == PLAYER_2 then s = 56+(itgstylemargin*-1.3) end
+	return s
+end
+
 
 local PColor = {
 	["PlayerNumber_P1"] = color("#836002"),
 	["PlayerNumber_P2"] = color("#2F8425"),
 };
 
+local itgstylemargin = ThemePrefs.Get("ITG1") and -10 or 0
+local battlegraphloc = ThemePrefs.Get("ITG1") and "ITG1/" or ""
+t[#t+1] = Def.Sprite{
+	Condition=GAMESTATE:GetPlayMode() == "PlayMode_Rave",
+	Texture=THEME:GetPathG("ScreenEvaluation grade frame/battle/"..battlegraphloc.."graph","frame"),
+	OnCommand=function(self)
+		self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+500)
+		:sleep(2.8):decelerate(0.5)
+		:y(SCREEN_CENTER_Y+54+itgstylemargin*1.8)
+	end,
+	OffCommand=function(self)
+		self:accelerate(0.3):addy(500)
+	end
+}
 
+
+
+-- Max Combo
+local function pnum(pn)
+	if pn == PLAYER_2 then return 2 end
+	return 1
+end
+t[#t+1] = Def.ActorFrame{
+	Condition=not GAMESTATE:Env()["WorkoutMode"],
+	OnCommand=function(s)
+		if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
+			s:xy(-71,-4)
+		end
+	end;
+	Def.BitmapText{ Font="Common Normal", Text="Max Combo",
+	OnCommand=function(self)
+		self:xy( -155, 16*7-2+80 ):zoom(0.5):halign(0):maxwidth(140)
+	end;
+	};
+
+	Def.BitmapText{ Font="ScreenEvaluation judge";
+	OnCommand=function(self)
+		self:xy( -30, 16*7-1+80 ):zoom(0.5):halign(1)
+		local combo = GetPSStageStats(player):MaxCombo()
+		self:settext( ("%05.0f"):format( combo ) )
+
+		local leadingZeroAttr = { Length=5-tonumber(tostring(combo):len()); Diffuse=PColor[player] }
+		self:AddAttribute(0, leadingZeroAttr )
+
+		:diffuse( PlayerColor(player) )
+		if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
+			self:x(137)
+		end
+	end;
+	};
+	
+	Def.GraphDisplay{
+			InitCommand=function(self)
+				self:y(40+(itgstylemargin*1.3))
+				if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
+					self:xy( 163*side(player), 6+itgstylemargin*1.3 ):rotationz( 90*side(player) )
+					:zoomx( 0.85*side(player) )
+				end
+					if player == PLAYER_1 then self:x(-158) end
+					if player == PLAYER_2 then self:x(720) end
+			end,
+			OnCommand=function(self)
+				self:Load("GraphDisplayP"..pnum(player))
+				local playerStageStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
+				local stageStats = STATSMAN:GetCurStageStats()
+				self:Set(stageStats, playerStageStats)
+				if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
+					self:zoomy(0):sleep(3.2):decelerate(0.5)
+					:zoomy(1.6)
+				end
+			end,
+			OffCommand=function(self)
+				self:accelerate(0.1):zoomy(0)
+			end
+		},
+		
+		Def.ComboGraph{
+			Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
+			InitCommand=function(self)
+				self:y(-7+(itgstylemargin*1.3))
+			end,
+			OnCommand=function(self)
+				self:Load("ComboGraphP"..pnum(player))
+				local playerStageStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
+				local stageStats = STATSMAN:GetCurStageStats()
+				self:Set(stageStats, playerStageStats)
+			end,
+		},
+
+}
 --Hands etc  values
 for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 	local performance = GetPSStageStats(player):GetRadarActual():GetValue( "RadarCategory_"..RCType )
@@ -170,9 +325,19 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:xy( -40, 16*index -1 ):zoom(0.5):halign(0):diffuse( PlayerColor(player) )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
 		end;
-		};
 
+		};
+			Def.BitmapText{
+		 Font="_futurist metalic", Text=CalculatePercentage(player), OnCommand=function(self)
+			self:horizalign(right):xy(5,-92+(itgstylemargin*2.7)):diffuse(PlayerColor(player))
+			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
+				self:xy(60,-88+(itgstylemargin*2.7)):zoom(0.8)
+			end
+		end
+	},
 	};
+	
+	
 end
 
 --player judgment values

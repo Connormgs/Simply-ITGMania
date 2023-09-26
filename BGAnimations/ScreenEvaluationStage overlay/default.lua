@@ -62,60 +62,8 @@ local function pnum(pn)
 	return 1
 end
 
-local itgstylemargin = ThemePrefs.Get("ITG1") and -10 or 0
-local battlegraphloc = ThemePrefs.Get("ITG1") and "ITG1/" or ""
-t[#t+1] = Def.Sprite{
-	Condition=GAMESTATE:GetPlayMode() == "PlayMode_Rave",
-	Texture=THEME:GetPathG("ScreenEvaluation grade frame/battle/"..battlegraphloc.."graph","frame"),
-	OnCommand=function(self)
-		self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y+500)
-		:sleep(2.8):decelerate(0.5)
-		:y(SCREEN_CENTER_Y+54+itgstylemargin*1.8)
-	end,
-	OffCommand=function(self)
-		self:accelerate(0.3):addy(500)
-	end
-}
 
--- Grade and Frame Info
-local DoublesIsOn = GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides"
-for player in ivalues(PlayerNumber) do
-	if GAMESTATE:IsPlayerEnabled(player) then
-		t[#t+1] = Def.ActorFrame{
-			LoadActor( THEME:GetPathG("","ScreenEvaluation grade frame"), player )..{
-				InitCommand=function(self)
-					local margin = GAMESTATE:GetPlayMode() == "PlayMode_Rave" and 164 or 145
-					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player)) ),SCREEN_CENTER_Y+54)
-				end,
-				OnCommand=function(self)
-					self:addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
-					:sleep(3):decelerate(0.3)
-					:addx( (DoublesIsOn and SCREEN_WIDTH/1.2 or SCREEN_WIDTH/2)*side(player) )
-					if player == PLAYER_1 then self:x(165) end
-					if player == PLAYER_2 then self:x(720) end
-				end,
-				OffCommand=function(self)
-					self:accelerate(0.3):addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
-				end,
-			}
-		}
 
-		t[#t+1] = Def.ActorFrame{
-			Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
-			OnCommand=function(self)
-				self:xy( DoublesIsOn and SCREEN_CENTER_X or (SCREEN_CENTER_X+(-145*side(player)) ),SCREEN_CENTER_Y-60)
-				:zoom(2):addx( (-SCREEN_WIDTH)*side(player) ):decelerate(0.5)
-				:addx( SCREEN_WIDTH*side(player) ):sleep(2.2):decelerate(0.5):zoom(0.9)
-				self:xy( DoublesIsOn and SCREEN_CENTER_X-80 or (SCREEN_CENTER_X+Gradeside(player) ) ,SCREEN_CENTER_Y-38+(itgstylemargin*2))
-			end,
-			OffCommand=function(self)
-				self:accelerate(0.3):addx((DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player))
-			end,
-			
-			LoadActor( THEME:GetPathG("", "_grade models/"..STATSMAN:GetCurStageStats():GetPlayerStageStats(player):GetGrade()..".lua" ) )
-		}
-	end
-end
 
 t[#t+1] = Def.ActorFrame{
 	-- The biggest challenge here was to compesate the positions because of SM5's TextureFiltering.

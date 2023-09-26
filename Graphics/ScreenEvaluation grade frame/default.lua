@@ -108,41 +108,9 @@ t[#t+1] = Def.ActorFrame{
 		}
 	};
 
-		Def.GraphDisplay{
-			InitCommand=function(self)
-				self:y(-36+(itgstylemargin*1.3))
-				if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-					self:xy( 163*side(player), 6+itgstylemargin*1.3 ):rotationz( 90*side(player) )
-					:zoomx( 0.85*side(player) )
-				end
-			end,
-			OnCommand=function(self)
-				self:Load("GraphDisplayP"..pnum(player))
-				local playerStageStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-				local stageStats = STATSMAN:GetCurStageStats()
-				self:Set(stageStats, playerStageStats)
-				if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-					self:zoomy(0):sleep(3.2):decelerate(0.5)
-					:zoomy(1.6)
-				end
-			end,
-			OffCommand=function(self)
-				self:accelerate(0.1):zoomy(0)
-			end
-		},
+	
 
-		Def.ComboGraph{
-			Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
-			InitCommand=function(self)
-				self:y(-7+(itgstylemargin*1.3))
-			end,
-			OnCommand=function(self)
-				self:Load("ComboGraphP"..pnum(player))
-				local playerStageStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-				local stageStats = STATSMAN:GetCurStageStats()
-				self:Set(stageStats, playerStageStats)
-			end,
-		},
+
 
 	-- Grade time
 	Def.Sprite{
@@ -154,14 +122,7 @@ t[#t+1] = Def.ActorFrame{
 	   end
    },
 
-	Def.BitmapText{
-		 Font="_futurist metalic", Text=CalculatePercentage(player), OnCommand=function(self)
-			self:horizalign(right):xy(115,-82+(itgstylemargin*2.7)):diffuse(PlayerColor(player))
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-				self:xy(60,-88+(itgstylemargin*2.7)):zoom(0.8)
-			end
-		end
-	},
+
 
 	
 	Def.BitmapText{
@@ -199,36 +160,7 @@ local PColor = {
 
 
 
--- Max Combo
-t[#t+1] = Def.ActorFrame{
-	Condition=not GAMESTATE:Env()["WorkoutMode"],
-	OnCommand=function(s)
-		if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-			s:xy(-71,-4)
-		end
-	end;
-	Def.BitmapText{ Font="Common Normal", Text="Max Combo",
-	OnCommand=function(self)
-		self:xy( 3, 16*7-2+itgstylemargin ):zoom(0.5):halign(0):maxwidth(140)
-	end;
-	};
 
-	Def.BitmapText{ Font="ScreenEvaluation judge";
-	OnCommand=function(self)
-		self:xy( 128, 16*7-1+itgstylemargin ):zoom(0.5):halign(1)
-		local combo = GetPSStageStats(player):MaxCombo()
-		self:settext( ("%05.0f"):format( combo ) )
-
-		local leadingZeroAttr = { Length=5-tonumber(tostring(combo):len()); Diffuse=PColor[player] }
-		self:AddAttribute(0, leadingZeroAttr )
-
-		:diffuse( PlayerColor(player) )
-		if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-			self:x(137)
-		end
-	end;
-	};
-}
 
 -- Workout Information Frame
 local WorkoutData = {
