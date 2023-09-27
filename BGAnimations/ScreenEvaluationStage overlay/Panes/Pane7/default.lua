@@ -1,7 +1,7 @@
 -- Pane7 displays QR codes for uploading scores to groovestats.com
 
 local player, _, ComputedData = unpack(...)
-
+local player, controller = unpack(...)
 local checks, allChecksPassed = ValidForGrooveStats(player)
 
 local url, text = nil, ""
@@ -53,6 +53,12 @@ local pane = Def.ActorFrame{
 	end
 }
 
+pane[#pane+1] = LoadActor("base2.png")..{
+		InitCommand=function(self)
+			self:zoom(1):xy(-113,-61):align(0,0)
+		end,
+		}
+
 local qr_amv
 -- don't generate the QR code twice if only one player is joined
 -- and we've already generated it for a previous controller's pane
@@ -62,7 +68,7 @@ else
 	local qr_module_path = THEME:GetPathB("", "_modules/QR Code/SL-QRCode.lua")
 	qr_amv = LoadActor( qr_module_path , {url, qrcode_size} )..{
 		Name="QRCode",
-		InitCommand=function(self) self:xy(116, -32):align(0,0.5) end,
+		InitCommand=function(self) self:xy(-50, 20):align(0,0.5) end,
 		HideCommand=function(self) self:GetChild("QRCodeData"):queuecommand("Hide") end
 	}
 	if ComputedData then ComputedData.QRCode = qr_amv end
@@ -74,7 +80,7 @@ pane[#pane+1] = qr_amv
 if not allChecksPassed then
 	pane[#pane+1] = LoadActor("x.png")..{
 		InitCommand=function(self)
-			self:zoom(1):xy(120,-28):align(0,0)
+			self:zoom(1):xy(-44,25):align(0,0)
 		end,
 		-- blink the red X once when the player first toggles into the QR pane
 		BlinkXCommand=function(self)
@@ -90,7 +96,8 @@ pane[#pane+1] = LoadActor("../Pane3/Percentage.lua", player)..{
 
 pane[#pane+1] = LoadFont("Common Normal")..{
 	Text="GrooveStats QR",
-	InitCommand=function(self) self:align(0,0) end
+	InitCommand=function(self) self:xy(20,-20):zoom(0.6) end
+	
 }
 
 pane[#pane+1] = Def.Quad{
@@ -105,7 +112,14 @@ if not allChecksPassed then
 		InitCommand=function(self) self:xy(-10, 142):zoomto(121,140):align(0,0):MaskSource() end
 	}
 end
-
+local t = Def.ActorFrame{
+	InitCommand=function(self)
+		self:xy(50 * (controller==PLAYER_1 and 1 or -1), _screen.cy-24)
+	end,
+}
+t[#t+1] = LoadActor("base2.png")..{
+	OnCommand=function(self) self:xy(-80, 70) end
+}
 -- localized help text, either "use your phone to scan" or "here's why your score was invalid"
 pane[#pane+1] = LoadFont("Common Normal")..{
 	Text=text,

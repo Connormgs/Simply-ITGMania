@@ -41,6 +41,11 @@ else
 		TapNoteScores.Names[#TapNoteScores.Names+1] = THEME:GetString(tns_string, judgment)
 	end
 end
+local t = Def.ActorFrame{
+	InitCommand=function(self)
+		
+	end,
+}
 
 local box_height = 146
 local row_height = box_height/#TapNoteScores.Types
@@ -85,5 +90,12 @@ t[#t+1] = LoadFont("Common Normal")..{
 		self:x( miss_bmt:GetX() - miss_bmt:GetWidth()/1.15 )
 	end
 }
-
+local t = Def.ActorFrame{
+	InitCommand=function(self)
+		self:xy(50 * (controller==PLAYER_1 and 1 or -1), _screen.cy-24)
+	end,
+}
+t[#t+1] = LoadActor("base2.png")..{
+	OnCommand=function(self) self:xy(-60, 75) end
+}
 return t

@@ -5,6 +5,7 @@
 
 local player, controller = unpack(...)
 
+
 return Def.ActorFrame{
 	-- ExpandForDoubleCommand() does not do anything here, but we check for its presence in
 	-- this ActorFrame in ./InputHandler to determine which panes to expand the background for
@@ -20,3 +21,4 @@ return Def.ActorFrame{
 	LoadActor("./JudgmentLabels.lua", player),
 	LoadActor("./Arrows.lua", player)
 }
+

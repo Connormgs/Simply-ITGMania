@@ -44,7 +44,7 @@ local row_height = box_height/#rows
 -- -----------------------------------------------------------------------
 
 local af = Def.ActorFrame{}
-af.InitCommand=function(self) self:xy(-104, _screen.cy-40) end
+af.InitCommand=function(self) self:xy(-250, _screen.cy-40) end
 
 
 for i, column in ipairs( cols ) do

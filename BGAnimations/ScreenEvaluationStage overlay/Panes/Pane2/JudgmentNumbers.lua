@@ -21,7 +21,7 @@ local TapNoteScores = {
 local RadarCategories = {
 	Types = { 'Holds', 'Mines', 'Rolls' },
 	-- x values for P1 and P2
-	x = { P1=-180, P2=218 }
+	x = { P1=-290, P2=218 }
 }
 
 -- TODO(Zankoku) - EX judgments are in storage now, so we shouldn't have to calculate this all over again

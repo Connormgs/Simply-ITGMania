@@ -1,14 +1,13 @@
 -- Pane4 displays a list of HighScores for the stepchart that was played.
 
-local player = unpack(...)
+local player, controller = unpack(...)
 
 local pane = Def.ActorFrame{
 	InitCommand=function(self)
-		self:y(_screen.cy - 62):zoom(0.8)
+		self:y(_screen.cy - 62):zoom(1)
 	end
 }
-
--- -----------------------------------------------------------------------
+---------------------------------------------------------
 
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 local NumHighScores = math.min(10, PREFSMAN:GetPreference("MaxHighScoresPerListForMachine"))
@@ -72,7 +71,9 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 
 	-- top 8 machine HighScores
 	args.NumHighScores = 8
-	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)
+	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
+	OnCommand=function(self) self:xy(-95, -10) end
+	}
 
 	-- horizontal line visually separating machine HighScores from player HighScores
 	pane[#pane+1] = Def.Quad{ InitCommand=function(self) self:zoomto(100, 1):y(args.RowHeight*9):diffuse(1,1,1,0.33) end }
@@ -81,7 +82,8 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 	args.NumHighScores = 2
 	args.Profile = PROFILEMAN:GetProfile(player)
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
-		InitCommand=function(self) self:y(args.RowHeight*9) end
+		InitCommand=function(self) self:y(args.RowHeight*9) end,
+		OnCommand=function(self) self:xy(-135, 170):zoom(0.7) end
 	}
 
 -- the player did not meet the conditions to show the 8+2 HighScores
@@ -90,7 +92,11 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 else
 	-- top 10 machine HighScores
 	args.NumHighScores = 10
-	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)
+	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
+	OnCommand=function(self) self:xy(-135, -10):zoom(0.7) end
+	}
 end
-
+pane[#pane+1] = LoadActor("base2.png")..{
+	OnCommand=function(self) self:xy(-110, 113) end
+	}
 return pane
