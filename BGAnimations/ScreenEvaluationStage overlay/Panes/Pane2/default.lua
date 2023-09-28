@@ -13,11 +13,13 @@ end
 
 return Def.ActorFrame{
 	-- score displayed as a percentage
-	LoadActor("./Percentage.lua", ...),
+	
 
 	-- labels like "FANTASTIC", "MISS", "holds", "rolls", etc.
 	LoadActor("./JudgmentLabels.lua", ...),
 
+
 	-- numbers (How many Fantastics? How many Misses? etc.)
-	LoadActor("./JudgmentNumbers.lua", ...),
+	LoadActor("./fa.lua", ...),
+	LoadActor("./fa2.lua", ...),
 }
