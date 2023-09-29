@@ -63,12 +63,12 @@ end
 for i=1, #TapNoteScores.Types do
 	-- no need to add BitmapText actors for TimingWindows that were turned off
 	if windows[i] or i==#TapNoteScores.Types then
-		t[#t+1] = LoadFont("Common Normal")..{
+		t[#t+1] = LoadFont("_eurostile normal")..{
 			Text=TapNoteScores.Names[i],
 			InitCommand=function(self) self:zoom(0.53):horizalign(right) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -232) or -28 )
-				self:y(90)
+				self:x( (controller == PLAYER_1 and -230) or -28 )
+				self:y(94)
 				-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
 				
 			end
@@ -80,12 +80,12 @@ end
 -- labels: hands/ex, holds, mines, rolls
 for index, label in ipairs(RadarCategories) do
 	if index == 1 then
-		t[#t+1] = LoadFont("Common Normal")..{
+		t[#t+1] = LoadFont("_eurostile normal")..{
 			Text="EX",
 			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
 			BeginCommand=function(self)
 				self:x(-137)
-				self:y(92)
+				self:y(94)
 				
 			end
 		}

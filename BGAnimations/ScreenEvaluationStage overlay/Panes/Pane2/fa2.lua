@@ -48,7 +48,7 @@ for i=1,#TapNoteScores.Types do
 	t[#t+1] = Def.RollingNumbers{
 		Font="ScreenEvaluation judge",
 		InitCommand=function(self)
-			self:zoom(0.61):horizalign(right)
+			self:zoom(0.62):horizalign(right)
 
 			self:diffuse( PlayerColor(player) )
 
@@ -67,7 +67,7 @@ for i=1,#TapNoteScores.Types do
 		end,
 		BeginCommand=function(self)
 			self:x(-275)
-			self:y(115)
+			self:y(120)
 			self:targetnumber(number)
 		end
 	}
@@ -86,10 +86,11 @@ for index, RCType in ipairs(RadarCategories.Types) do
 			Name="Percent",
 			Text=("%.2f"):format(CalculateExScore(player)),
 			InitCommand=function(self)
-				self:horizalign(right):zoom(0.61)
-				self:x(-106)
-				self:y(114)
+				self:horizalign(right):zoom(0.63)
+				self:x(-104)
+				self:y(118)
 				self:diffuse( PlayerColor(player) )
+				self:Load("RollingNumbersEvaluationA")
 			end
 		}
 	end

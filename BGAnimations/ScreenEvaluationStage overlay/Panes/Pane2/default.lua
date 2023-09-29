@@ -22,5 +22,5 @@ return Def.ActorFrame{
 	-- numbers (How many Fantastics? How many Misses? etc.)
 	LoadActor("./fa.lua", ...),
 	LoadActor("./fa2.lua", ...),
-	LoadActor("./fa3.lua", ...),
+
 }
