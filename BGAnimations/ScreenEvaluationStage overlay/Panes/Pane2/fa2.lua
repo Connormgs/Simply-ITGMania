@@ -75,6 +75,28 @@ for i=1,#TapNoteScores.Types do
 end
 
 -- then handle hands/ex, holds, mines, rolls
+local RadarCategories = {
+	Types = { 'Holds', 'Mines', 'Rolls' },
+	-- x values for P1 and P2
+	x = { P1=-180, P2=218 }
+}
+for index, RCType in ipairs(RadarCategories.Types) do
+	if index == 1 then
+		t[#t+1] = LoadFont("ScreenEvaluation judge")..{
+			Name="Percent",
+			Text=("%.2f"):format(CalculateExScore(player)),
+			InitCommand=function(self)
+				self:horizalign(right):zoom(0.61)
+				self:x(-106)
+				self:y(114)
+				self:diffuse( PlayerColor(player) )
+			end
+		}
+	end
 
+
+
+end
+		
 
 return t

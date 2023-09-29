@@ -74,8 +74,23 @@ for i=1, #TapNoteScores.Types do
 			end
 		}
 	end
+	
 end
 
 -- labels: hands/ex, holds, mines, rolls
+for index, label in ipairs(RadarCategories) do
+	if index == 1 then
+		t[#t+1] = LoadFont("Common Normal")..{
+			Text="EX",
+			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
+			BeginCommand=function(self)
+				self:x(-137)
+				self:y(92)
+				
+			end
+		}
+	end
 
+
+end
 return t
