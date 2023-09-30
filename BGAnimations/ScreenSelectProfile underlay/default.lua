@@ -28,7 +28,7 @@ local HandleStateChange = function(self, Player)
 	local scroller = scrollerframe:GetChild('Scroller')
 
 	local seltext = frame:GetChild('SelectedProfileText')
-	local usbsprite = frame:GetChild('USBIcon')
+	local usbsprite = frame:GetChild('USB Icon')
 
 	if GAMESTATE:IsHumanPlayer(Player) then
 
@@ -253,9 +253,7 @@ local t = Def.ActorFrame {
 			end
 		end
 	},
-	LoadActor( THEME:GetPathS("", "what.ogg") )..{
-		WhatMessageCommand=function(self) self:play() end
-	}
+	
 }
 
 -- get table of player avatar paths

@@ -357,7 +357,7 @@ return Def.ActorFrame{
 	},
 
 
-	LoadActor(THEME:GetPathB("ScreenMemoryCard", "overlay/usbicon.png"))..{
+	LoadActor(THEME:GetPathB("ScreenMemoryCard", "overlay/usb icon.png"))..{
 		Name="USBIcon",
 		InitCommand=function(self)
 			self:rotationz(90):zoom(0.8175):visible(false):diffuseshift()

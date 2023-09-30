@@ -254,7 +254,7 @@ t[#t+1] = Def.ActorFrame{
 		self:linear(0.5):diffusealpha(0)
     end,
     
-    Def.Sprite{ Texture="ScreenSelectStyle underlay/explanation frame" },
+  
     Def.BitmapText{
         Font="_eurostile normal",
         OnCommand=function(self)
