@@ -10,7 +10,7 @@ local GraphHeight = THEME:GetMetric("GraphDisplay", "BodyHeight")
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y(_screen.cy + 124)
-		self:addx(20)
+		self:addx(90)
 		if NumPlayers == 1 then
 			-- not quite an even 0.25 because we need to accomodate the extra 10px
 			-- that would normally be between the left and right panes
@@ -22,6 +22,7 @@ local af = Def.ActorFrame{
 	Def.Quad{
 		InitCommand=function(self)
 			self:zoomto(GraphWidth, GraphHeight):diffuse(color("#101519")):vertalign(top)
+			self:addx(20)
 		end
 	},
 }

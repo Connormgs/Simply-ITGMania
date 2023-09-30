@@ -244,7 +244,7 @@ return Def.ActorFrame{
 		
 		LoadActor("BLOCK")..{
 			InitCommand=function(self)
-				self:zoom(3):y(100):z(-350):customtexturerect(0.5,0,1.5,1):texcoordvelocity(-0.06,0):diffuse(streakcolor):diffusealpha(0.05)
+				self:zoom(3):y(100):z(-350):customtexturerect(0.5,0,1.5,1):texcoordvelocity(-0.06,0):diffuse(streakcolor):diffusealpha(0.05) self:GetCurrentColor(1)
 			end;
 			UpdateColoringMessageCommand=function(s) s:finishtweening():linear(0.5):diffuse(streakcolor):diffusealpha(0.05) end;
 		},

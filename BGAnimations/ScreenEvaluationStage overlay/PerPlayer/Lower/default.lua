@@ -38,7 +38,7 @@ af[#af+1] = Def.Quad{
 	Name="LowerQuad",
 	InitCommand=function(self)
 		self:diffuse(color("#1E282F")):horizalign(left)
-		self:xy(-small_pane_w * 0.5, _screen.cy+34)
+		self:xy(-small_pane_w * 0.3, _screen.cy+34)
 		self:zoomto( pane_width, pane_height )
 
 		if ThemePrefs.Get("RainbowMode") then
