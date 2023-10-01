@@ -14,24 +14,7 @@ local proxy_offset = _screen.cx - WideScale(30,40)
 
 local t = Def.ActorFrame{}
 
--- a row
-t[#t+1] = Def.Quad {
-	Name="RowBackgroundQuad",
-	InitCommand=function(self)
-		self:horizalign(left):x(padding)
-		self:setsize(row_width , row_height)
-	end
-}
 
--- black quad behind the title
-t[#t+1] = Def.Quad {
-	Name="TitleBackgroundQuad",
-	OnCommand=function(self)
-		self:horizalign(left):x(padding)
-		self:setsize(title_bg_width, row_height):diffuse(Color.Black)
-		self:diffusealpha(DarkUI() and 0.8 or 0.25)
-	end
-}
 
 -- -----------------------------------------------------------------------
 -- Here's where the "magic" for visual previews in OptionRows happens.  D:

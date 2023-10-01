@@ -99,7 +99,7 @@ local Prefs =
 	ITG1 = 
 	{
 		Default = true,
-		Choices = { "ITG2", "ITG1" },
+		Choices = { "ITG1", "ITG2" },
 		Values = { true, false }
 	},
 }
