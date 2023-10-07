@@ -9,7 +9,7 @@ return LoadFont("_eurostile normal")..{
     Text="",
 	InitCommand=function(self)
 		local textZoom = 0.7
-        self:maxwidth(width/textZoom):zoom(textZoom):xy(150,_screen.cy-95)
+        self:maxwidth(width/textZoom):zoom(textZoom):xy(150,_screen.cy-135)
         if player == PLAYER_1 then
 			self:x( self:GetX() * -1 )
 			self:horizalign(left)

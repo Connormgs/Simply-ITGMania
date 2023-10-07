@@ -24,7 +24,8 @@ af[#af+1] = LoadFont("_eurostile normal")..{
 	InitCommand=function(self)
 		local songtitle = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle()) or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
 		if songtitle then self:settext(songtitle):maxwidth(banner.width*banner.zoom)
-		self:y(-5)
+		self:y(-10)
+		zoom(.2)
 		end
 	end
 }

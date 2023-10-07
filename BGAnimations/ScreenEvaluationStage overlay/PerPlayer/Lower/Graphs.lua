@@ -9,9 +9,9 @@ local GraphHeight = THEME:GetMetric("GraphDisplay", "BodyHeight")
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
-		self:y(_screen.cy + 14)
-		self:addx(-30)
-		if player == PLAYER_2 then self:x(30)
+		self:y(_screen.cy +0)
+		self:addx(-90)
+		if player == PLAYER_2 then self:x(50)
 			-- not quite an even 0.25 because we need to accomodate the extra 10px
 			-- that would normally be between the left and right panes
 			

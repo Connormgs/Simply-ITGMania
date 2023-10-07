@@ -7,8 +7,8 @@ return Def.ActorFrame{
 	
 
 	-- text for BPM (and maybe music rate if ~= 1.0)
-	LoadFont("Common Normal")..{
-		InitCommand=function(self) self:zoom(0.6):maxwidth(418/0.875) end,
+	LoadFont("_eurostile normal")..{
+		InitCommand=function(self) self:zoom(0.5):maxwidth(400/0.875) end,
 		OnCommand=function(self)
 			-- FIXME: the current layout of ScreenEvaluation doesn't accommodate split BPMs
 			--        so this currently uses the MasterPlayer's BPM values
@@ -17,16 +17,18 @@ return Def.ActorFrame{
 			if  MusicRate ~= 1 then
 				-- format a string like "150 - 300 bpm (1.5x Music Rate)"
 				self:settext( ("%s bpm (%gx %s)"):format(bpms, MusicRate, THEME:GetString("OptionTitles", "MusicRate")) )
+				self:xy(-40, -105)
 			else
 				-- format a string like "100 - 200 bpm"
 				self:settext( ("%s bpm"):format(bpms))
+				self:xy(-40, -105)
 			end
 		end
 	},
 
 	-- text for Song Length
-	LoadFont("Common Normal")..{
-		InitCommand=function(self) self:zoom(0.6):maxwidth(418/0.875):x(145):horizalign("right") end,
+	LoadFont("_eurostile normal")..{
+		InitCommand=function(self) self:zoom(0.6):maxwidth(418/0.875):xy(120,-130):horizalign("right") end,
 		OnCommand=function(self)
 			local seconds = nil
 			if GAMESTATE:IsCourseMode() then

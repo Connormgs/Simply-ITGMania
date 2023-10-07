@@ -51,7 +51,7 @@ local t = Def.ActorFrame{
 }
 
 	t[#t+1] = Def.Sprite{
-	Texture=THEME:GetPathG("","base.png"),
+	Texture=THEME:GetPathG("","base2.png"),
 	Name="base",
 	InitCommand=function(self)
 		self:xy(-120,80)
@@ -60,7 +60,7 @@ local t = Def.ActorFrame{
 }
 
 	t[#t+1] = Def.Sprite{
-	Texture=THEME:GetPathG("","base.png"),
+	Texture=THEME:GetPathG("","base2.png"),
 	Name="base",
 	InitCommand=function(self)
 		self:xy(120,80)
