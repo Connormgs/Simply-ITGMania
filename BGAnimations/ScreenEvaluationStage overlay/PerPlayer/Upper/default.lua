@@ -11,12 +11,13 @@ return Def.ActorFrame{
 			self:x(_screen.cx + 155)
 		end
 	end,
-
+	
 	-- letter grade
 
 
 	-- nice
 	LoadActor("./nice.lua", player),
+	-- letter grade
 
 
 	-- stream breakdown

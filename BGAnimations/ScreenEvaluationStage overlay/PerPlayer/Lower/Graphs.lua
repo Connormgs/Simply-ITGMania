@@ -9,9 +9,9 @@ local GraphHeight = THEME:GetMetric("GraphDisplay", "BodyHeight")
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
-		self:y(_screen.cy + 124)
-		self:addx(90)
-		if NumPlayers == 1 then
+		self:y(_screen.cy + 14)
+		self:addx(-30)
+		if player == PLAYER_2 then self:x(30)
 			-- not quite an even 0.25 because we need to accomodate the extra 10px
 			-- that would normally be between the left and right panes
 			
@@ -89,14 +89,7 @@ af[#af+1] = Def.GraphDisplay{
 	end
 }
 
-af[#af+1] = Def.Quad{
-	Name="ZeroLine",
-	InitCommand=function(self)
-		self:zoomto(GraphWidth,1)
-		self:y(GraphHeight/2)
-		self:diffusealpha(0.1)
-	end
-}
+
 
 local storage = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1]
 
@@ -117,30 +110,7 @@ if storage.DeathSecond ~= nil then
 			-- Move to where the player failed
 			self:addx(GraphWidth * graphPercentage)
 		end,
-		Def.ActorFrame {
-			Name="BGQuad",
-			SetSizeCommand=function(self, params)
-				if params.lines == 2 then self:addy(-10) end
-			end,
-			Def.Quad {
-				InitCommand=function(self)
-					self:diffuse(Color.Red)
-				end,
-				SetSizeCommand=function(self, params)
-					self:zoomto(params.width + 1, 10 * params.lines + 1)
-					self:addx(params.addx)
-				end
-			},
-			Def.Quad {
-				InitCommand=function(self)
-					self:diffuse(Color.Black)
-				end,
-				SetSizeCommand=function(self, params)
-					self:zoomto(params.width,10 * params.lines)
-					self:addx(params.addx)
-				end
-			},
-		},
+	
 		LoadFont("Common Normal")..{
 			InitCommand=function(self)
 				self:zoom(0.5)

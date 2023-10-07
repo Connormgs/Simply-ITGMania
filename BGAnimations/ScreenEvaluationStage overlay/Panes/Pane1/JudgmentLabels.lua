@@ -43,9 +43,28 @@ for index, window in ipairs(TapNoteScores.Types) do
 	scores_table[window] = number
 end
 
+
 local t = Def.ActorFrame{
 	InitCommand=function(self)
 		self:xy(50 * (controller==PLAYER_1 and 1 or -1), _screen.cy-24)
+	end,
+}
+
+	t[#t+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base.png"),
+	Name="base",
+	InitCommand=function(self)
+		self:xy(-120,80)
+		if player == PLAYER_2 then self:x(9999) end
+	end,
+}
+
+	t[#t+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base.png"),
+	Name="base",
+	InitCommand=function(self)
+		self:xy(120,80)
+		if player == PLAYER_1 then self:x(9999) end
 	end,
 }
 
@@ -65,7 +84,17 @@ t[#t+1] = Def.Sprite{
 		self:accelerate(0.3):addy(500)
 	end
 }
-
+local playerStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
+local grade = playerStats:GetGrade()
+t[#t+1] = LoadActor(THEME:GetPathG("", "_grade models/"..grade..".lua"), playerStats)..{
+	InitCommand=function(self)
+		self:x(-100 * (player==PLAYER_1 and -1 or 1))
+		self:y(_screen.cy-250)
+		if player == PLAYER_1 then self:x(-220) end
+		if player == PLAYER_2 then self:x(220) end
+	end,
+	
+}
 -- Grade and Frame Info
 
 local function side(pn)
@@ -85,14 +114,14 @@ for player in ivalues(PlayerNumber) do
 			LoadActor( THEME:GetPathG("","ScreenEvaluation grade frame"), player )..{
 				InitCommand=function(self)
 					local margin = GAMESTATE:GetPlayMode() == "PlayMode_Rave" and 164 or 145
-					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player)) ),SCREEN_CENTER_Y-160)
+					self:xy( DoublesIsOn and SCREEN_CENTER_X or ( SCREEN_CENTER_X+((-margin+itgstylemargin*1.2)*side(player)) ),SCREEN_CENTER_Y-1690)
 				end,
 				OnCommand=function(self)
 					self:addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
 					:sleep(3):decelerate(0.3)
 					:addx( (DoublesIsOn and SCREEN_WIDTH/1.2 or SCREEN_WIDTH/2)*side(player) )
-					if player == PLAYER_1 then self:x(-160) end
-					if player == PLAYER_2 then self:x(720) end
+					if player == PLAYER_1 then self:x(9999) end
+					if player == PLAYER_2 then self:x(9999) end
 				end,
 				OffCommand=function(self)
 					self:accelerate(0.3):addx( (DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player) )
@@ -100,25 +129,9 @@ for player in ivalues(PlayerNumber) do
 			}
 		}
 
-t[#t+1] = Def.ActorFrame{
-			Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
-			OnCommand=function(self)
-				self:xy( DoublesIsOn and SCREEN_CENTER_X or (SCREEN_CENTER_X+(-145*side(player)) ),SCREEN_CENTER_Y-60)
-				:zoom(2):addx( (-SCREEN_WIDTH)*side(player) ):decelerate(0.5)
-				:addx( SCREEN_WIDTH*side(player) ):sleep(2.2):decelerate(0.5):zoom(0.9)
-				self:xy( DoublesIsOn and SCREEN_CENTER_X-80 or (SCREEN_CENTER_X+Gradeside(player) ) ,SCREEN_CENTER_Y-255+(itgstylemargin*2))
-				if player == PLAYER_1 then self:x(-260) end
-					if player == PLAYER_2 then self:x(720) end
-			end,
-			OffCommand=function(self)
-				self:accelerate(0.3):addx((DoublesIsOn and -SCREEN_WIDTH/1.2 or -SCREEN_WIDTH/2)*side(player))
-			end,
-			
-			LoadActor( THEME:GetPathG("", "_grade models/"..STATSMAN:GetCurStageStats():GetPlayerStageStats(player):GetGrade()..".lua" ) )
-		}
+	
 	end
 end
-
 
 -- labels: hands/ex, holds, mines, rolls
 for index, label in ipairs(RadarCategories) do
@@ -144,7 +157,7 @@ for index, label in ipairs(RadarCategories) do
 		Def.BitmapText{ Font="_eurostile normal", Text=label,
 			InitCommand=function(self) self:zoom(0.55):horizalign(left) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -155) or 20 )
+				self:x( (controller == PLAYER_1 and -120) or 120 )
 				self:y((index-1)*17 + 108)
 			end
 		}
@@ -171,6 +184,8 @@ for index, label in ipairs(RadarCategories) do
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
 				s:xy(60,-94+15.8*index)
 			end
+				if player == PLAYER_1 then s:x(40) end
+			if player == PLAYER_2 then s:x(280) end
 		end;
 		};
 		
@@ -217,6 +232,10 @@ local function pnum(pn)
 	if pn == PLAYER_2 then return 2 end
 	return 1
 end
+local function TrailOrSteps(pn)
+	if GAMESTATE:IsCourseMode() then return GAMESTATE:GetCurrentTrail(pn) end
+	return GAMESTATE:GetCurrentSteps(pn)
+end
 t[#t+1] = Def.ActorFrame{
 	Condition=not GAMESTATE:Env()["WorkoutMode"],
 	OnCommand=function(s)
@@ -226,13 +245,60 @@ t[#t+1] = Def.ActorFrame{
 	end;
 	Def.BitmapText{ Font="Common Normal", Text="Max Combo",
 	OnCommand=function(self)
-		self:xy( -155, 16*7-2+80 ):zoom(0.5):halign(0):maxwidth(140)
+		self:xy( -120, 16*7-2+80 ):zoom(0.5):halign(0):maxwidth(140)
+		if player == PLAYER_2 then self:x(120) end
 	end;
 	};
-
+Def.Sprite{
+			Texture=THEME:GetPathG('',ThemePrefs.Get("ITG1") and '_evaluation difficulty icons' or '_difficulty icons'),
+			OnCommand=function(self)
+				self:animate(0):playcommand("Update")
+				if player == PLAYER_1 then self:xy(-215,-68) end
+				if player == PLAYER_2 then self:xy(208,-68) end
+			end,
+			UpdateCommand=function(self,parent) self:setstate( SetFrameDifficulty(player,true) ) end,
+			
+		},
+		
+		Def.BitmapText{
+			Font="Common Normal",
+			OnCommand=function(self)
+				self:zoom(0.5):x( -250*side(player) )
+				:halign( pnum(player)-1 ):playcommand("Update")
+				self:y( 18*side(player) )
+				if player == PLAYER_1 then self:y(-68) end
+				if player == PLAYER_2 then self:y(-68) end
+			end,
+			UpdateCommand=function(self)
+				local steps = TrailOrSteps(player):GetDifficulty()
+				if GAMESTATE:IsCourseMode() then
+					self:settext( DifficultyName("Trail", player) )
+				else
+					self:settext( DifficultyName("Steps", player) )
+				end
+				self:diffuse( ThemePrefs.Get("ITG1") and Color.Black or ContrastingDifficultyColor( steps ) )
+				:shadowlength( ThemePrefs.Get("ITG1") and 1 or 0 )
+			end
+		},
+		Def.BitmapText{
+			Font="Common Normal",
+			OnCommand=function(self)
+				self:zoom(0.5):x( -200*side(player) )
+				:halign( pnum(player)-1 ):playcommand("Update")
+				self:y( 18*side(player) )
+				if player == PLAYER_1 then self:y(-68) end
+				if player == PLAYER_2 then self:y(-68) end
+			end,
+			UpdateCommand=function(self)
+				self:settext( TrailOrSteps(player):GetMeter() )
+				self:diffuse( ThemePrefs.Get("ITG1") and Color.Black or ContrastingDifficultyColor( TrailOrSteps(player):GetDifficulty() ) )
+				:shadowlength( ThemePrefs.Get("ITG1") and 1 or 0 )
+			end
+		},
+		
 	Def.BitmapText{ Font="ScreenEvaluation judge";
 	OnCommand=function(self)
-		self:xy( -30, 16*7-1+80 ):zoom(0.5):halign(1)
+		self:xy( 10, 16*7-1+80 ):zoom(0.5):halign(1)
 		local combo = GetPSStageStats(player):MaxCombo()
 		self:settext( ("%05.0f"):format( combo ) )
 
@@ -241,8 +307,9 @@ t[#t+1] = Def.ActorFrame{
 
 		:diffuse( PlayerColor(player) )
 		if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-			self:x(137)
-		end
+			self:x(137) end
+			if player == PLAYER_2 then self:x(249) end
+	
 	end;
 	};
 	
@@ -293,7 +360,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 	t[#t+1] = Def.ActorFrame{
 		Condition=not GAMESTATE:Env()["WorkoutMode"],
 		OnCommand=function(self)
-			self:xy(-35,110-16+itgstylemargin)
+			self:xy(-35,111-16+itgstylemargin)
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
 				self:xy(66,32-18+itgstylemargin)
 			end
@@ -306,6 +373,8 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			local leadingZeroAttr = { Length=3-tonumber(tostring(performance):len()); Diffuse=PColor[player] }
 			self:AddAttribute(0, leadingZeroAttr )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
+			if player == PLAYER_1 then self:x(6) end
+			if player == PLAYER_2 then self:x(244) end
 		end;
 		};
 		
@@ -316,6 +385,8 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			local leadingZeroAttr = { Length=3-tonumber(tostring(possible):len()); Diffuse=PColor[player] }
 			self:AddAttribute(0, leadingZeroAttr )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
+			if player == PLAYER_1 then self:x(45) end
+			if player == PLAYER_2 then self:x(284) end
 		end;
 		};
 
@@ -324,6 +395,8 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 		OnCommand=function(self)
 			self:xy( -40, 16*index -1 ):zoom(0.5):halign(0):diffuse( PlayerColor(player) )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
+			if player == PLAYER_1 then self:x(5) end
+			if player == PLAYER_2 then self:x(243) end
 		end;
 
 		};
@@ -332,6 +405,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:horizalign(right):xy(5,-92+(itgstylemargin*2.7)):diffuse(PlayerColor(player))
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
 				self:xy(60,-88+(itgstylemargin*2.7)):zoom(0.8)
+				if player == PLAYER_2 then self:x(320) end
 			end
 		end
 	},
@@ -353,8 +427,10 @@ for index, ScWin in ipairs(JudgmentInfo.Types) do
 			local leadingZeroAttr = { Length=4-tonumber(tostring(sco):len()); Diffuse=PColor[player] }
 			self:AddAttribute(0, leadingZeroAttr )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-				self:xy(84,-96+15.8*index)
+				self:xy(84,-70+15.8*index)
 			end
+			if player == PLAYER_1 then self:x(45) end
+			if player == PLAYER_2 then self:x(285) end
 		end;
 		};
 	};
