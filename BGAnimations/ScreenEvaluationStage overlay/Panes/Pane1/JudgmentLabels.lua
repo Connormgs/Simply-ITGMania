@@ -403,10 +403,8 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			Def.BitmapText{
 		 Font="_futurist metalic", Text=CalculatePercentage(player), OnCommand=function(self)
 			self:horizalign(right):xy(5,-92+(itgstylemargin*2.7)):diffuse(PlayerColor(player))
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-				self:xy(60,-88+(itgstylemargin*2.7)):zoom(0.8)
-				if player == PLAYER_2 then self:x(320) end
-			end
+			if player == PLAYER_2 then self:x(220) end
+			
 		end
 	},
 	};

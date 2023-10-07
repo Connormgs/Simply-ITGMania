@@ -340,25 +340,7 @@ for player in ivalues(PlayerNumber) do
 	-- -----------------------------------------------------------------------
 	-- colored background Quad
 
-	af2[#af2+1] = Def.Quad{
-		Name="BackgroundQuad",
-		InitCommand=function(self)
-			self:zoomtowidth(_screen.w/2-10)
-			self:zoomtoheight(pane_height)
-			self:vertalign(top)
-		end,
-		SetCommand=function(self)
-			local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
-			if GAMESTATE:IsHumanPlayer(player) then
-				if StepsOrTrail then
-					local difficulty = StepsOrTrail:GetDifficulty()
-					self:diffuse( DifficultyColor(difficulty) )
-				else
-					self:diffuse( PlayerColor(player) )
-				end
-			end
-		end
-	}
+
 
 	-- -----------------------------------------------------------------------
 	-- loop through the six sub-tables in the PaneItems table
@@ -405,110 +387,13 @@ for player in ivalues(PlayerNumber) do
 			},
 		}
 	end
+	
 
-	-- Machine/World Record Machine Tag
-	af2[#af2+1] = LoadFont("Common Normal")..{
-		Name="MachineHighScoreName",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-			self:x(pos.col[3]-50*text_zoom)
-			self:y(pos.row[1])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) then
-				self:settext("----")
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
-			local machineScore = GetScoreFromProfile(machine_profile, SongOrCourse, StepsOrTrail)
-			self:settext(machineScore and machineScore:GetName() or "----")
-			DiffuseEmojis(self:ClearAttributes())
-		end
-	}
 
-	-- Machine/World Record HighScore
-	af2[#af2+1] = LoadFont("Common Normal")..{
-		Name="MachineHighScore",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-			self:x(pos.col[3]+25*text_zoom)
-			self:y(pos.row[1])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) then
-				self:settext("??.??%")
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
-			local machineScore = GetScoreFromProfile(machine_profile, SongOrCourse, StepsOrTrail)
-			if machineScore ~= nil then
-				self:settext(FormatPercentScore(machineScore:GetPercentDP()))
-			else
-				self:settext("??.??%")
-			end
-		end
-	}
 
-	-- Player Profile/GrooveStats Machine Tag
-	af2[#af2+1] = LoadFont("Common Normal")..{
-		Name="PlayerHighScoreName",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
-			self:x(pos.col[3]-50*text_zoom)
-			self:y(pos.row[2])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) then
-				self:settext("----")
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local playerScore = GetScoreForPlayer(player)
-			self:settext(playerScore and playerScore:GetName() or "----")
-			DiffuseEmojis(self:ClearAttributes())
-		end
-	}
 
-	-- Player Profile/GrooveStats HighScore
-	af2[#af2+1] = LoadFont("Common Normal")..{
-		Name="PlayerHighScore",
-		InitCommand=function(self)
-			self:zoom(text_zoom):diffuse(Color.Black):horizalign(right)
-			self:x(pos.col[3]+25*text_zoom)
-			self:y(pos.row[2])
-		end,
-		SetCommand=function(self)
-			-- We overload this actor to work both for GrooveStats and also offline.
-			-- If we're connected, we let the ResponseProcessor set the text
-			if IsServiceAllowed(SL.GrooveStats.GetScores) then
-				self:settext("??.??%")
-			else
-				self:queuecommand("SetDefault")
-			end
-		end,
-		SetDefaultCommand=function(self)
-			local playerScore = GetScoreForPlayer(player)
-			if playerScore ~= nil then
-				self:settext(FormatPercentScore(playerScore:GetPercentDP()))
-			else
-				self:settext("??.??%")
-			end
-		end
-	}
+
+
 
 	af2[#af2+1] = LoadFont("Common Normal")..{
 		Name="Loading",
@@ -525,28 +410,7 @@ for player in ivalues(PlayerNumber) do
 		end
 	}
 
-	-- Chart Difficulty Meter
-	af2[#af2+1] = LoadFont("Wendy/_wendy small")..{
-		Name="DifficultyMeter",
-		InitCommand=function(self)
-			self:horizalign(right):diffuse(Color.Black)
-			self:xy(pos.col[4], pos.row[2])
-			if not IsUsingWideScreen() then self:maxwidth(66) end
-			self:queuecommand("Set")
-		end,
-		SetCommand=function(self)
-			-- Hide the difficulty number if we're connected.
-			if IsServiceAllowed(SL.GrooveStats.GetScores) then
-				self:visible(false)
-			end
 
-			local SongOrCourse, StepsOrTrail = GetSongAndSteps(player)
-			if not SongOrCourse then self:settext("") return end
-			local meter = StepsOrTrail and StepsOrTrail:GetMeter() or "?"
-
-			self:settext( meter )
-		end
-	}
 
 	-- Add actors for Rival score data. Hidden by default
 	-- We position relative to column 3 for spacing reasons.
