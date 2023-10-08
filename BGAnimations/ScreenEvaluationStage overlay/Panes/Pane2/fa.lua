@@ -65,9 +65,9 @@ for i=1, #TapNoteScores.Types do
 	if windows[i] or i==#TapNoteScores.Types then
 		t[#t+1] = LoadFont("_eurostile normal")..{
 			Text=TapNoteScores.Names[i],
-			InitCommand=function(self) self:zoom(0.53):horizalign(right) end,
+			InitCommand=function(self) self:zoom(0.52):horizalign(right) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -230) or -28 )
+				self:x( (controller == PLAYER_1 and -190) or -50 )
 				self:y(94)
 				-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
 				
@@ -84,7 +84,7 @@ for index, label in ipairs(RadarCategories) do
 			Text="EX",
 			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
 			BeginCommand=function(self)
-				self:x(-137)
+				self:x( (controller == PLAYER_1 and -102) or 38 )
 				self:y(94)
 				
 			end

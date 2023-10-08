@@ -3,8 +3,7 @@ local SongOrCourse = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse() o
 
 local banner = {
 	directory = (FILEMAN:DoesFileExist(path) and path or THEME:GetPathG("","_FallbackBanners/Arrows")),
-	width = 418,
-	zoom = 0.7,
+
 }
 
 -- the Quad containing the bpm and music rate doesn't appear in Casual mode

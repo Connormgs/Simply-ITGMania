@@ -200,8 +200,6 @@ t[#t+1] = LoadActor("./Shared/GlobalStorage.lua")
 
 -- help text that appears if we're in Casual gamemode
 t[#t+1] = LoadActor("./Shared/CasualHelpText.lua")
-
-t[#t+1] = LoadActor("./Panes/default.lua", NumPanes)
 for player in ivalues(Players) do
 
 	-- the per-player upper half of ScreenEvaluation, including: letter grade, nice
@@ -210,5 +208,7 @@ for player in ivalues(Players) do
 	t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
 
 end
+t[#t+1] = LoadActor("./Panes/default.lua", NumPanes)
+
 collectgarbage()
 return t

@@ -41,11 +41,6 @@ else
 		TapNoteScores.Names[#TapNoteScores.Names+1] = THEME:GetString(tns_string, judgment)
 	end
 end
-local t = Def.ActorFrame{
-	InitCommand=function(self)
-		
-	end,
-}
 
 local box_height = 146
 local row_height = box_height/#TapNoteScores.Types
@@ -53,7 +48,23 @@ local row_height = box_height/#TapNoteScores.Types
 local t = Def.ActorFrame{
 	InitCommand=function(self) self:xy(50 * (player==PLAYER_2 and -1 or 1), _screen.cy-36) end
 }
-
+		t[#t+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	Name="base",
+	InitCommand=function(self)
+		self:xy(-120,92)
+		if player == PLAYER_2 then self:x(9999) end
+	
+	end,
+}
+t[#t+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	Name="base",
+	InitCommand=function(self)
+		self:xy(20,92)
+		if player == PLAYER_1 then self:x(9999) end
+	end,
+}
 local miss_bmt
 
 local windows = SL[pn].ActiveModifiers.TimingWindows
@@ -66,21 +77,23 @@ for i=1, #TapNoteScores.Types do
 		local window = TapNoteScores.Types[i]
 		local label = TapNoteScores.Names[i]
 
-		t[#t+1] = LoadFont("Common Normal")..{
+		t[#t+1] = LoadFont("_eurostile normal")..{
 			Text=label:upper(),
 			InitCommand=function(self)
 				self:zoom(0.8):horizalign(right):maxwidth(65/self:GetZoom())
-					:x( (player == PLAYER_1 and -130) or -28 )
+					:x( (player == PLAYER_1 and -173) or -28 )
 					:y( i * row_height )
 					:diffuse( Colors[i] )
 
 				if i == #TapNoteScores.Types then miss_bmt = self end
 			end
 		}
+
+
 	end
 end
 
-t[#t+1] = LoadFont("Common Normal")..{
+t[#t+1] = LoadFont("_eurostile normal")..{
 	Text=ScreenString("Held"),
 	InitCommand=function(self)
 		self:y(140):zoom(0.6):halign(1)
@@ -90,12 +103,5 @@ t[#t+1] = LoadFont("Common Normal")..{
 		self:x( miss_bmt:GetX() - miss_bmt:GetWidth()/1.15 )
 	end
 }
-local t = Def.ActorFrame{
-	InitCommand=function(self)
-		self:xy(50 * (controller==PLAYER_1 and 1 or -1), _screen.cy-24)
-	end,
-}
-t[#t+1] = LoadActor("base2.png")..{
-	OnCommand=function(self) self:xy(-60, 75) end
-}
+
 return t

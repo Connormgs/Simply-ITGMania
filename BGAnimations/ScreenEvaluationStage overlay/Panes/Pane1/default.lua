@@ -11,7 +11,7 @@ return Def.ActorFrame{
 
 	-- labels like "FANTASTIC", "MISS", "holds", "rolls", etc.
 	LoadActor("./JudgmentLabels.lua", ...),
-
+	
 	-- numbers (How many Fantastics? How many Misses? etc.)
 
 }

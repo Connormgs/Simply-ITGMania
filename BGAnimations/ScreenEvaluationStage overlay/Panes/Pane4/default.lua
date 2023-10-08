@@ -5,6 +5,7 @@ local player, controller = unpack(...)
 local pane = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y(_screen.cy - 62):zoom(1)
+		if player == PLAYER_2 then self:x(0) end
 	end
 }
 ---------------------------------------------------------
@@ -72,7 +73,11 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 	-- top 8 machine HighScores
 	args.NumHighScores = 8
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
-	OnCommand=function(self) self:xy(-95, -10) end
+	InitCommand=function(self) self:xy(0, -10) 
+	 self:x( (controller == PLAYER_1 and -100) or -60 ):zoom(0.7)
+
+	end
+	
 	}
 
 	-- horizontal line visually separating machine HighScores from player HighScores
@@ -82,8 +87,10 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 	args.NumHighScores = 2
 	args.Profile = PROFILEMAN:GetProfile(player)
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
-		InitCommand=function(self) self:y(args.RowHeight*9) end,
-		OnCommand=function(self) self:xy(-135, 170):zoom(0.7) end
+		InitCommand=function(self) self:y(args.RowHeight*9) 
+		 self:x( (controller == PLAYER_1 and -120) or 40 )
+end,
+		OnCommand=function(self) self:xy(0, 170):zoom(0.7) end
 	}
 
 -- the player did not meet the conditions to show the 8+2 HighScores
@@ -93,10 +100,26 @@ else
 	-- top 10 machine HighScores
 	args.NumHighScores = 10
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
-	OnCommand=function(self) self:xy(-135, -10):zoom(0.7) end
+	OnCommand=function(self) self:xy(-95, -10):zoom(0.7) end
 	}
 end
-pane[#pane+1] = LoadActor("base2.png")..{
-	OnCommand=function(self) self:xy(-110, 113) end
-	}
+	pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	
+	InitCommand=function(self)
+		self:xy(-70,118)
+		if player == PLAYER_2 then self:x(9999) end
+	end,
+}
+
+	pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	
+	InitCommand=function(self)
+		self:xy(-30,118)
+		if player == PLAYER_1 then self:x(9999) end
+	end,
+}
 return pane
+
+

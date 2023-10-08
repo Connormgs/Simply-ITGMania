@@ -38,13 +38,16 @@ if not (styletype == "OnePlayerOneSide" or styletype == "TwoPlayersTwoSides") th
 	box_width = 520
 end
 
-local col_width  = box_width/num_columns
+local col_width  = box_width/num_columns*.8
 local row_height = box_height/#rows
 
 -- -----------------------------------------------------------------------
 
 local af = Def.ActorFrame{}
-af.InitCommand=function(self) self:xy(-250, _screen.cy-40) end
+af.InitCommand=function(self) self:xy(-104, _screen.cy-40) 
+self:x( (controller == PLAYER_1 and -280) or -90 )
+if player == PLAYER_1 then self:x(-130) end
+end
 
 
 for i, column in ipairs( cols ) do

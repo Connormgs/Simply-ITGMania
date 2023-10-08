@@ -53,12 +53,30 @@ local pane = Def.ActorFrame{
 	end
 }
 
-pane[#pane+1] = LoadActor("base2.png")..{
-		InitCommand=function(self)
-			self:zoom(1):xy(-113,-61):align(0,0)
-		end,
-		}
+pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	Name="base",
+	InitCommand=function(self)
+		self:xy(70,74)
+		if player == PLAYER_2 then self:x(9999) end
+	end,
+}
 
+pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	Name="base",
+	InitCommand=function(self)
+		self:xy(110,74)
+		if player == PLAYER_1 then self:x(9999) end
+	end,
+}
+pane[#pane+1] = LoadFont("Common Normal")..{
+	Text="GrooveStats QR",
+	InitCommand=function(self) self:xy(20,-20):zoom(0.6) 
+	self:x( (controller == PLAYER_1 and -120) or 120 ) 
+	end
+
+}
 local qr_amv
 -- don't generate the QR code twice if only one player is joined
 -- and we've already generated it for a previous controller's pane
@@ -94,11 +112,7 @@ pane[#pane+1] = LoadActor("../Pane3/Percentage.lua", player)..{
 	OnCommand=function(self) self:xy(25, -22) end
 }
 
-pane[#pane+1] = LoadFont("Common Normal")..{
-	Text="GrooveStats QR",
-	InitCommand=function(self) self:xy(20,-20):zoom(0.6) end
-	
-}
+
 
 pane[#pane+1] = Def.Quad{
 	InitCommand=function(self) self:y(23):zoomto(96,1):align(0,0):diffuse(1,1,1,0.33) end
@@ -112,14 +126,7 @@ if not allChecksPassed then
 		InitCommand=function(self) self:xy(-10, 142):zoomto(121,140):align(0,0):MaskSource() end
 	}
 end
-local t = Def.ActorFrame{
-	InitCommand=function(self)
-		self:xy(50 * (controller==PLAYER_1 and 1 or -1), _screen.cy-24)
-	end,
-}
-t[#t+1] = LoadActor("base2.png")..{
-	OnCommand=function(self) self:xy(-80, 70) end
-}
+
 -- localized help text, either "use your phone to scan" or "here's why your score was invalid"
 pane[#pane+1] = LoadFont("Common Normal")..{
 	Text=text,

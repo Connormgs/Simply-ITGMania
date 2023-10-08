@@ -66,7 +66,7 @@ for i=1,#TapNoteScores.Types do
 			end
 		end,
 		BeginCommand=function(self)
-			self:x(-275)
+			self:x( (controller == PLAYER_1 and -219) or 56 )
 			self:y(120)
 			self:targetnumber(number)
 		end
@@ -87,7 +87,7 @@ for index, RCType in ipairs(RadarCategories.Types) do
 			Text=("%.2f"):format(CalculateExScore(player)),
 			InitCommand=function(self)
 				self:horizalign(right):zoom(0.63)
-				self:x(-104)
+				self:x( (controller == PLAYER_1 and -37) or 236 )
 				self:y(118)
 				self:diffuse( PlayerColor(player) )
 				self:Load("RollingNumbersEvaluationA")

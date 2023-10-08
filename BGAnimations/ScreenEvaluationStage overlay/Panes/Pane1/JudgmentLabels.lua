@@ -47,6 +47,7 @@ end
 local t = Def.ActorFrame{
 	InitCommand=function(self)
 		self:xy(50 * (controller==PLAYER_1 and 1 or -1), _screen.cy-24)
+		if player == PLAYER_2 then self:x(-150) end
 	end,
 }
 
@@ -142,7 +143,8 @@ for index, label in ipairs(RadarCategories) do
 			Text="EX",
 			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -160) or 20 )
+				if player == PLAYER_1 then self:x(0) end
+				if player == PLAYER_2 then self:x(60) end
 				self:y(38)
 				self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
 			end
@@ -155,7 +157,7 @@ for index, label in ipairs(RadarCategories) do
 		Condition=not GAMESTATE:Env()["WorkoutMode"],
 		OnCommand=function(self) self:xy(0,0) end;
 		Def.BitmapText{ Font="_eurostile normal", Text=label,
-			InitCommand=function(self) self:zoom(0.55):horizalign(left) end,
+			InitCommand=function(self) self:zoom(0.5):horizalign(left) end,
 			BeginCommand=function(self)
 				self:x( (controller == PLAYER_1 and -120) or 120 )
 				self:y((index-1)*17 + 108)
@@ -243,7 +245,7 @@ t[#t+1] = Def.ActorFrame{
 			s:xy(-71,-4)
 		end
 	end;
-	Def.BitmapText{ Font="Common Normal", Text="Max Combo",
+	Def.BitmapText{ Font="_eurostile normal", Text="Max Combo",
 	OnCommand=function(self)
 		self:xy( -120, 16*7-2+80 ):zoom(0.5):halign(0):maxwidth(140)
 		if player == PLAYER_2 then self:x(120) end
@@ -261,7 +263,7 @@ Def.Sprite{
 		},
 		
 		Def.BitmapText{
-			Font="Common Normal",
+			Font="_eurostile normal",
 			OnCommand=function(self)
 				self:zoom(0.5):x( -250*side(player) )
 				:halign( pnum(player)-1 ):playcommand("Update")
@@ -312,31 +314,7 @@ Def.Sprite{
 	
 	end;
 	};
-	
-	Def.GraphDisplay{
-			InitCommand=function(self)
-				self:y(40+(itgstylemargin*1.3))
-				if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-					self:xy( 163*side(player), 6+itgstylemargin*1.3 ):rotationz( 90*side(player) )
-					:zoomx( 0.85*side(player) )
-				end
-					if player == PLAYER_1 then self:x(-158) end
-					if player == PLAYER_2 then self:x(720) end
-			end,
-			OnCommand=function(self)
-				self:Load("GraphDisplayP"..pnum(player))
-				local playerStageStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-				local stageStats = STATSMAN:GetCurStageStats()
-				self:Set(stageStats, playerStageStats)
-				if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-					self:zoomy(0):sleep(3.2):decelerate(0.5)
-					:zoomy(1.6)
-				end
-			end,
-			OffCommand=function(self)
-				self:accelerate(0.1):zoomy(0)
-			end
-		},
+
 		
 		Def.ComboGraph{
 			Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
