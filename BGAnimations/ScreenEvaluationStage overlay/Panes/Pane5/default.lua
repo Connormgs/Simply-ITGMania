@@ -101,9 +101,26 @@ end
 local pane = Def.ActorFrame{
 	InitCommand=function(self)
 		self:xy(-pane_width*0.5, pane_height*1.95)
+		self:addx(-57)
 	end
 }
+pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	Name="base",
+	InitCommand=function(self)
+		self:xy(137,-55)
+		if player == PLAYER_2 then self:x(9999) end
+	end,
+}
 
+	pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","base3.png"),
+	Name="base2",
+	InitCommand=function(self)
+		self:xy(177,-55)
+		if player == PLAYER_1 then self:x(9999) end
+	end,
+}
 -- the line in the middle indicating where truly flawless timing (0ms offset) is
 pane[#pane+1] = Def.Quad{
 	InitCommand=function(self)
@@ -320,4 +337,5 @@ pane[#pane+1] = Def.BitmapText{
 	end,
 }
 
+	
 return pane

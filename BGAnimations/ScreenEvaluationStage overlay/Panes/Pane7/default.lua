@@ -73,7 +73,7 @@ pane[#pane+1] = Def.Sprite{
 pane[#pane+1] = LoadFont("Common Normal")..{
 	Text="GrooveStats QR",
 	InitCommand=function(self) self:xy(20,-20):zoom(0.6) 
-	self:x( (controller == PLAYER_1 and -120) or 120 ) 
+	self:x( (controller == PLAYER_1 and 20) or 120 ) 
 	end
 
 }
@@ -86,19 +86,21 @@ else
 	local qr_module_path = THEME:GetPathB("", "_modules/QR Code/SL-QRCode.lua")
 	qr_amv = LoadActor( qr_module_path , {url, qrcode_size} )..{
 		Name="QRCode",
-		InitCommand=function(self) self:xy(-50, 20):align(0,0.5) end,
+		InitCommand=function(self) self:xy(-20, 20):align(0,0.5) end,
+		
 		HideCommand=function(self) self:GetChild("QRCodeData"):queuecommand("Hide") end
+		
 	}
 	if ComputedData then ComputedData.QRCode = qr_amv end
 end
 
 pane[#pane+1] = qr_amv
-
+ 
 -- red X to visually cover the QR code if the score was invalid
 if not allChecksPassed then
 	pane[#pane+1] = LoadActor("x.png")..{
 		InitCommand=function(self)
-			self:zoom(1):xy(-44,25):align(0,0)
+			self:zoom(1):xy(-24,25):align(0,0)
 		end,
 		-- blink the red X once when the player first toggles into the QR pane
 		BlinkXCommand=function(self)
