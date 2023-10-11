@@ -193,6 +193,7 @@ local t = Def.ActorFrame{
 		ThemePrefs.Save()
 		
 		MESSAGEMAN:Broadcast("ColorSelected")
+		MESSAGEMAN:Broadcast("UpdateColoring")
 	end,
 	FinishCommand=function(self)
 		self:GetChild("start_sound"):play()

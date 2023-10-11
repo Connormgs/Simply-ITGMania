@@ -78,7 +78,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 		--LEFT SIDE
 		{
 			{"Steps", function() return StepsOrCourse() and RadarValue(args, 5) or 0 end, {1,200,350,550} },
-			{"Holds", function() return StepsOrCourse() and RadarValue(args, 8) or 0 end, {1,15,30,50} },
+			{"Holds", function() return StepsOrCourse() and RadarValue(args, 8) or 9 end, {1,15,30,50} },
 			{function() return PercentScore(args)[2] end, function() return PercentScore(args)[1] end },
 			{"Card", function() return PercentScore(args,true)[1] end },
 			xpos = {-125,-25},
@@ -89,10 +89,11 @@ if GAMESTATE:IsPlayerEnabled(args) then
 			{"Mines", function() return StepsOrCourse() and RadarValue(args, 9) or 0 end },
 			{"Hands", function() return StepsOrCourse() and RadarValue(args, 10) or 0 end, {1,10,35,75} },
 			{"Rolls", function() return StepsOrCourse() and RadarValue(args, 11) or 0 end, {1,10,35,75} },
-			xpos = {-15,70},
+			xpos = {-40,54},
 		},
-		DiffPlacement = args == PLAYER_1 and 102 or -102
+		DiffPlacement = args == PLAYER_1 and 160 or -102
 	}
+	
 	for ind,content in ipairs(ObtainData) do
 		for vind,val in ipairs( ObtainData[ind] ) do
 			t[#t+1] = Def.BitmapText{
@@ -100,7 +101,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				Text=val[1],
 				InitCommand=function(self)
 					self:zoom(0.5):xy(
-						ObtainData[ind].xpos[1] + (args == PLAYER_2 and 55 or 0)
+						ObtainData[ind].xpos[1] + (args == PLAYER_2 and 55 or 0) - 54
 						,-24+14*(vind-1)):halign(0)
 				end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)
@@ -119,7 +120,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				Text=val[2],
 				InitCommand=function(self)
 					self:zoom(0.5):xy(
-						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 55 or 0)
+						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 55 or 0) - 75
 						,-24+14*(vind-1)):halign(1)
 				end;
 				CurrentSongChangedMessageCommand=function(s) s:diffuse(Color.White):settext("") end;
@@ -179,7 +180,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 	};
 	t[#t+1] = Def.BitmapText{
 		Font="_eurostile normal",
-		InitCommand=function(self) self:x(ObtainData.DiffPlacement):y(-24+38):maxwidth(90):zoom(0.6) end;
+		InitCommand=function(self) self:x(ObtainData.DiffPlacement):y(-24+38):maxwidth(90):zoom(0.55) end;
 		CurrentSongChangedMessageCommand=function(s) s:settext("") end;
 		["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(self)
 			if GAMESTATE:GetCurrentSong() and not GAMESTATE:IsCourseMode() then

@@ -243,7 +243,7 @@ local layout = {
 	{"Brackets", "Total Stream"},
 }
 
-local colSpacing = 155
+local colSpacing = 75
 local rowSpacing = 20
 
 for i, row in ipairs(layout) do
@@ -252,17 +252,17 @@ for i, row in ipairs(layout) do
 			Text=col ~= "Total Stream" and "0" or "None (0.0%)",
 			Name=col .. "Value",
 			InitCommand=function(self)
-				local textHeight = 17
-				local textZoom = 0.8
-				self:zoom(textZoom):horizalign(right)
+				local textHeight = 9
+				local textZoom = 0.3
+				self:zoom(textZoom):horizalign(left)
 				if col == "Total Stream" then
-					self:maxwidth(100)
+					self:maxwidth(120)
+					
 				end
-				self:xy(430,-90)
+				self:xy(-10,15)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
-				self:rotationz(-1)
-				self:zoom(0.7)
+				self:zoom(0.5)
 			end,
 			HideCommand=function(self)
 				if col ~= "Total Stream" then
@@ -270,10 +270,12 @@ for i, row in ipairs(layout) do
 				else
 					self:settext("None (0.0%)")
 				end
+				
 			end,
 			RedrawCommand=function(self)
 				if col ~= "Total Stream" then
 					self:settext(SL[pn].Streams[col])
+
 				else
 					local streamMeasures, breakMeasures = GetTotalStreamAndBreakMeasures(pn)
 					local totalMeasures = streamMeasures + breakMeasures
@@ -291,12 +293,12 @@ for i, row in ipairs(layout) do
 			Name=col,
 			InitCommand=function(self)
 				local textHeight = 17
-				local textZoom = 0.65
+				local textZoom = 0.44
 				self:maxwidth(width/textZoom):zoom(textZoom):horizalign(left)
-				self:xy(290,-90)
+				self:xy(-20,5)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
-				self:rotationz(-1)
+				
 			end,
 		}
 
