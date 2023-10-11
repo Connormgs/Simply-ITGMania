@@ -1,1 +1,0 @@
-return LoadModule("HeaderText.lua")(Var "LoadingScreen")

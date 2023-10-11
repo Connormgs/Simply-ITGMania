@@ -204,7 +204,7 @@ return Def.ActorFrame{
 		Def.BitmapText{
 		Font="_eurostile normal",
 		OnCommand=function(s)
-			s:halign(0):shadowlength(2):zoom(0.55):xy(-165,-22):diffusealpha(1)
+			s:halign(0):shadowlength(2):zoom(0.55):xy(-165,-22):diffusealpha(1):maxwidth(180)
 		end;
 		CurrentSongChangedMessageCommand=function(s)
 			s:settext( GAMESTATE:GetCurrentSong() and GAMESTATE:GetCurrentSong():GetDisplayArtist() or "" )
@@ -236,14 +236,14 @@ return Def.ActorFrame{
 		Text="BPM",
 		Font="_eurostile normal",
 		OnCommand=function(s)
-			s:shadowlength(2):zoom(0.5):xy(30,-32):diffusealpha(0.5)
+			s:shadowlength(2):zoom(0.5):xy(-40,-38):diffusealpha(0.5)
 		end;
 		},
 
 		Def.BitmapText{
 		Font="_eurostile normal",
 		OnCommand=function(s)
-			s:halign(0):shadowlength(2):zoom(0.6):xy(15,-18)
+			s:halign(0):shadowlength(2):zoom(0.6):xy(-56,-18)
 		end;
 		CurrentSongChangedMessageCommand=function(s)
 			local song = GAMESTATE:GetCurrentSong()
@@ -283,7 +283,7 @@ return Def.ActorFrame{
 
 		-- need to figure out how to get pop
 		Def.BitmapText{ Text="LENGTH", Font="_eurostile normal",
-		OnCommand=function(s) s:shadowlength(2):zoom(0.5):xy(130,-30):diffusealpha(0.5) end;
+		OnCommand=function(s) s:shadowlength(2):zoom(0.5):xy(45,-36):diffusealpha(0.5) end;
 		},
 
 	
