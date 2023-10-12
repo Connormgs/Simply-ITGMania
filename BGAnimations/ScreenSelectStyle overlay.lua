@@ -254,7 +254,7 @@ t[#t+1] = Def.ActorFrame{
 		self:linear(0.5):diffusealpha(0)
     end,
     
-  
+    Def.Sprite{ Texture="ScreenSelectStyle underlay/explanation frame" },
     Def.BitmapText{
         Font="_eurostile normal",
         OnCommand=function(self)
@@ -269,12 +269,7 @@ t[#t+1] = Def.ActorFrame{
         end
     }
 }
-
 t[#t+1] = Controller
-
-t[#t+1] = loadfile( THEME:GetPathB("_shared underlay","arrows") )()
-t[#t+1] = LoadModule("HeaderText.lua")("ScreenSelectStyle2")
-
 t[#t+1] = Def.HelpDisplay {
     File="_eurostile normal",
     OnCommand=function(self)
