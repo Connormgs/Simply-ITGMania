@@ -89,6 +89,6 @@ t[#t+1] = Def.ActorFrame{
 
 }
 
-t[#t+1] = LoadActor("ITG1")..{Condition=ThemePrefs.Get("ITG1")};
+
 
 return t;

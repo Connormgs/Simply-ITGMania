@@ -206,9 +206,10 @@ for player in ivalues(Players) do
 	-- stepartist, difficulty text, difficulty meter, machine/personal HighScore text
 	t[#t+1] = LoadActor("./PerPlayer/Upper/default.lua", player)
 	t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
+	t[#t+1] = LoadActor("./PerPlayer/ItlFile.lua", player)
 
 end
 t[#t+1] = LoadActor("./Panes/default.lua", NumPanes)
-
+t[#t+1] = LoadActor("./Shared/AutoSubmitScore.lua")
 collectgarbage()
 return t
