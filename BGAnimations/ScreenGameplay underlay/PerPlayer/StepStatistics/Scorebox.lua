@@ -343,7 +343,7 @@ for i=1,NumEntries do
 			Name="Rank"..i,
 			Text="",
 			InitCommand=function(self)
-				self:diffuse(Color.White):xy(-width/2 + 27, y):maxwidth(30):horizalign(right):zoom(zoom)
+				self:diffuse(Color.White):xy(-width/2 + 27, y):maxwidth(30):horizalign(right):zoom(.7)
 			end,
 			LoopScoreboxCommand=function(self)
 				self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
@@ -366,7 +366,7 @@ for i=1,NumEntries do
 		Name="Name"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(zoom)
+			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(.7)
 		end,
 		LoopScoreboxCommand=function(self)
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
@@ -388,7 +388,7 @@ for i=1,NumEntries do
 		Name="Score"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 160, y):horizalign(right):zoom(zoom)
+			self:diffuse(Color.White):xy(-width/1.35 + 199, y):horizalign(right):zoom(0.6)
 		end,
 		LoopScoreboxCommand=function(self)
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
