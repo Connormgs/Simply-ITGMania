@@ -39,15 +39,6 @@ function PlayerColor( pn, decorative )
 	return Color.White
 end
 
-function DifficultyColor( difficulty, decorative )
-	if (difficulty == nil or difficulty == "Difficulty_Edit") then return color("#B4B7BA") end
-
-	-- use the reverse lookup functionality available to all SM enums
-	-- to map a difficulty string to a number
-	-- SM's enums are 0 indexed, so Beginner is 0, Challenge is 4, and Edit is 5
-	local clr = SL.Global.ActiveColorIndex + (Difficulty:Reverse()[difficulty] - 4)
-	return GetHexColor(clr, decorative)
-end
 
 function LightenColor(c)
 	return { c[1]*1.25, c[2]*1.25, c[3]*1.25, c[4] }
