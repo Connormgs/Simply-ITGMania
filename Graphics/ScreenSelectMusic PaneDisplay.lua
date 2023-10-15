@@ -91,7 +91,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 			{"Rolls", function() return StepsOrCourse() and RadarValue(args, 11) or 0 end, {1,10,35,75} },
 			xpos = {-40,54},
 		},
-		DiffPlacement = args == PLAYER_1 and 160 or -102
+		DiffPlacement = args == PLAYER_1 and 160 or -160
 	}
 	
 	for ind,content in ipairs(ObtainData) do
@@ -101,8 +101,8 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				Text=val[1],
 				InitCommand=function(self)
 					self:zoom(0.5):xy(
-						ObtainData[ind].xpos[1] + (args == PLAYER_2 and 55 or 0) - 54
-						,-24+14*(vind-1)):halign(0)
+						ObtainData[ind].xpos[1] + (args == PLAYER_2 and 45 or 0) - 54
+						,-34+14*(vind-1)):halign(0)
 				end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)
 					if GAMESTATE:GetCurrentSteps(args) then
@@ -120,8 +120,8 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				Text=val[2],
 				InitCommand=function(self)
 					self:zoom(0.5):xy(
-						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 55 or 0) - 75
-						,-24+14*(vind-1)):halign(1)
+						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 45 or 0) - 73
+						,-33+14*(vind-1)):halign(1)
 				end;
 				CurrentSongChangedMessageCommand=function(s) s:diffuse(Color.White):settext("") end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)

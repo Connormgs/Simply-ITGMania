@@ -12,10 +12,11 @@ local width = IsUsingWideScreen() and 286 or 276
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:visible( GAMESTATE:IsHumanPlayer(player) )
-		self:xy(_screen.cx-182, _screen.cy+23)
+		self:xy(_screen.cx-182, _screen.cy+18)
 
 		if player == PLAYER_2 then
-			self:addy(height+24)
+			self:addy(height+110)
+			self:addx(430)
 		end
 
 		if IsUsingWideScreen() then
@@ -100,7 +101,7 @@ local af2 = af[#af]
 af2[#af2+1] = NPS_Histogram(player, width, height)..{
 	Name="DensityGraph",
 	OnCommand=function(self)
-		self:addx(290):addy(135)
+		self:addx(9999):addy(135)
 		self:rotationz(-5)
 	end,
 	HideCommand=function(self)

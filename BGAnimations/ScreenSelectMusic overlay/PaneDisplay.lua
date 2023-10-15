@@ -397,6 +397,7 @@ for player in ivalues(PlayerNumber) do
 			self:zoom(text_zoom):diffuse(Color.Black):maxwidth(30)
 			self:x(pos.col[3]-50*text_zoom)
 			self:y(pos.row[1])
+			
 		end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.

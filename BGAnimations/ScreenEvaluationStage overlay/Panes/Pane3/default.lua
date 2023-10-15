@@ -20,4 +20,3 @@ return Def.ActorFrame{
 	LoadActor("./JudgmentLabels.lua", player),
 	LoadActor("./Arrows.lua", player)
 }
-

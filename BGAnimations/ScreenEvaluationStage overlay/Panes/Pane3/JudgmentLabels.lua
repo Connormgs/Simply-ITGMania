@@ -77,23 +77,21 @@ for i=1, #TapNoteScores.Types do
 		local window = TapNoteScores.Types[i]
 		local label = TapNoteScores.Names[i]
 
-		t[#t+1] = LoadFont("_eurostile normal")..{
+		t[#t+1] = LoadFont("Common Normal")..{
 			Text=label:upper(),
 			InitCommand=function(self)
 				self:zoom(0.8):horizalign(right):maxwidth(65/self:GetZoom())
-					:x( (player == PLAYER_1 and -173) or -28 )
+					:x( (player == PLAYER_1 and -130) or -28 )
 					:y( i * row_height )
 					:diffuse( Colors[i] )
 
 				if i == #TapNoteScores.Types then miss_bmt = self end
 			end
 		}
-
-
 	end
 end
 
-t[#t+1] = LoadFont("_eurostile normal")..{
+t[#t+1] = LoadFont("Common Normal")..{
 	Text=ScreenString("Held"),
 	InitCommand=function(self)
 		self:y(140):zoom(0.6):halign(1)
