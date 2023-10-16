@@ -246,21 +246,7 @@ t[#t+1] = Def.ActorFrame{
 		ShowPressStartForOptionsCommand=function(self)
 			self:diffusealpha(1):zoomx(0.1):zoomy(3):bounceend(0.3):zoom(0.9)
 		end,
-		Def.BitmapText{
-			Condition=ThemePrefs.Get("ITG1"),
-			Font="_big blue glow",
-			Text=THEME:GetString("ScreenSelectMusic","OptionsMessage"),
-			ShowPressStartForOptionsCommand=function(self)
-				self:sleep(1.5):linear(0.3):cropleft(1.3)
-			end,
-			ShowEnteringOptionsCommand=function(self)
-				self:settext( THEME:GetString("ScreenSelectMusic","EnteringOptions") )
-				self:stoptweening():sleep(0.6):linear(0.3):cropleft(1.3)
-			end,
-			HidePressStartForOptionsCommandCommand=function(self)
-				self:linear(0.3):cropleft(1.3)
-			end
-		}
+		
 	}
 }
 

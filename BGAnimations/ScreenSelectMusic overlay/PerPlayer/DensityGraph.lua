@@ -123,9 +123,9 @@ af2[#af2+1] = LoadFont("_eurostile normal")..{
 	Name="NPS",
 	Text="Peak NPS: ",
 	InitCommand=function(self)
-		self:horizalign(left):zoom(0.5)
+		self:horizalign(left):zoom(0.47)
 		if player == PLAYER_1 then
-			self:xy(490,-70)
+			self:xy(60,157)
 		else
 			self:addx(-136):addy(-41)
 		end
@@ -178,7 +178,7 @@ af2[#af2+1] = Def.ActorFrame{
 		InitCommand=function(self)
 			local textZoom = 0.5
 			self:maxwidth(200):zoom(textZoom)
-			self:xy(440,-75)
+			self:xy(10,132)
 			
 		end,
 		HideCommand=function(self)

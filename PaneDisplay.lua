@@ -513,8 +513,8 @@ for player in ivalues(PlayerNumber) do
 		Text="Loading ... ",
 		InitCommand=function(self)
 			self:zoom(text_zoom):diffuse(Color.Black)
-			self:x(pos.col[3]-15)
-			self:y(pos.row[3])
+			self:x(0)
+			self:y(0)
 			self:visible(false)
 		end,
 		SetCommand=function(self)

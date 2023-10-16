@@ -79,9 +79,9 @@ if GAMESTATE:IsPlayerEnabled(args) then
 		{
 			{"Steps", function() return StepsOrCourse() and RadarValue(args, 5) or 0 end, {1,200,350,550} },
 			{"Holds", function() return StepsOrCourse() and RadarValue(args, 8) or 9 end, {1,15,30,50} },
-			{function() return PercentScore(args)[2] end, function() return PercentScore(args)[1] end },
-			{"Card", function() return PercentScore(args,true)[1] end },
-			xpos = {-125,-25},
+
+		
+			xpos = {-125,-20},
 		},
 		--RIGHT SIDE
 		{
@@ -89,7 +89,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 			{"Mines", function() return StepsOrCourse() and RadarValue(args, 9) or 0 end },
 			{"Hands", function() return StepsOrCourse() and RadarValue(args, 10) or 0 end, {1,10,35,75} },
 			{"Rolls", function() return StepsOrCourse() and RadarValue(args, 11) or 0 end, {1,10,35,75} },
-			xpos = {-40,54},
+			xpos = {-40,64},
 		},
 		DiffPlacement = args == PLAYER_1 and 160 or -160
 	}
@@ -119,9 +119,9 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				Font="_eurostile normal",
 				Text=val[2],
 				InitCommand=function(self)
-					self:zoom(0.5):xy(
-						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 45 or 0) - 73
-						,-33+14*(vind-1)):halign(1)
+					self:zoom(0.48):xy(
+						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 45 or 0) - 100
+						,-33+14*(vind-1))horizalign(right)
 				end;
 				CurrentSongChangedMessageCommand=function(s) s:diffuse(Color.White):settext("") end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)

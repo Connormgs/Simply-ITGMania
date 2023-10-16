@@ -40,18 +40,18 @@ return Def.ActorFrame{
 				self:x( _screen.cx - (IsUsingWideScreen() and 356 or 346))
 				self:y(_screen.cy + 32)
 			else
-				self:x( _screen.cx - (IsUsingWideScreen() and 356 or 346))
-				self:y(_screen.cy + 12)
+				self:x( _screen.cx - (IsUsingWideScreen() and -180 or 346))
+				self:y(_screen.cy + -20)
 			end
 
 		elseif player == PLAYER_2 then
 
 			if GAMESTATE:IsCourseMode() then
 				self:x( _screen.cx - 210)
-				self:y(_screen.cy + 85)
+				self:y(_screen.cy + 75)
 			else
-				self:x( _screen.cx - 244)
-				self:y(_screen.cy + 40)
+				self:x( _screen.cx + 180)
+				self:y(_screen.cy - 60)
 			end
 		end
 
@@ -76,17 +76,26 @@ return Def.ActorFrame{
 		end
 	},
 
-	--STEPS label
 
-	--stepartist text
+	--STEPS label
 	LoadFont("Common Normal")..{
+		Text=GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("Chart"),
 		InitCommand=function(self)
-			self:diffuse(color("#1e282f")):horizalign(left):zoom(0.8)
+			self:diffusealpha(0.5):horizalign(left):x(30):zoom(0.5):shadowlength(2)
+		end,
+		UpdateTrailTextMessageCommand=function(self, params)
+			self:settext( THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index) )
+		end
+	},
+	--stepartist text
+	LoadFont("_eurostile normal")..{
+		InitCommand=function(self)
+			self:diffuse(color("#0000ff")):horizalign(left):zoom(0.6)
 
 			if GAMESTATE:IsCourseMode() then
 				self:x(60):maxwidth(138)
 			else
-				self:x(75):maxwidth(124):diffuse(color("#000000"))
+				self:x(75):maxwidth(124):diffuse(color("#ffffff"))
 			end
 		end,
 		ResetCommand=function(self)
