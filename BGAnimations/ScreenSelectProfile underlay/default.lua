@@ -253,9 +253,7 @@ local t = Def.ActorFrame {
 			end
 		end
 	},
-	LoadActor( THEME:GetPathS("", "what.ogg") )..{
-		WhatMessageCommand=function(self) self:play() end
-	}
+	
 }
 
 -- get table of player avatar paths
