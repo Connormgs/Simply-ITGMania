@@ -127,7 +127,7 @@ af2[#af2+1] = LoadFont("_eurostile normal")..{
 		if player == PLAYER_1 then
 			self:xy(60,157)
 		else
-			self:addx(-136):addy(-41)
+			self:addx(50):addy(-17)
 		end
 		-- We want black text in Rainbow mode except during HolidayCheer(), white otherwise.
 		self:diffuse((ThemePrefs.Get("RainbowMode") and not HolidayCheer()) and {0, 0, 0, 1} or {1, 1, 1, 1})
@@ -179,6 +179,7 @@ af2[#af2+1] = Def.ActorFrame{
 			local textZoom = 0.5
 			self:maxwidth(200):zoom(textZoom)
 			self:xy(10,132)
+			if player == PLAYER_2 then self:xy(-5,-40) end
 			
 		end,
 		HideCommand=function(self)

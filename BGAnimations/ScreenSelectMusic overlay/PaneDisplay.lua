@@ -354,6 +354,7 @@ for player in ivalues(PlayerNumber) do
 			self:zoom(0.49):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
 			self:y(-9)
+			if player == PLAYER_2 then self:xy(-125,-9) end
 		end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
@@ -379,6 +380,7 @@ for player in ivalues(PlayerNumber) do
 			self:zoom(0.48):diffuse(Color.White):horizalign(right)
 			self:x(-95)
 			self:y(-9)
+			if player == PLAYER_2 then self:xy(-53,-9) end
 		end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
@@ -407,6 +409,7 @@ for player in ivalues(PlayerNumber) do
 			self:zoom(0.50):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
 			self:y(12)
+			if player == PLAYER_2 then self:x(-125) end
 		end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
@@ -431,6 +434,7 @@ for player in ivalues(PlayerNumber) do
 			self:zoom(0.48):diffuse(Color.White):horizalign(right)
 			self:x(-95)
 			self:y(12)
+			if player == PLAYER_2 then self:x(-60) end
 		end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
