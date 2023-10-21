@@ -19,8 +19,9 @@ local permitted_profile_settings = {
 	NoteSkin         = "string",
 	JudgmentGraphic  = "string",
 	ComboFont        = "string",
+	HeldGraphic      = "string",
 	HoldJudgment     = "string",
-	BackgroundFilter = "string",
+	BackgroundFilter = "number",
 	NoteFieldOffsetX = "number",
 	NoteFieldOffsetY = "number",
 	VisualDelay      = "string",
@@ -39,34 +40,83 @@ local permitted_profile_settings = {
 
 	LifeMeterType        = "string",
 	DataVisualizations   = "string",
-	TargetScore          = "number",
+	StepStatsExtra       = "string",
+	TargetScore          = "string",
+	TargetScoreNumber    = "number",
 	ActionOnMissedTarget = "string",
 
 	MeasureCounter       = "string",
 	MeasureCounterLeft   = "boolean",
 	MeasureCounterUp     = "boolean",
-	HideLookahead        = "boolean",
+	MeasureCounterVert   = "boolean",
+	BrokenRun            = "boolean",
+	RunTimer             = "boolean",
+	MeasureCounterLookahead = "number",
+	
+	RainbowMax           = "boolean",
+	ResponsiveColors     = "boolean",
+	ShowLifePercent      = "boolean",
+	
+	MiniIndicator		 = "string",
+	MiniIndicatorColor	 = "string",
 
 	ColumnFlashOnMiss    = "boolean",
 	SubtractiveScoring   = "boolean",
 	Pacemaker            = "boolean",
+	TrackEarlyJudgments  = "boolean",
+	TrackRecalc          = "boolean",
 	NPSGraphAtTop        = "boolean",
 	JudgmentTilt         = "boolean",
 	ColumnCues           = "boolean",
-	DisplayScorebox      = "boolean",
+	ColumnCountdown      = "boolean",
+	ShowHeldMiss         = "boolean",
+	TrackFoot            = "boolean",
 
 	ErrorBar             = "string",
 	ErrorBarUp           = "boolean",
 	ErrorBarMultiTick    = "boolean",
-	ErrorBarTrim         = "string",
+	ErrorBarCap    		 = "number",
 
 	ShowFaPlusWindow     = "boolean",
 	ShowEXScore          = "boolean",
 	ShowFaPlusPane       = "boolean",
+	SmallerWhite     = "boolean",
 
 	HideEarlyDecentWayOffJudgments = "boolean",
 	HideEarlyDecentWayOffFlash     = "boolean",
 
+	VisualDelay          = "string",
+	
+	PackBanner           = "boolean",
+	StepInfo             = "boolean",
+	DisplayScorebox      = "boolean",
+	
+	FlashMiss            = "boolean",
+	FlashWayOff          = "boolean",
+	FlashDecent          = "boolean",
+	FlashGreat           = "boolean",
+	FlashExcellent       = "boolean",
+	FlashFantastic       = "boolean",
+	
+	BeatBars			 = "string",
+	TiltMultiplier       = "number",
+	
+	ComboColors			 = "string",
+	ComboMode			 = "string",
+	TimerMode            = "string",
+	
+	JudgmentBack         = "boolean",
+	ErrorMSDisplay       = "boolean",
+
+	GrowCombo			 = "boolean",
+	SpinCombo			 = "boolean",
+	WildCombo			 = "boolean",
+	RainbowComboOptions	 = "string",
+	TiltOptions			 = "string",
+	Waterfall			 = "boolean",
+	FadeFantastic		 = "boolean",
+	NoBar				 = "boolean",
+	
 	----------------------------------
 	-- Profile Settings without OptionRows
 	-- these settings are saved per-profile, but are transparently managed by the theme

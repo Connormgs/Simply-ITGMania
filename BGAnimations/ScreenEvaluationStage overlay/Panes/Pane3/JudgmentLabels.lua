@@ -52,7 +52,7 @@ local t = Def.ActorFrame{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(-120,92)
+		self:xy(-120,92):diffuse(GetCurrentColor(true))
 		if player == PLAYER_2 then self:x(9999) end
 	
 	end,
@@ -61,7 +61,7 @@ t[#t+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(20,92)
+		self:xy(20,92):diffuse(GetCurrentColor(true))
 		if player == PLAYER_1 then self:x(9999) end
 	end,
 }

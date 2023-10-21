@@ -6,15 +6,20 @@ return Def.ActorFrame{
 	OffCommand=function(s) s:linear(0.5):addx(-420) end;
 	CancelMessageCommand=function(s) if GAMESTATE:Env()["WorkoutMode"] then s:linear(0.5):addx(-420) end end;
 
-	Def.Sprite{ Texture="WheelItems/"..style.."WheelSong NormalPart" },
+			LoadActor("WheelItems/"..style.."WheelSong NormalPart")..{
+		 OnCommand=function(self)
+			self:diffuse(GetCurrentColor(true))
+		end
+	},
 
+		
 	Def.ActorFrame{
 		Name="SongContents",
 		SetMessageCommand=function(self,params)
 			self:shadowlength(1)
 			local song = params.Song;
 			if song then
-				self:GetChild("Title"):diffuse( params.Color )
+				self:GetChild("Title"):diffuse(Color.White )
 				:settext(song:GetDisplayMainTitle())
 				self:GetChild("SubTitle"):diffuse( params.Color )
 				:settext(song:GetDisplaySubTitle()):zoom(0)
@@ -34,6 +39,9 @@ return Def.ActorFrame{
 				self:x(95):maxwidth(300):halign(1):shadowlength(1)
 			end
 		},
+	
+	
+	
 		Def.BitmapText{
 			Font="_eurostile normal",
 			Name="SubTitle",
@@ -41,5 +49,7 @@ return Def.ActorFrame{
 				self:xy(95,8):maxwidth(460):halign(1):shadowlength(1)
 			end
 		}
+	
 	}
+	
 }

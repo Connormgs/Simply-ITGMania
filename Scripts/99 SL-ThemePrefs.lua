@@ -16,15 +16,15 @@ end
 
 SL_CustomPrefs.Get = function()
 	 -- emojis are our lingua franca for the 21st century
-	local visualStyleChoices = { "❤", "↖", "🐻", "🦆", "😺", "🎃", "🌈", "⭐", "🤔" }
-	local visualStyleValues  = { "Hearts", "Arrows", "Bears", "Ducks", "Cats", "Spooky", "Gay", "Stars", "Thonk" }
+	local visualStyleChoices = { "❤", "↖", "🐻", "🦆", "😺", "🎃", "🌈", "⭐", "🤔", "🌀" }
+	local visualStyleValues  = { "Hearts", "Arrows", "Bears", "Ducks", "Cats", "Spooky", "Gay", "Stars", "Thonk", "Technique"}
 
 	local year = Year()
 	local month = MonthOfYear()+1
 	local day = DayOfMonth()
 	local today = year * 10000 + month * 100 + day
 
-	if today >= 20230620 then
+	if today >= 20230619 then
 		visualStyleChoices[#visualStyleChoices+1] = "😈"
 		visualStyleValues[#visualStyleValues+1] = "SRPG7"
 	else
@@ -261,6 +261,8 @@ SL_CustomPrefs.Get = function()
 			Values  = { true, false }
 		},
 
+
+
 		AutoDownloadUnlocks = {
 			Default = false,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
@@ -272,6 +274,56 @@ SL_CustomPrefs.Get = function()
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values  = { true, false }
 		},
+
+		-- - - - - - - - - - - - - - - - - - - -
+		-- new Zmod stuff
+		-- - - - - - - - - - - - - - - - - - - -
+		TournamentMode = {
+			Default = "Off",
+			Choices = { THEME:GetString("ThemePrefs","Off"), THEME:GetString("ThemePrefs", "EX"), THEME:GetString("ThemePrefs", "ITG") },
+			Values  = { "Off", "EX", "ITG" }
+		},
+
+		EnableBoogieStats = {
+			Default = false,
+			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values  = { true, false }
+		},
+
+		ThemeFont = {
+			Default = "Common",
+			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega") },
+			Values = { "Common", "Mega" }
+		},
+		SampleMusicLoop =
+		{
+			Default = true,
+			Choices = { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values  = { true, false }
+		},
+		MusicWheelGS =
+		{
+			Default = "Scorebox",
+			Choices = { "Scorebox", "Pane", "Off" }
+		},
+		FolderStats =
+		{
+			Default = true,
+			Choices = { THEME:GetString("ThemePrefs", "Show"), THEME:GetString("ThemePrefs", "Hide") },
+			Values  = { true, false }
+		},
+		ITGDiffColors =
+		{
+			Default = false,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values  = { true, false }
+		},
+		AnimateBanners =
+		{
+			Default = true,
+			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
+			Values  = { true, false }
+		}
 	}
 end
 

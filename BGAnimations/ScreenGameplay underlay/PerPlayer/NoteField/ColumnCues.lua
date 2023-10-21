@@ -32,7 +32,7 @@ else
 end
 
 local Update = function(self, delta)
-	if curIndex <= #columnCues then
+	if columnCues ~= nil and curIndex <= #columnCues then
 		local curTime = playerState:GetSongPosition():GetMusicSecondsVisible()
 		local columnCue = columnCues[curIndex]
 		local startTime = columnCue.startTime
@@ -153,8 +153,7 @@ for columnIndex=1,numColumns do
 					:sleep(flashDuration - 2*fadeTime)
 					:accelerate(fadeTime)
 					:diffuse(0,0,0,0)
-
-				if flashDuration >= 5 then
+				if flashDuration >= 5 and mods.ColumnCountdown then
 					breakTime = flashDuration
 					if text ~= nil then
 						text:stoptweening()

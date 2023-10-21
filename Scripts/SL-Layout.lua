@@ -42,23 +42,24 @@ function GetGameplayLayout(player, reverse)
         if mods.MeasureCounterUp then
             layout.MeasureCounter = { y = topY - 8 }
             topY = topY - 20
+			if mods.BrokenRun then
+				layout.MeasureCounter.y = layout.MeasureCounter.y - 16
+			end
         else
             layout.MeasureCounter = { y = bottomY + 8 }
             bottomY = bottomY + 21
         end
     end
 
-    if mods.SubtractiveScoring then
-        if mods.MeasureCounter ~= "None" and mods.MeasureCounterUp and mods.HideLookahead then
-            layout.SubtractiveScoring = { y = layout.MeasureCounter.y }
-        elseif mods.MeasureCounter ~= "None" and  mods.MeasureCounterUp then
-            layout.SubtractiveScoring = { y = bottomY + 8}
-            bottomY = bottomY + 16
-        else
-            layout.SubtractiveScoring = { y = topY - 8 }
-            topY = topY - 16
-        end
-    end
+	if mods.MeasureCounter ~= "None" and mods.MeasureCounterUp and mods.HideLookahead then
+		layout.SubtractiveScoring = { y = layout.MeasureCounter.y }
+	elseif mods.MeasureCounter ~= "None" and  mods.MeasureCounterUp then
+		layout.SubtractiveScoring = { y = bottomY + 8}
+		bottomY = bottomY + 16
+	else
+		layout.SubtractiveScoring = { y = topY - 8 }
+		topY = topY - 16
+	end
 
     -- Move the combo counter out of the way if it overlaps with any gameplay
     -- element.

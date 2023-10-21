@@ -55,7 +55,7 @@ local t = Def.ActorFrame{
 	Texture=THEME:GetPathG("","base4.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(-120,80)
+		self:xy(-120,80):diffuse(GetCurrentColor(true))
 		if player == PLAYER_2 then self:x(9999) end
 	end,
 }
@@ -64,7 +64,7 @@ local t = Def.ActorFrame{
 	Texture=THEME:GetPathG("","base4.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(120,80)
+		self:xy(120,80):diffuse(GetCurrentColor(true))
 		if player == PLAYER_1 then self:x(9999) end
 	end,
 }

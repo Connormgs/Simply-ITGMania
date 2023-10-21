@@ -22,7 +22,7 @@ return Def.ActorFrame{
 			self:Center():addy(18)
 		end,
 		OnCommand=function(self)
-			self:x(-SCREEN_WIDTH):decelerate(0.3):x(SCREEN_CENTER_X)
+			self:x(-SCREEN_WIDTH):decelerate(0.3):x(SCREEN_CENTER_X):diffuse(GetCurrentColor(true))
 		end,
 		OffCommand=function(self)
 			self:accelerate(0.3):addx(SCREEN_WIDTH)

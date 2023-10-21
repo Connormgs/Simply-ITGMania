@@ -1,7 +1,7 @@
 local style = ThemePrefs.Get("ITG1") and "ITG1/" or ""
 return Def.ActorFrame{
 	OnCommand=function(self)
-		self:ztest(1):addx(-420):sleep(0.35):linear(0.5):addx(420)
+		self:ztest(1):addx(-420):sleep(0.35):linear(0.5):addx(420):diffuse(GetCurrentColor(true))
 	end;
 	OffCommand=function(s) s:linear(0.5):addx(-420) end;
 	CancelMessageCommand=function(s) if GAMESTATE:Env()["WorkoutMode"] then s:linear(0.5):addx(-420) end end;
@@ -20,7 +20,7 @@ return Def.ActorFrame{
 			for pn in ivalues(PlayerNumber) do
 				if Group == PROFILEMAN:GetProfile(pn):GetDisplayName() then
 					self:settext(Group.."'s Songs")
-					self:diffuse(Color.Orange)
+					
 				end
 			end
 		end

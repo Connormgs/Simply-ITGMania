@@ -22,6 +22,7 @@ local num_styles = 3
 local GrooveStatsBlue = color("#007b85")
 local RpgYellow = color("1,0.972,0.792,1")
 local ItlPink = color("1,0.2,0.406,1")
+local BoogieStatsPurple = color("#8000ff")
 
 local style_color = {
 	[0] = GrooveStatsBlue,
@@ -38,6 +39,12 @@ local transition_seconds = 1
 local all_data = {}
 
 local ResetAllData = function()
+	SL[pn].Rival = {}
+	SL[pn].Rival.Score = 0
+	SL[pn].Rival.EXScore = 0
+	SL[pn].Rival.WRScore = 0
+	SL[pn].Rival.WREXScore = 0
+	
 	for i=1,num_styles do
 		local data = {
 			["has_data"]=false,
@@ -76,6 +83,28 @@ local SetScoreData = function(data_idx, score_idx, rank, name, score, isSelf, is
 	score_data.isSelf = isSelf
 	score_data.isRival = isRival
 	score_data.isFail = isFail
+	
+	if not isFail and (isRival or isSelf) then
+		if data_idx == 3 then
+			if tonumber(score) > SL[pn].Rival.EXScore then
+				SL[pn].Rival.EXScore = tonumber(score)
+			end
+		else
+			if tonumber(score) > SL[pn].Rival.Score then
+				SL[pn].Rival.Score = tonumber(score)
+			end
+		end
+	end
+	
+	if score_data.rank == 1 then
+		if data_idx == 3 then
+			SL[pn].Rival.WREXScore = tonumber(score)
+		else
+			if tonumber(score) > SL[pn].Rival.WRScore then
+				SL[pn].Rival.WRScore = tonumber(score)
+			end
+		end
+	end
 end
 
 local LeaderboardRequestProcessor = function(res, master)
@@ -89,7 +118,7 @@ local LeaderboardRequestProcessor = function(res, master)
 		elseif error or (res.statusCode ~= nil and res.statusCode ~= 200) then
 			text = "Failed to Load 😞"
 		end
-		SetScoreData(1, 1, "", text, "", false, false, false)
+		SetScoreData(1, 1, "", text, "", false, false, true)
 		master:queuecommand("CheckScorebox")
 		return
 	end
@@ -97,17 +126,30 @@ local LeaderboardRequestProcessor = function(res, master)
 	local playerStr = "player"..n
 	local data = JsonDecode(res.body)
 
+	-- BoogieStats integration
+	-- Find out whether this chart is ranked on GrooveStats. 
+	-- If it is unranked, alter groovestats logo and the box border color to the BoogieStats theme
+	local headers = res.headers
+	local boogie = false
+	local boogie_ex = false
+	if headers["bs-leaderboard-player-" .. n] == "BS" then
+		boogie = true
+	elseif headers["bs-leaderboard-player-" .. n] == "BS-EX" then
+		boogie_ex = true
+	end
+	local gsBox = SCREENMAN:GetTopScreen():GetChild("Underlay"):GetChild("StepStatsPane" .. pn):GetChild("BannerAndData"):GetChild("ScoreBox" .. pn)
+	if boogie then
+		style_color[0] = BoogieStatsPurple
+		gsBox:queuecommand("BoogieStats")
+	elseif boogie_ex then
+		style_color[0] = BoogieStatsPurple
+		gsBox:queuecommand("BoogieStatsEX")
+	end
+
 	-- First check to see if the leaderboard even exists.
 	if data and data[playerStr] then
 		-- These will get overwritten if we have any entries in the leaderboard below.
-		if data[playerStr]["isRanked"] then
-			SetScoreData(1, 1, "", "No Scores", "", false, false, false)
-		else
-			if (not (data[playerStr]["rpg"] and data[playerStr]["rpg"]["rpgLeaderboard"]) and
-					not (data[playerStr]["itl"] and data[playerStr]["itl"]["itlLeaderboard"])) then
-				SetScoreData(1, 1, "", "Chart Not Ranked", "", false, false, false)
-			end
-		end
+		SetScoreData(1, 1, "", "No Scores", "", false, false, false)
 
 		if data[playerStr]["gsLeaderboard"] then
 			local entryCount = 0
@@ -120,6 +162,18 @@ local LeaderboardRequestProcessor = function(res, master)
 								entry["isSelf"],
 								entry["isRival"],
 								entry["isFail"])
+			end
+			entryCount = entryCount + 1
+			if entryCount > 1 then
+				for i=entryCount,5,1 do
+					SetScoreData(1, i,
+									"",
+									"",
+									"",
+									false,
+									false,
+									false)
+				end
 			end
 		end
 
@@ -139,6 +193,16 @@ local LeaderboardRequestProcessor = function(res, master)
 									entry["isFail"]
 								)
 				end
+				entryCount = entryCount + 1
+				for i=entryCount,5,1 do
+					SetScoreData(2, i,
+									"",
+									"",
+									"",
+									false,
+									false,
+									false)
+				end
 			end
 		end
 
@@ -157,6 +221,16 @@ local LeaderboardRequestProcessor = function(res, master)
 									entry["isRival"],
 									entry["isFail"]
 								)
+				end
+				numEntries = numEntries + 1
+				for i=numEntries,5,1 do
+					SetScoreData(3, i,
+									"",
+									"",
+									"",
+									false,
+									false,
+									false)
 				end
 			end
 		end
@@ -240,6 +314,20 @@ local af = Def.ActorFrame{
 			-- Should be fine though.
 			if sendRequest then
 				self:GetParent():GetChild("Name1"):settext("Loading...")
+				self:GetParent():GetChild("Name2"):settext("")
+				self:GetParent():GetChild("Name3"):settext("")
+				self:GetParent():GetChild("Name4"):settext("")
+				self:GetParent():GetChild("Name5"):settext("")
+				self:GetParent():GetChild("Score1"):settext("")
+				self:GetParent():GetChild("Score2"):settext("")
+				self:GetParent():GetChild("Score3"):settext("")
+				self:GetParent():GetChild("Score4"):settext("")
+				self:GetParent():GetChild("Score5"):settext("")
+				self:GetParent():GetChild("Rank1"):diffusealpha(0)
+				self:GetParent():GetChild("Rank2"):settext("")
+				self:GetParent():GetChild("Rank3"):settext("")
+				self:GetParent():GetChild("Rank4"):settext("")
+				self:GetParent():GetChild("Rank5"):settext("")
 				self:playcommand("MakeGrooveStatsRequest", {
 					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
 					method="GET",
@@ -276,6 +364,12 @@ local af = Def.ActorFrame{
 		InitCommand=function(self)
 			self:zoom(0.8):diffusealpha(0.5)
 		end,
+		BoogieStatsCommand=function(self)
+			self:Load(THEME:GetPathG("", "BoogieStats.png"))
+		end,
+		BoogieStatsEXCommand=function(self)
+			self:Load(THEME:GetPathG("", "BoogieStatsEX.png"))
+		end,
 		LoopScoreboxCommand=function(self)
 			if cur_style == 0 then
 				self:sleep(transition_seconds/2):linear(transition_seconds/2):diffusealpha(0.5)
@@ -289,7 +383,7 @@ local af = Def.ActorFrame{
 		Texture=THEME:GetPathG("", "_VisualStyles/SRPG7/logo_main (doubleres).png"),
 		Name="SRPG7Logo",
 		InitCommand=function(self)
-			self:diffusealpha(0.4):zoom(0.18):diffusealpha(0)
+			self:diffusealpha(0.4):zoom(0.03):diffusealpha(0)
 		end,
 		LoopScoreboxCommand=function(self)
 			if cur_style == 1 then
@@ -343,7 +437,7 @@ for i=1,NumEntries do
 			Name="Rank"..i,
 			Text="",
 			InitCommand=function(self)
-				self:diffuse(Color.White):xy(-width/2 + 27, y):maxwidth(30):horizalign(right):zoom(.7)
+				self:diffuse(Color.White):xy(-width/2 + 27, y):maxwidth(30):horizalign(right):zoom(zoom)
 			end,
 			LoopScoreboxCommand=function(self)
 				self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
@@ -366,7 +460,7 @@ for i=1,NumEntries do
 		Name="Name"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(.7)
+			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(zoom)
 		end,
 		LoopScoreboxCommand=function(self)
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
@@ -388,7 +482,7 @@ for i=1,NumEntries do
 		Name="Score"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/1.35 + 199, y):horizalign(right):zoom(0.6)
+			self:diffuse(Color.White):xy(-width/2 + 160, y):horizalign(right):zoom(zoom)
 		end,
 		LoopScoreboxCommand=function(self)
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")

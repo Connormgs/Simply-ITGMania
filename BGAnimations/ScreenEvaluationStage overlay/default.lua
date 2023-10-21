@@ -159,7 +159,7 @@ t[#t+1] = Def.ActorFrame{
 		Condition=not ThemePrefs.Get("ITG1"),
 		InitCommand=function(self) self:xy(SCREEN_CENTER_X-1,SCREEN_CENTER_Y-126) end,
 		OnCommand=function(self)
-			self:y(SCREEN_TOP-100):sleep(3):decelerate(0.3):y(SCREEN_CENTER_Y-124)
+			self:y(SCREEN_TOP-100):sleep(3):decelerate(0.3):y(SCREEN_CENTER_Y-124):diffuse(GetCurrentColor(true))
 		end,
 		OffCommand=function(self)
 			self:accelerate(0.3):addy(-SCREEN_CENTER_X)

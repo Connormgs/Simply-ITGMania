@@ -84,6 +84,7 @@ af[#af+1] = Def.ActorFrame{
 			self:queuecommand("Show")
 		end
 	end,
+	OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 	ShowCommand=function(self)
 		if GAMESTATE:GetCurrentSong() and
 				GAMESTATE:GetCurrentSteps(player) then
@@ -136,6 +137,7 @@ af2[#af2+1] = LoadFont("_eurostile normal")..{
 		self:settext("Peak NPS: ")
 		self:visible(false)
 	end,
+	OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 	RedrawCommand=function(self)
 		if SL[pn].Streams.PeakNPS ~= 0 then
 			self:settext(("Peak NPS: %.1f"):format(SL[pn].Streams.PeakNPS * SL.Global.ActiveModifiers.MusicRate))
@@ -155,6 +157,7 @@ af2[#af2+1] = Def.ActorFrame{
 		self:addy(height/2 - actorHeight/2)
 
 	end,
+	
 	HideCommand=function(self)
 		self:visible(false)
 	end,
@@ -182,6 +185,7 @@ af2[#af2+1] = Def.ActorFrame{
 			if player == PLAYER_2 then self:xy(-5,-40) end
 			
 		end,
+
 		HideCommand=function(self)
 			self:settext("")
 		end,
@@ -266,6 +270,7 @@ for i, row in ipairs(layout) do
 				self:addy((i-1)*rowSpacing)
 				self:zoom(0.5)
 			end,
+			OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 			HideCommand=function(self)
 				if col ~= "Total Stream" then
 					self:settext("0")
@@ -302,6 +307,7 @@ for i, row in ipairs(layout) do
 				self:addy((i-1)*rowSpacing)
 				
 			end,
+			OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 		}
 
 	end

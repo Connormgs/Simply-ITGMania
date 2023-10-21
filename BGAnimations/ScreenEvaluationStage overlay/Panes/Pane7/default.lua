@@ -57,7 +57,7 @@ pane[#pane+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(70,74)
+		self:xy(70,74):diffuse(GetCurrentColor(true))
 		if player == PLAYER_2 then self:x(9999) end
 	end,
 }
@@ -66,7 +66,7 @@ pane[#pane+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(110,74)
+		self:xy(110,74):diffuse(GetCurrentColor(true))
 		if player == PLAYER_1 then self:x(9999) end
 	end,
 }

@@ -72,8 +72,9 @@ t[#t+1] = Def.ActorFrame{
 			CancelMessageCommand=function(self) if GAMESTATE:Env()["WorkoutMode"] then self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end end
 		},
 
-		Def.Sprite{
-			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage",""..StageIndexBySegment()),
+	
+			Def.Sprite{
+			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage","w"..StageIndexBySegment()),
 			Condition=not GAMESTATE:IsCourseMode() and not ThemePrefs.Get("ITG1"),
 			OnCommand=function(self)
 				self:xy(40,34):addx(-SCREEN_WIDTH):sleep(0.2):decelerate(0.6):addx(SCREEN_WIDTH)
@@ -81,7 +82,18 @@ t[#t+1] = Def.ActorFrame{
 			OffCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end,
 			CancelMessageCommand=function(self) if GAMESTATE:Env()["WorkoutMode"] then self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end end
 		},
-
+	Def.Sprite{
+			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage","o"..StageIndexBySegment()),
+			Condition=not GAMESTATE:IsCourseMode() and not ThemePrefs.Get("ITG1"),
+			OnCommand=function(self)
+				self:xy(40,34):addx(-SCREEN_WIDTH):sleep(0.2):decelerate(0.6):addx(SCREEN_WIDTH):diffuse(GetCurrentColor(true))
+			end,
+			OffCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end,
+			CancelMessageCommand=function(self) if GAMESTATE:Env()["WorkoutMode"] then self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end end
+		},
+		
+	
+		
 		LoadActor( THEME:GetPathG("ScreenWithMenuElements","Items/ITG1") )..{
 			Condition=not GAMESTATE:IsCourseMode() and ThemePrefs.Get("ITG1"),
 			OnCommand=function(self)
@@ -251,16 +263,7 @@ t[#t+1] = Def.ActorFrame{
 }
 
 for player in ivalues(PlayerNumber) do
-	t[#t+1] = LoadActor( THEME:GetPathG('ScreenSelectMusic','PaneDisplay'), player )..{
-		Condition=GAMESTATE:IsHumanPlayer(player),
-		OnCommand=function(self)
-			self:x( GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and SCREEN_CENTER_X or (player == PLAYER_1 and SCREEN_CENTER_X-193 or SCREEN_CENTER_X+194) )
-			:y(SCREEN_BOTTOM-95):zoomy(0):sleep(0.5):linear(0.3):zoomy(1)
-		end,
-		OffCommand=function(self) self:linear(0.3):zoomy(0) end,
-		CancelMessageCommand=function(self) if GAMESTATE:Env()["WorkoutMode"] then self:linear(0.3):zoomy(0) end end
-		
-		}
+
 		t[#t+1] = Def.ActorFrame{
 		
 			InitCommand=function(self)
@@ -295,7 +298,16 @@ for player in ivalues(PlayerNumber) do
 	LoadActor("./EscapeFromEventMode.lua"),
 	LoadActor("./SongSearch/default.lua"),
 	}
-	
+		t[#t+1] = LoadActor( THEME:GetPathG('ScreenSelectMusic','PaneDisplay'), player )..{
+		Condition=GAMESTATE:IsHumanPlayer(player),
+		OnCommand=function(self)
+			self:x( GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and SCREEN_CENTER_X or (player == PLAYER_1 and SCREEN_CENTER_X-193 or SCREEN_CENTER_X+194) )
+			:y(SCREEN_BOTTOM-95):zoomy(0):sleep(0.5):linear(0.3):zoomy(1)
+		end,
+		OffCommand=function(self) self:linear(0.3):zoomy(0) end,
+		CancelMessageCommand=function(self) if GAMESTATE:Env()["WorkoutMode"] then self:linear(0.3):zoomy(0) end end
+		
+		}
 end
 
 return t

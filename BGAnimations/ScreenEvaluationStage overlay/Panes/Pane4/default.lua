@@ -107,7 +107,7 @@ end
 	Texture=THEME:GetPathG("","base3.png"),
 	
 	InitCommand=function(self)
-		self:xy(-70,118)
+		self:xy(-70,118):diffuse(GetCurrentColor(true))
 		if player == PLAYER_2 then self:x(9999) end
 	end,
 }
@@ -116,7 +116,7 @@ end
 	Texture=THEME:GetPathG("","base3.png"),
 	
 	InitCommand=function(self)
-		self:xy(-30,118)
+		self:xy(-30,118):diffuse(GetCurrentColor(true))
 		if player == PLAYER_1 then self:x(9999) end
 	end,
 }

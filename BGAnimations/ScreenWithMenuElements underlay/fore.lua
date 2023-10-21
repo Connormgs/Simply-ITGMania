@@ -7,7 +7,7 @@ return Def.ActorFrame{
 	Condition=not ThemePrefs.Get("ITG1"),
 	Texture="streak",
 	InitCommand=function(self)
-		self:x(SCREEN_CENTER_X):zoomtowidth(SCREEN_WIDTH):cropleft(-0.2):cropright(-0.2)
+		self:x(SCREEN_CENTER_X):zoomtowidth(SCREEN_WIDTH):cropleft(-0.2):cropright(-0.2):diffuse(GetCurrentColor(true))
 	end;
 	DoOnCommand=function(self)
 		self:diffusealpha(1):cropright(1.2):cropleft(-0.2):linear(1):cropright(-0.2)

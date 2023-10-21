@@ -66,7 +66,7 @@ end
 local style = ThemePrefs.Get("ITG1") and LoadActor( THEME:GetPathB("","_frame 3x1") , {"pane",250}) or LoadActor( THEME:GetPathG('PaneDisplay','Frame') )
 local t = Def.ActorFrame{
 	style..{
-		OnCommand=function(s) s:y( ThemePrefs.Get("ITG1") and -2 or 0 ) end;
+		OnCommand=function(s) s:y( ThemePrefs.Get("ITG1") and -2 or 0 ):diffuse(GetCurrentColor(true)) end;
 	}
 }
 
@@ -125,7 +125,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				end;
 				CurrentSongChangedMessageCommand=function(s) s:diffuse(Color.White):settext("") end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)
-					s:diffuse(Color.White)
+					
 					if GAMESTATE:GetCurrentSteps(args) and val[2] then
 						s:settext( val[2]() )
 						if val[3] then

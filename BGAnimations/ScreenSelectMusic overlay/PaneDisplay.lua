@@ -9,7 +9,7 @@ local footer_height = 32
 local pane_height = 60
 
 local text_zoom = WideScale(0.8, 0.9)
-
+local IsWide = (GetScreenAspectRatio() > 16/9)
 -- -----------------------------------------------------------------------
 -- Convenience function to return the SongOrCourse and StepsOrTrail for a
 -- for a player.
@@ -226,6 +226,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 		-- Create variables for both players, even if they're not currently active.
 		self.IsParsing = {false, false}
 	end,
+	
 	-- Broadcasted from ./PerPlayer/DensityGraph.lua
 	P1ChartParsingMessageCommand=function(self)	self.IsParsing[1] = true end,
 	P2ChartParsingMessageCommand=function(self)	self.IsParsing[2] = true end,
@@ -250,6 +251,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 					loadingText:visible(true)
 				end
 			end
+			
 			return
 		end
 
@@ -295,7 +297,9 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 					args=params,
 				})
 			end
+			
 		end
+		
 	end
 }
 
@@ -347,15 +351,19 @@ for player in ivalues(PlayerNumber) do
 
 
 
+
+
 	-- Machine/World Record Machine Tag
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
 		Name="MachineHighScoreName",
 		InitCommand=function(self)
 			self:zoom(0.49):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
+			if IsWide then self:x(-141) end
 			self:y(-9)
 			if player == PLAYER_2 then self:xy(-125,-9) end
 		end,
+		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
 			-- If we're connected, we let the ResponseProcessor set the text
@@ -379,9 +387,11 @@ for player in ivalues(PlayerNumber) do
 		InitCommand=function(self)
 			self:zoom(0.48):diffuse(Color.White):horizalign(right)
 			self:x(-95)
+			if IsWide then self:x(-75) end
 			self:y(-9)
 			if player == PLAYER_2 then self:xy(-53,-9) end
 		end,
+		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
 			-- If we're connected, we let the ResponseProcessor set the text
@@ -399,7 +409,9 @@ for player in ivalues(PlayerNumber) do
 			else
 				self:settext("??.??%")
 			end
+			
 		end
+		
 	}
 
 	-- Player Profile/GrooveStats Machine Tag
@@ -408,9 +420,11 @@ for player in ivalues(PlayerNumber) do
 		InitCommand=function(self)
 			self:zoom(0.50):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
-			self:y(12)
+			if IsWide then self:x(-141) end
+			self:y(5)
 			if player == PLAYER_2 then self:x(-125) end
 		end,
+		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
 			-- If we're connected, we let the ResponseProcessor set the text
@@ -433,9 +447,11 @@ for player in ivalues(PlayerNumber) do
 		InitCommand=function(self)
 			self:zoom(0.48):diffuse(Color.White):horizalign(right)
 			self:x(-95)
-			self:y(12)
+			if IsWide then self:x(-75) end
+			self:y(5)
 			if player == PLAYER_2 then self:x(-60) end
 		end,
+		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
 			-- If we're connected, we let the ResponseProcessor set the text
