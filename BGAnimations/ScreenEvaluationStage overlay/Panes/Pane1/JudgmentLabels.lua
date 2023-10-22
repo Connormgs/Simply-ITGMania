@@ -2,7 +2,7 @@ local player, controller = unpack(...)
 
 local pn = ToEnumShortString(player)
 local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
-
+local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 local tns_string = "TapNoteScore" .. (SL.Global.GameMode=="ITG" and "" or SL.Global.GameMode)
 
 local firstToUpper = function(str)
@@ -70,7 +70,12 @@ local t = Def.ActorFrame{
 }
 
 local windows = SL[pn].ActiveModifiers.TimingWindows
-
+local maxCount = 1
+for i=1, #TapNoteScores.Types do
+	local window = TapNoteScores.Types[i]
+	local number = pss:GetTapNoteScores( "TapNoteScore_"..window )
+	if number > maxCount then maxCount = number end
+end
 local itgstylemargin = ThemePrefs.Get("ITG1") and -10 or 0
 local battlegraphloc = ThemePrefs.Get("ITG1") and "ITG1/" or ""
 t[#t+1] = Def.Sprite{
