@@ -75,8 +75,18 @@ t[#t+1] = Def.ActorFrame{
 			self:xy(35,38)
 		end,
 
-		Def.BitmapText{
-		Font=_eurostileColorPick(),
+LoadFont("_eurostile white glow")..{
+		Text=string.upper(THEME:GetString("ScreenEvaluation","HeaderText")),
+			InitCommand=function(self) self:shadowlength(4):x(self:GetWidth()/2):skewx( ThemePrefs.Get("ITG1") and 0 or -0.16):diffuse(GetCurrentColor(true)) end,
+			OnCommand=function(self)
+				self:zoomx(0):zoomy(6):sleep(0.3):bounceend(0.3):zoom(1)
+			end,
+			OffCommand=function(self)
+				self:accelerate(0.2):zoomx(2):zoomy(0):diffusealpha(0)
+				SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start") or THEME:GetPathS("_ITGCommon","start") )
+			end
+		},
+LoadFont("_eurostile normal")..{
 		Text=string.upper(THEME:GetString("ScreenEvaluation","HeaderText")),
 			InitCommand=function(self) self:shadowlength(4):x(self:GetWidth()/2):skewx( ThemePrefs.Get("ITG1") and 0 or -0.16) end,
 			OnCommand=function(self)
@@ -87,9 +97,8 @@ t[#t+1] = Def.ActorFrame{
 				SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start") or THEME:GetPathS("_ITGCommon","start") )
 			end
 		},
-
 		Def.Sprite{
-			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage",""..StageIndexBySegment(true)),
+			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage","w"..StageIndexBySegment()),
 			Condition=not ThemePrefs.Get("ITG1"),
 			OnCommand=function(self)
 				if GAMESTATE:GetCurrentStage() == "Stage_Final" then
@@ -101,7 +110,19 @@ t[#t+1] = Def.ActorFrame{
 				self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0)
 			end
 		},
-	
+	Def.Sprite{
+			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage","o"..StageIndexBySegment()),
+			Condition=not ThemePrefs.Get("ITG1"),
+			OnCommand=function(self)
+				if GAMESTATE:GetCurrentStage() == "Stage_Final" then
+					self:Load( THEME:GetPathG("ScreenWithMenuElements Items/stage","final") )
+				end
+				self:x(30):y(34):addx(-SCREEN_WIDTH):sleep(3):decelerate(0.3):addx(SCREEN_WIDTH):diffuse(GetCurrentColor(true))
+			end,
+			OffCommand=function(self)
+				self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0)
+			end
+		},
 		LoadActor( THEME:GetPathG("ScreenWithMenuElements","Items/ITG1"), true )..{
 			Condition=ThemePrefs.Get("ITG1"),
 			OnCommand=function(self)

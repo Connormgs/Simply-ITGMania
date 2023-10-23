@@ -1,5 +1,5 @@
 local pn = ...
-
+local player = ...
 local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
 local PercentDP = stats:GetPercentDancePoints()
 local percent = FormatPercentScore(PercentDP)
@@ -15,19 +15,18 @@ return Def.ActorFrame{
 		self:y( _screen.cy-40 )
 	end,
 
-	-- dark background quad behind player percent score
-	Def.Quad{
-		InitCommand=function(self)
-			self:diffuse( color("#101519") )
-				:y(-2)
-				:zoomto(70, 28)
-		end
-	},
+
 
 	LoadFont("Wendy/_wendy white")..{
 		Text=percent,
 		Name="Percent",
-		InitCommand=function(self) self:horizalign(right):zoom(0.25):xy( 30, -2) end
+		InitCommand=function(self) self:horizalign(right):zoom(0.25):xy( 30, -2) 
+			if player == PLAYER_1 then
+			self:x(-50)
+		else
+			self:x(-10)
+		end
 		
+		end
 	}
 }

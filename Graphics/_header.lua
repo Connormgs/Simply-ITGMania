@@ -6,7 +6,7 @@ return Def.ActorFrame{
 	Name="Header",
 
 	
-	LoadFont("_eurostile red glow")..{
+	LoadFont("_eurostile normal")..{
 		Name="HeaderText",
 		Text=ScreenString("HeaderText"),
 		InitCommand=function(self) self:diffusealpha(0):horizalign(left):xy(10, 15):zoom( SL_WideScale(0.5,0.6) ) end,

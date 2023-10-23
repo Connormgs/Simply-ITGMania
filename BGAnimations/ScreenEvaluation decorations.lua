@@ -29,19 +29,20 @@ af.InitCommand=function(self)
 end
 
 -- add a BitmapText to this ActorFrame
-af[#af+1] = LoadFont("_eurostile red glow.ini")..{
+af[#af+1] = LoadFont("_eurostile white glow")..{
 	Name="DateTime",
 	InitCommand=function(self)
 		timestamp_bmt = self
 
 		self:x(_screen.cx):horizalign(center)
 		self:zoom(0.6)
+		
 	end,
 	OnCommand=function(self)
 		-- y offset for ScreenEvaluationStage or ScreenEvaluationNonstop
 		-- or anything else that inherits from ScreenEvaluation
-		self:y(_screen.h - 17)
-
+		self:y(_screen.h - 17):diffuse(GetCurrentColor(true))
+	
 		-- use a slightly diffrent y offset for ScreenEvaluationSummary
 		local screen = SCREENMAN:GetTopScreen()
 		if screen then
@@ -50,12 +51,41 @@ af[#af+1] = LoadFont("_eurostile red glow.ini")..{
 			end
 		end
 
-		local textColor = Color.White
-		if ThemePrefs.Get("RainbowMode") and not HolidayCheer() then
-			textColor = Color.Black
+		
+
+		
+		self:playcommand("Refresh")
+	end,
+	RefreshCommand=function(self)
+		self:settext(DateFormat:format(Year(), MonthOfYear()+1, DayOfMonth(), Hour(), Minute()))
+	end
+}
+-- add a BitmapText to this ActorFrame
+af[#af+1] = LoadFont("_eurostile normal")..{
+	Name="DateTime",
+	InitCommand=function(self)
+		timestamp_bmt = self
+
+		self:x(_screen.cx):horizalign(center)
+		self:zoom(0.6)
+		
+	end,
+	OnCommand=function(self)
+		-- y offset for ScreenEvaluationStage or ScreenEvaluationNonstop
+		-- or anything else that inherits from ScreenEvaluation
+		self:y(_screen.h - 17)
+	
+		-- use a slightly diffrent y offset for ScreenEvaluationSummary
+		local screen = SCREENMAN:GetTopScreen()
+		if screen then
+			if screen:GetName() == 'ScreenEvaluationSummary' then
+				self:y(_screen.h - 20)
+			end
 		end
 
-		self:diffuse(textColor)
+		
+
+		
 		self:playcommand("Refresh")
 	end,
 	RefreshCommand=function(self)

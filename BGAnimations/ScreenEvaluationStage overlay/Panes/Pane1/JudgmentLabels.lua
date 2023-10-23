@@ -64,7 +64,7 @@ local t = Def.ActorFrame{
 	Texture=THEME:GetPathG("","base.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(120,80)
+		self:xy(120,80):diffuse(GetCurrentColor(true)) 
 		if player == PLAYER_1 then self:x(9999) end
 	end,
 }

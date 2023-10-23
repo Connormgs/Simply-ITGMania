@@ -80,8 +80,8 @@ for i=1, #TapNoteScores.Types do
 		t[#t+1] = LoadFont("Common Normal")..{
 			Text=label:upper(),
 			InitCommand=function(self)
-				self:zoom(0.8):horizalign(right):maxwidth(65/self:GetZoom())
-					:x( (player == PLAYER_1 and -130) or -28 )
+				self:zoom(0.5):horizalign(right):maxwidth(65/self:GetZoom())
+					:x( (player == PLAYER_1 and -195) or -55 )
 					:y( i * row_height )
 					:diffuse( Colors[i] )
 
@@ -94,11 +94,11 @@ end
 t[#t+1] = LoadFont("Common Normal")..{
 	Text=ScreenString("Held"),
 	InitCommand=function(self)
-		self:y(140):zoom(0.6):halign(1)
+		self:y(140):zoom(0.3):halign(1)
 			:diffuse( SL.JudgmentColors[SL.Global.GameMode][6] )
 	end,
 	OnCommand=function(self)
-		self:x( miss_bmt:GetX() - miss_bmt:GetWidth()/1.15 )
+		self:x( miss_bmt:GetX() - miss_bmt:GetWidth()/1.15 ):addx(25)
 	end
 }
 
