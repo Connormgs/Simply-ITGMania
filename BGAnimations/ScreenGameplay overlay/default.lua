@@ -266,7 +266,7 @@ t[#t+1] = Def.ActorFrame{
         end;
         
         Stream=Def.Sprite{ Texture=ThemePrefs.Get("ITG1") and "_meter stream" or "meter stream",
-        	InitCommand=function(s) s:diffusealpha(1) end
+        	InitCommand=function(s) s:diffuse(GetCurrentColor(true)):diffusealpha(1) end
         },
         Tip=Def.Sprite{ Texture="tip",
             OnCommand=function(s) s:diffuseshift():effectcolor1(1,1,1,0.6):effectcolor2(1,1,1,1.0) end;

@@ -20,18 +20,24 @@ t[#t+1] = LoadActor("../_song credit display")..{
 t[#t+1] = Def.ActorFrame{
 		Condition=not ThemePrefs.Get("ITG1"),
 		Def.Sprite{
-			Texture=THEME:GetPathG("StageAndCourses/ScreenGameplay","stage ".. ToEnumShortString(GAMESTATE:GetCurrentStage())),
+			Texture=THEME:GetPathG("StageAndCourses/ScreenGameplay","stagew ".. ToEnumShortString(GAMESTATE:GetCurrentStage())),
 			OnCommand=function(self)
 				self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y):cropright(1.3):linear(1):cropright(-0.3)
 			end;
 		},
 
+	
+};
+t[#t+1] = Def.ActorFrame{
+		Condition=not ThemePrefs.Get("ITG1"),
 		Def.Sprite{
-			Texture="_white ScreenGameplay stage ".. ToEnumShortString(GAMESTATE:GetCurrentStage()),
+			Texture=THEME:GetPathG("StageAndCourses/ScreenGameplay","stageo ".. ToEnumShortString(GAMESTATE:GetCurrentStage())),
 			OnCommand=function(self)
-				self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y):zoom(1.05):cropleft(-0.3):cropright(1):faderight(.1):fadeleft(.1):linear(1):cropleft(1):cropright(-0.3)
+				self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y):cropright(1.3):linear(1):cropright(-0.3):diffuse(GetCurrentColor(true)) 
 			end;
 		},
+
+		
 };
 t[#t+1] = LoadActor( "ITG1" )..{
 	Condition=ThemePrefs.Get("ITG1"),
@@ -50,12 +56,7 @@ t[#t+1] = Def.ActorFrame{
 			end;
 		},
 
-		Def.Sprite{
-			Texture="_white ScreenGameplay course song 1",
-			OnCommand=function(self)
-				self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y):zoom(1.05):cropleft(-0.3):cropright(1):faderight(.1):fadeleft(.1):linear(1):cropleft(1):cropright(-0.3)
-			end;
-		},
+	
 
 };
 end
