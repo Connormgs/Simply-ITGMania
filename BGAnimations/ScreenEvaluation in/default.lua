@@ -25,10 +25,14 @@ local stylepick = ThemePrefs.Get("ITG1") and "ITG1/" or ""
 return Def.ActorFrame{
 	LoadActor("../_fade in normal"),
 	Def.ActorFrame{
-
-		LoadActor( stylepick..img.." text")..{
+LoadActor( stylepick..img.." textw")..{
 		OnCommand=function(self)
 			self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y-240+340):cropright(1.3):faderight(0.1):sleep(0.25):linear(0.7):cropright(-0.3):sleep(1.95):linear(0.3):diffuse(0,0,0,0)
+		end;
+		},
+		LoadActor( stylepick..img.." texto")..{
+		OnCommand=function(self)
+			self:diffuse(GetCurrentColor(true)):x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y-240+340):cropright(1.3):faderight(0.1):sleep(0.25):linear(0.7):cropright(-0.3):sleep(1.95):linear(0.3):diffuse(0,0,0,0)
 		end;
 		},
 
