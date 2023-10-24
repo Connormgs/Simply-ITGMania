@@ -240,6 +240,46 @@ return Def.ActorFrame{
 		end;
 		},
 
+		Def.BitmapText{
+		Font="_eurostile normal",
+		OnCommand=function(s)
+			s:halign(0):shadowlength(2):zoom(0.6):xy(-56,-18)
+		end;
+		CurrentSongChangedMessageCommand=function(s)
+			local song = GAMESTATE:GetCurrentSong()
+			local val = ""
+			if song then
+				local bpms = song:GetDisplayBpms()
+				if bpms[1] == bpms[2] then
+					val = string.format("%i",bpms[1])
+				else
+					val = string.format("%i-%i",bpms[1],bpms[2])
+				end
+			end
+			s:settext(val)
+		end;
+		CurrentCourseChangedMessageCommand=function(s)
+			local course = GAMESTATE:GetCurrentCourse()
+			local val = {0,0}
+			if course then
+				local entries = course:GetCourseEntries()
+				for v in ivalues(entries) do
+					if v and v:GetSong() then
+						local bpms = v:GetSong():GetDisplayBpms()
+						for i=1,2 do
+							if bpms[i] > val[i] then val[i] = bpms[i] end
+						end
+					end
+				end
+				if val[1] == val[2] then
+					val = string.format("%i",val[1])
+				else
+					val = string.format("%i-%i",val[1],val[2])
+				end
+				s:settext(val == "0" and "???" or val)
+			end
+		end;
+		},
 
 		-- need to figure out how to get pop
 		Def.BitmapText{ Text="LENGTH", Font="_eurostile normal",

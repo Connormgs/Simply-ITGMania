@@ -83,9 +83,11 @@ return Def.ActorFrame{
 		InitCommand=function(self)
 			self:diffusealpha(0.5):horizalign(left):x(30):zoom(0.5):shadowlength(2)
 		end,
+		OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 		UpdateTrailTextMessageCommand=function(self, params)
 			self:settext( THEME:GetString("ScreenSelectCourse", "SongNumber"):format(params.index) )
 		end
+		
 	},
 	--stepartist text
 	LoadFont("_eurostile normal")..{
@@ -155,6 +157,6 @@ return Def.ActorFrame{
 				self:settext( text_table[params.index] or "" )
 			end
 		end,
-		OffCommand=function(self) self:stoptweening() end
+		OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 	}
 }

@@ -26,8 +26,7 @@ for player in ivalues(PlayerNumber) do
 		end;
 	};
 end
-
-t[#t+1] = LoadActor("moreexit")..{
+t[#t+1] = LoadActor("morewexit")..{
 	OnCommand=function(s)
 		s:y(14):cropbottom(.57):croptop(.1)
 	end;
@@ -40,5 +39,19 @@ t[#t+1] = LoadActor("moreexit")..{
 		end
 	end;
 };
+t[#t+1] = LoadActor("moreoexit")..{
+	OnCommand=function(s)
+		s:y(14):cropbottom(.57):croptop(.1):diffuse(GetCurrentColor(true))
+	end;
+	TweenCheckMessageCommand=function(s)
+		s:stoptweening():linear(.15)
+		if GAMESTATE:GetNumPlayersEnabled() == 2 and (ExitSelect[1] and ExitSelect[2]) or ExitSelect[ tonumber( string.len(ToEnumShortString(GAMESTATE:GetMasterPlayerNumber()), 1 ) ) ] then
+			s:y(-18):croptop(.57):cropbottom(.1)
+		else
+			s:y(14):cropbottom(.57):croptop(.1)
+		end
+	end;
+};
+
 
 return t;
