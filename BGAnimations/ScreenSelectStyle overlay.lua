@@ -290,16 +290,6 @@ t[#t+1] = Def.HelpDisplay {
     end
 }
 
-t[#t+1] = loadfile( THEME:GetPathB("_menu","out") )()..{
-    OnCommand=function(self)
-        if ThemePrefs.Get("ITG1") then self:xy(GetTitleSafeH(0.9),GetTitleSafeV(0.8)) else self:xy(SCREEN_CENTER_X,SCREEN_CENTER_Y) end
-        self:diffusealpha(0)
-    end,
-    OffCommand=function(self)
-        if not GAMESTATE:Env()["WorkoutMode"] then
-            self:sleep(1.5):linear(0.3):diffusealpha(1)
-        end
-    end
-}
+
 
 return t
