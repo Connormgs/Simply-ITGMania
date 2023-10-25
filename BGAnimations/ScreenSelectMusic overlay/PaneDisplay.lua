@@ -361,7 +361,7 @@ for player in ivalues(PlayerNumber) do
 			self:x(-163)
 			if IsWide then self:x(-141) end
 			self:y(-9)
-			if player == PLAYER_2 then self:xy(-125,-9) end
+			if IsWide and player == PLAYER_2 then self:x(-145) end
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
@@ -389,7 +389,7 @@ for player in ivalues(PlayerNumber) do
 			self:x(-95)
 			if IsWide then self:x(-75) end
 			self:y(-9)
-			if player == PLAYER_2 then self:xy(-53,-9) end
+			if IsWide and player == PLAYER_2 then self:x(-74) end
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
@@ -422,7 +422,7 @@ for player in ivalues(PlayerNumber) do
 			self:x(-163)
 			if IsWide then self:x(-141) end
 			self:y(5)
-			if player == PLAYER_2 then self:x(-125) end
+			if IsWide and player == PLAYER_2 then self:x(-145) end
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
@@ -449,7 +449,8 @@ for player in ivalues(PlayerNumber) do
 			self:x(-95)
 			if IsWide then self:x(-75) end
 			self:y(5)
-			if player == PLAYER_2 then self:x(-60) end
+			if player == PLAYER_2 then self:x(-53) end
+			if IsWide and player == PLAYER_2 then self:x(-74) end
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)

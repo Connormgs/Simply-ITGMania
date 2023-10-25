@@ -124,17 +124,17 @@ af2[#af2+1] = LoadFont("_eurostile normal")..{
 	Name="NPS",
 	Text="Peak NPS: ",
 	InitCommand=function(self)
-		self:horizalign(left):zoom(0.47)
+		self:horizalign(left):zoom(0.40)
 		if player == PLAYER_1 then
 			self:xy(60,157)
 		else
-			self:addx(50):addy(-17)
+			self:addx(44):addy(-17)
 		end
 		-- We want black text in Rainbow mode except during HolidayCheer(), white otherwise.
 		self:diffuse((ThemePrefs.Get("RainbowMode") and not HolidayCheer()) and {0, 0, 0, 1} or {1, 1, 1, 1})
 	end,
 	HideCommand=function(self)
-		self:settext("Peak NPS: ")
+		self:settext("Peak NPS:")
 		self:visible(false)
 	end,
 	OffCommand=function(self) self:linear(0.3):zoomy(0) end,
