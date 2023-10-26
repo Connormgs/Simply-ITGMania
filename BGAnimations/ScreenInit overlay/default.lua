@@ -32,7 +32,7 @@ for i=1,7 do
 
 			self:queuecommand("Hide")
 		end,
-		HideCommand=function(self) self:visible(false) end,
+		HideCommand=function(self) SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenCompany" ):StartTransitioningScreen("SM_GoToNextScreen") end,
 	}
 
 	-- desaturated SM5 logo
