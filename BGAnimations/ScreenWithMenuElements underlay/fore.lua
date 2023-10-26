@@ -26,7 +26,7 @@ return Def.ActorFrame{
 
 	Def.Sprite{
 	Texture="flare",
-	Condition=not ThemePrefs.Get("ITG1"),
+	
 	InitCommand=function(self)
 		self:x(SCREEN_LEFT-128)
 	end;

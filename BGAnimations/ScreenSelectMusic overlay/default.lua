@@ -62,7 +62,7 @@ t[#t+1] = Def.ActorFrame{
 	LoadFont("_eurostile white glow")..{
 			Text=GAMESTATE:IsCourseMode() and THEME:GetString("ScreenSelectMusicCourse","HeaderText") or Screen.String("HeaderText"),
 			InitCommand=function(self)
-				self:shadowlength(4):x(self:GetWidth()/2):skewx( ThemePrefs.Get("ITG1") and 0 or -0.16):diffuse(GetCurrentColor(true))
+				self:diffuse(GetCurrentColor(true)):shadowlength(4):x(self:GetWidth()/2):skewx( ThemePrefs.Get("ITG1") and 0 or -0.16)
 			end,
 			OnCommand=function(self)
 				self:zoomx(0):zoomy(6):sleep(0.3):bounceend(.3):zoom(1)
