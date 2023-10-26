@@ -359,6 +359,7 @@ for player in ivalues(PlayerNumber) do
 		InitCommand=function(self)
 			self:zoom(0.49):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
+			if player == PLAYER_2 then self:x(-125) end
 			if IsWide then self:x(-141) end
 			self:y(-9)
 			if IsWide and player == PLAYER_2 then self:x(-145) end
@@ -387,6 +388,7 @@ for player in ivalues(PlayerNumber) do
 		InitCommand=function(self)
 			self:zoom(0.48):diffuse(Color.White):horizalign(right)
 			self:x(-95)
+			if player == PLAYER_2 then self:x(-53) end
 			if IsWide then self:x(-75) end
 			self:y(-9)
 			if IsWide and player == PLAYER_2 then self:x(-74) end
@@ -420,6 +422,7 @@ for player in ivalues(PlayerNumber) do
 		InitCommand=function(self)
 			self:zoom(0.50):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
+			if player == PLAYER_2 then self:x(-125) end
 			if IsWide then self:x(-141) end
 			self:y(5)
 			if IsWide and player == PLAYER_2 then self:x(-145) end
