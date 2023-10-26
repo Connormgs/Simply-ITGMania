@@ -51,12 +51,6 @@ return Def.ActorFrame{
 
 	LoadFont("_eurostile normal")..{
 		Text=optionslist,
-		InitCommand=function(self) self:xy(-230,-260):zoom(0.5):wrapwidthpixels(400) 
-		if player == PLAYER_1 then
-			self:x(-50)
-		else
-			self:x(60)
-		end
-		end
+		InitCommand=function(self) self:zoom(0.5):xy(-140,-5):align(0,0):vertspacing(-6):_wrapwidthpixels((width-10) / font_zoom) end
 	}
 }
