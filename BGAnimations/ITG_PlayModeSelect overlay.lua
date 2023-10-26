@@ -36,7 +36,7 @@ local BTInput = {
 		or THEME:GetPathS("_ITGCommon","start") )
         local mode = modes[MenuIndex] == "dance" and "regular" or modes[MenuIndex]
         GAMESTATE:ApplyGameCommand("playmode,".. mode)
-        SCREENMAN:GetTopScreen():SetNextScreenName( "ITG_StyleSelect" ):StartTransitioningScreen("SM_GoToNextScreen")
+        SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
     end,
     ["Back"] = function(event)
         SCREENMAN:PlayCancelSound()

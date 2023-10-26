@@ -170,20 +170,6 @@ function NoteSkinList()
 	return t
 end
 
-function DetermineTitleMenu()
-	local choices = "GameStart,"
-
-	if not ThemePrefs.Get("TitleMenuType") then
-		choices = "Dance,Battle,Nonstop,"
-	end
-	-- "Dance".. (not ThemePrefs.Get("TitleMenuType") and "Battle,Nonstop" or "") ..",Fitness,Records,Jukebox,EditMenu,Options,Exit"
-	if not ThemePrefs.Get("TitleMenuType") then
-		choices = choices .. "Fitness,EditMenu,Records,Options,Exit"
-	else
-		choices = choices .. "Fitness,Records,Jukebox,EditMenu,Options,Exit"
-	end
-	return choices
-end
 
 function StageIndexBySegment(toggleless)
 	local CurrentStage = {
@@ -265,7 +251,7 @@ Branch.StartGame = function()
 		return "ScreenSelectProfile"
 	else
 		if IsNetConnected() then
-			return "ITG_StyleSelect"
+			return "ScreenSelectStyle"
 		else
 			if (THEME:GetMetric("Common","AutoSetStyle") == false or GAMESTATE:GetCoinMode() == "CoinMode_Pay")
 				and not GAMESTATE:GetPlayMode()
@@ -273,7 +259,7 @@ Branch.StartGame = function()
 				or GAMESTATE:Env()["FullSelection"] then
 				return "ITG_PlayModeSelect"
 			else
-				return "ITG_StyleSelect"
+				return "ScreenSelectStyle"
 			end
 		end
 	end
@@ -282,9 +268,9 @@ end
 Branch.AfterSelectProfile = function()
 	if ( THEME:GetMetric("Common","AutoSetStyle") == true ) then
 		-- use SelectStyle in online...
-		return IsNetConnected() and "ITG_StyleSelect" or "ScreenSelectPlayMode"
+		return IsNetConnected() and "ScreenSelectStyle" or "ScreenSelectPlayMode"
 	else
-		return "ITG_StyleSelect"
+		return "ScreenSelectStyle"
 	end
 end
 
