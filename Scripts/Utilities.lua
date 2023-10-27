@@ -211,7 +211,13 @@ Branch.AfterProfileLoad = function()
 		return Branch.StartGame()
 	end
 end
-
+Branch.AfterCaution = function()
+	if GAMESTATE:IsPlayerEnabled(pn) then 
+		return "ScreenSelectColor"
+	else
+		return "ScreenSelectColor"
+	end
+end
 Branch.GameOverOrContinue = function()
 	if GAMESTATE:Env()["ForceGoodEnding"] == "1" or tonumber( string.sub(ToEnumShortString(STATSMAN:GetBestFinalGrade() ), 5) ) <= 4 then return "ScreenEndingGood" end
 	return "ScreenEnding"

@@ -62,7 +62,7 @@ return Def.ActorFrame{
 		end;
 		OffCommand=function(self)
 			self:linear(0.5):zoomy(0)
-			SOUND:PlayOnce( ) and THEME:GetPathS("_ITGCommon","start")
+			SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start")
 			or THEME:GetPathS("_ITGCommon","start") )
 		end;
 	},
