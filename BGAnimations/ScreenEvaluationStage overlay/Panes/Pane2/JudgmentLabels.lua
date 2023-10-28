@@ -317,18 +317,7 @@ Def.Sprite{
 	
 	
 		
-		Def.ComboGraph{
-			Condition=GAMESTATE:GetPlayMode() ~= "PlayMode_Rave",
-			InitCommand=function(self)
-				self:y(-7+(itgstylemargin*1.3))
-			end,
-			OnCommand=function(self)
-				self:Load("ComboGraphP"..pnum(player))
-				local playerStageStats = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
-				local stageStats = STATSMAN:GetCurStageStats()
-				self:Set(stageStats, playerStageStats)
-			end,
-		},
+	
 
 }
 --Hands etc  values
