@@ -43,7 +43,7 @@ input = function(event)
 		elseif event.GameButton == "Start" then
 			ColorSelected = true
 			underlay:playcommand("Finish")
-
+			SOUND:PlayOnce( THEME:GetPathS("_ITGCommon","start") )
 		elseif event.GameButton == "Back" then
 			topscreen:RemoveInputCallback(input)
 			topscreen:Cancel()
