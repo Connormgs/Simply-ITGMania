@@ -138,8 +138,8 @@ pane[#pane+1] = Def.BitmapText{
 	Font="Common Bold",
 	Text=ScreenString("Early"),
 	InitCommand=function(self)
-		self:addx(10):addy(-125)
-			:zoom(0.3)
+		self:addx(-5):addy(-125)
+			:zoom(0.7)
 			:horizalign(left)
 	end,
 }
@@ -149,8 +149,8 @@ pane[#pane+1] = Def.BitmapText{
 	Font="Common Bold",
 	Text=ScreenString("Late"),
 	InitCommand=function(self)
-		self:addx(pane_width-10):addy(-125)
-			:zoom(0.3)
+		self:addx(pane_width-24):addy(-125)
+			:zoom(0.7)
 			:horizalign(right)
 	end,
 }
@@ -162,7 +162,7 @@ pane[#pane+1] = Def.Quad{
 	InitCommand=function(self)
 		self:vertalign(top)
 			:zoomto(280,13 )
-			:xy(275/2, 0)
+			:xy(273/2, 0)
 			:diffuse(color("#101519"))
 	end,
 }
@@ -237,8 +237,8 @@ end
 pane[#pane+1] = Def.Quad{
 	InitCommand=function(self)
 		self:vertalign(top)
-			:zoomto(pane_width, topbar_height )
-			:xy(pane_width/2, -pane_height + topbar_height/2)
+			:zoomto(281, 26 )
+			:xy(139, -180 + 26/2)
 			:diffuse(color("#101519"))
 	end,
 }
@@ -277,7 +277,7 @@ end
 
 local label = {}
 label.y = -pane_height+20
-label.zoom = 0.575
+label.zoom = 0.51
 label.padding = 3
 
 -- Cleanly positioning the labels for "mean timing error", "median", and "mode"
@@ -290,7 +290,7 @@ pane[#pane+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=ScreenString("MeanTimingError"),
 	InitCommand=function(self)
-		self:x(40):y(label.y)
+		self:x(38):y(label.y)
 			:zoom(label.zoom):maxwidth(label.max_width)
 
 		if self:GetWidth() > label.max_width then

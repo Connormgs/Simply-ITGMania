@@ -164,14 +164,14 @@ af[#af+1] = Def.ActorMultiVertex{
 -- BitmapText actors for text
 local bmts = Def.ActorFrame{}
 bmts.InitCommand=function(self) self:y(-pane_height+32) end
-local pad = 40
+local pad = 32
 
 -- avg_timing_error value with "ms" label
 bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.1fms"):format(avg_timing_error),
 	InitCommand=function(self)
-		self:x(pad):zoom(0.8)
+		self:x(pad):zoom(0.62)
 	end,
 }
 
@@ -180,7 +180,7 @@ bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.1fms"):format(avg_offset),
 	InitCommand=function(self)
-		self:x(pad + (pane_width-2*pad)/3):zoom(0.8)
+		self:x(pad + (pane_width-2*pad)/3):zoom(0.62)
 	end,
 }
 
@@ -189,7 +189,7 @@ bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.1fms"):format(std_dev * 3),
 	InitCommand=function(self)
-		self:x(pad + (pane_width-2*pad)/3 * 2):zoom(0.8)
+		self:x(pad + (pane_width-2*pad)/3 * 2-10):zoom(0.62)
 	end,
 }
 
@@ -198,7 +198,7 @@ bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.1fms"):format(max_error),
 	InitCommand=function(self)
-		self:x(pane_width-pad):zoom(0.8)
+		self:x(pane_width-pad-12):zoom(0.62)
 	end,
 }
 
