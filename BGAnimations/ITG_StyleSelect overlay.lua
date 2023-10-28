@@ -96,8 +96,7 @@ local BTInput = {
                 GAMESTATE:JoinPlayer(PLAYER_1)
                 GAMESTATE:JoinPlayer(PLAYER_2)
             end
-            SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start")
-			or THEME:GetPathS("_ITGCommon","start") )
+            SOUND:PlayOnce(THEME:GetPathS("_ITGCommon","start"))
             if not GAMESTATE:Env()["WorkoutMode"] then
                 SOUND:StopMusic()
             end
@@ -106,8 +105,7 @@ local BTInput = {
         else
             if GAMESTATE:GetCoins() >= 1 then
                 GAMESTATE:JoinPlayer(event)
-                SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start")
-                or THEME:GetPathS("_ITGCommon","start") )
+                SOUND:PlayOnce(THEME:GetPathS("_ITGCommon","start"))
                 GAMESTATE:InsertCoin(-1)
             end
         end

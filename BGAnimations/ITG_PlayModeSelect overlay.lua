@@ -32,8 +32,8 @@ local BTInput = {
         CheckValueOffsets(-1)
     end,
     ["Start"] = function(event)
-        SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start")
-		or THEME:GetPathS("_ITGCommon","start") )
+        SOUND:PlayOnce(THEME:GetPathS("_ITGCommon","start"))
+		
         local mode = modes[MenuIndex] == "dance" and "regular" or modes[MenuIndex]
         GAMESTATE:ApplyGameCommand("playmode,".. mode)
         SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")

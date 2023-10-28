@@ -142,7 +142,7 @@ af.OnCommand=function(self)
         if event.type == "InputEventType_FirstPress" and event.GameButton == "MenuRight" then
             self:GetParent():visible(false)
 			else if event.type == "InputEventType_FirstPress" and event.GameButton == "MenuLeft" then
-            self:GetParent():GetChild("testtt"):visible(true)
+            self:GetParent():visible(true)
         end
         end
     end)
