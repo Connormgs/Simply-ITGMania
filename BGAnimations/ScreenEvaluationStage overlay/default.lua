@@ -83,7 +83,7 @@ LoadFont("_eurostile white glow")..{
 			end,
 			OffCommand=function(self)
 				self:accelerate(0.2):zoomx(2):zoomy(0):diffusealpha(0)
-				SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start") or THEME:GetPathS("_ITGCommon","start") )
+				SOUND:PlayOnce( THEME:GetPathS("_ITGCommon","start") )
 			end
 		},
 LoadFont("_eurostile normal")..{
@@ -94,7 +94,6 @@ LoadFont("_eurostile normal")..{
 			end,
 			OffCommand=function(self)
 				self:accelerate(0.2):zoomx(2):zoomy(0):diffusealpha(0)
-				SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start") or THEME:GetPathS("_ITGCommon","start") )
 			end
 		},
 		Def.Sprite{

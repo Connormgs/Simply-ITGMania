@@ -19,7 +19,7 @@ return {
 				Font="Common Normal",
 				InitCommand=function(subself)
 					self.top_text = subself
-					subself:zoom(1.15):y(-15):diffusealpha(0)
+					subself:zoom(.8):y(-15):diffusealpha(0)
 				end,
 				OnCommand=function(subself)
 					subself:sleep(0.13):linear(0.05):diffusealpha(1)
@@ -31,7 +31,7 @@ return {
 				Font="Common Bold",
 				InitCommand=function(subself)
 					self.bottom_text = subself
-					subself:zoom(0.85):y(10):diffusealpha(0):maxwidth(405)
+					subself:zoom(1.4):y(10):diffusealpha(0):maxwidth(405)
 				end,
 				OnCommand=function(subself)
 					subself:sleep(0.1):linear(0.15):diffusealpha(1)
