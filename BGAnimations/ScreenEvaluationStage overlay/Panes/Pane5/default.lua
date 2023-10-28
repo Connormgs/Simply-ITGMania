@@ -161,8 +161,8 @@ pane[#pane+1] = Def.BitmapText{
 pane[#pane+1] = Def.Quad{
 	InitCommand=function(self)
 		self:vertalign(top)
-			:zoomto(pane_width, bottombar_height )
-			:xy(pane_width/2, 0)
+			:zoomto(280,13 )
+			:xy(275/2, 0)
 			:diffuse(color("#101519"))
 	end,
 }
