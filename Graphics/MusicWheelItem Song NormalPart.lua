@@ -36,7 +36,7 @@ return Def.ActorFrame{
 			Font="_eurostile normal",
 			Name="Title",
 			InitCommand=function(self)
-				self:x(95):maxwidth(330):halign(1):shadowlength(1)
+				self:x(95):maxwidth(320):halign(1):shadowlength(1)
 			end
 		},
 	
