@@ -39,13 +39,7 @@ t[#t+1] = Def.ActorFrame{
 
 		
 };
-t[#t+1] = LoadActor( "ITG1" )..{
-	Condition=ThemePrefs.Get("ITG1"),
-	OnCommand=function(self)
-		self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y)
-	end;
-};
-end
+
 
 if GAMESTATE:IsCourseMode() then
 t[#t+1] = Def.ActorFrame{
