@@ -235,7 +235,14 @@ if combo_font == "Source Code" then
 		self:diffuseshift():effectperiod(0.8):playcommand("Color", params)
 	end
 end
-
+if combo_font == "ITG" then
+	combo_bmt.ComboCommand=function(self, params)
+		-- "Hexadecimal is a virus of incredible power and unpredictable insanity from Lost Angles."
+		-- https://reboot.fandom.com/wiki/Hexadecimal
+		self:settext( string.format("%X", tostring(params.Combo or params.Misses or 0)):lower() )
+		self:zoom(1.2)
+	end
+end
 if combo_font == "Wendy (Cursed)" then
 	combo_bmt.ColorCommand=function(self, params)
 		if params.FullComboW3 then

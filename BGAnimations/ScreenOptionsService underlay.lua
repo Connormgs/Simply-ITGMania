@@ -42,11 +42,7 @@ t[#t+1] = Def.ActorFrame {
 			self:accelerate(0.5):diffusealpha(di)
 		end,
 		
-		LoadActor("_frame 3x1",{"explanation metal",SCREEN_WIDTH/1.15})..{
-			OnCommand=function(self)
-				self:CenterX()
-			end
-		},
+
 	
 		Def.BitmapText{
 			Font="Common Normal",

@@ -274,7 +274,7 @@ t[#t+1] = Def.ActorFrame{
     };
 
 	Def.Sprite{ Texture="meter frame", Condition=not IsUsingWideScreen() and not ThemePrefs.Get("ITG1"); },
-	LoadActor( THEME:GetPathB("","_frame 3x1"), {"progress",WideScale( 374, 374+128 )} )..{ Condition=ThemePrefs.Get("ITG1"); };
+	
 	
 	Def.BitmapText{
 	Font="_eurostile normal",
