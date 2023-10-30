@@ -305,7 +305,12 @@ t[#t+1] = Def.Quad{
 		s:diffuse(color("#000000")):stretchto(0,0,SCREEN_WIDTH,SCREEN_HEIGHT):diffusealpha(1):linear(0.3):diffusealpha(0)
 	end
 };
-
+t[#t+1] = Def.Quad{
+	OnCommand=function(s)
+			if GAMESTATE:GetPlayMode()=="PlayMode_Oni" or GAMESTATE:GetPlayMode()=="PlayMode_Rave" then SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenEvaluationStage" )
+		end
+	end
+};
 t[#t+1] = LoadActor("../_song credit display")..{
 	Condition=not GAMESTATE:IsDemonstration();
 	OnCommand=function(s)
