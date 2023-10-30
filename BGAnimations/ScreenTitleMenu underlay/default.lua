@@ -1,5 +1,6 @@
 local style = ThemePrefs.Get("ITG1") and "_flare" or "flare"
 local num = ThemePrefs.Get("ITG1") and "" or " 2"
+InitializeSimplyLove()
 return Def.ActorFrame{
 	LoadActor("../ScreenLogo background"),
 
