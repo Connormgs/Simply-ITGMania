@@ -235,7 +235,26 @@ if combo_font == "Source Code" then
 		self:diffuseshift():effectperiod(0.8):playcommand("Color", params)
 	end
 end
+if combo_font == "ITG" then
+	combo_bmt.ColorCommand=function(self, params)
+		if params.FullComboW3 then
+			self:rainbowscroll(false)
 
+		elseif params.Combo then
+			-- combo broke at least once; stop the rainbow effect and diffuse white
+			self:zoom(1.2)
+
+		elseif params.Misses then
+			self:stopeffect():rainbowscroll(false):diffuse( Color.Red ) -- Miss Combo
+			self:zoom(self:GetZoom() * 1.001)
+			-- horizalign of center until the miss combo is wider than this player's notefield
+			-- then, align so that it doesn't encroach into the other player's half of the screen
+			if (#GAMESTATE:GetHumanPlayers() > 1) and ((self:GetWidth()*self:GetZoom()) > GetNotefieldWidth()) then
+				self:horizalign(player == PLAYER_1 and right or left):x( (self:GetWidth()) * (player == PLAYER_1 and 1 or -1)  )
+			end
+		end
+	end
+end
 if combo_font == "Wendy (Cursed)" then
 	combo_bmt.ColorCommand=function(self, params)
 		if params.FullComboW3 then
