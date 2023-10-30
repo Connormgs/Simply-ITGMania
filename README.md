@@ -1,5 +1,5 @@
 # Simply ITGMania 
-Simply ITG for ITGMania. If you run into any problems or want things changed let me know. The theme is constantly being updated so if you run into bugs there's a chance they'll be fixed within a few days of you encountering them.
+Simply ITG for ITGMania with pretty much every feature of simply love and zmod including groovestats and boogiestats support. If you run into any problems or want things changed let me know. The theme is constantly being updated so if you run into bugs there's a chance they'll be fixed within a few days of you encountering them.
 
 Restart the game after picking your color for the background to properly change
 
