@@ -22,5 +22,14 @@ return Def.ActorFrame{
 	-- numbers (How many Fantastics? How many Misses? etc.)
 	LoadActor("./fa.lua", ...),
 	LoadActor("./fa2.lua", ...),
+	
+	-- "Look at this graph."  –Some sort of meme on The Internet
+	LoadActor("./Graphs.lua", player),
+
+	-- list of modifiers used by this player for this song
+	LoadActor("./PlayerModifiers.lua", player),
+
+	-- was this player disqualified from ranking?
+	LoadActor("./Disqualified.lua", player),
 
 }

@@ -22,7 +22,7 @@ local af = Def.ActorFrame{ InitCommand=function(self) self:xy(_screen.cx, y_offs
 af[#af+1] = LoadFont("_eurostile normal")..{
 	InitCommand=function(self)
 		local songtitle = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle()) or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
-		if songtitle then self:settext(songtitle):maxwidth(banner.width*banner.zoom) 
+		if songtitle then self:settext(songtitle)
 		end
 	
 		
