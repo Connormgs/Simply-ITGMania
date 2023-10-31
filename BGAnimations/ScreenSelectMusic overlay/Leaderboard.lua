@@ -278,7 +278,7 @@ local af = Def.ActorFrame{
 	}
 }
 
-local paneWidth1Player = 330
+local paneWidth1Player = 370
 local paneWidth2Player = 230
 local paneWidth = (GAMESTATE:GetNumSidesJoined() == 1) and paneWidth1Player or paneWidth2Player
 local paneHeight = 360
@@ -515,8 +515,9 @@ for player in ivalues( PlayerNumber ) do
 				InitCommand=function(self)
 					self:horizalign(center)
 					self:maxwidth(130)
-					self:x(-paneWidth2Player/2 + 100)
+					self:x(-paneWidth2Player/2 + 80)
 					self:diffuse(Color.White)
+					self:zoom(0.75)
 				end,
 				ResetEntryMessageCommand=function(self)
 					self:settext(i==1 and "Loading" or "")
@@ -529,8 +530,9 @@ for player in ivalues( PlayerNumber ) do
 				Text="",
 				InitCommand=function(self)
 					self:horizalign(right)
-					self:x(paneWidth2Player/2-borderWidth)
+					self:x(paneWidth2Player/2-borderWidth-8)
 					self:diffuse(Color.White)
+					self:zoom(0.7)
 				end,
 				ResetEntryMessageCommand=function(self)
 					self:settext("")
@@ -542,8 +544,9 @@ for player in ivalues( PlayerNumber ) do
 				Text="",
 				InitCommand=function(self)
 					self:horizalign(right)
-					self:x(paneWidth2Player/2 + 100 - borderWidth)
+					self:x(paneWidth2Player/2 + 125 - borderWidth)
 					self:diffuse(Color.White)
+					self:zoom(0.65)
 				end,
 				ResetEntryMessageCommand=function(self)
 					self:settext("")

@@ -67,7 +67,7 @@ for i=1, #TapNoteScores.Types do
 			Text=TapNoteScores.Names[i],
 			InitCommand=function(self) self:zoom(0.52):horizalign(right) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -190) or -50 )
+				self:x( (controller == PLAYER_1 and -185) or -45 )
 				self:y(94)
 				-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
 				
