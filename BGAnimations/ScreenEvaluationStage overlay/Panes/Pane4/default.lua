@@ -73,8 +73,8 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 	-- top 8 machine HighScores
 	args.NumHighScores = 8
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
-	InitCommand=function(self) self:xy(0, 10)
-	 self:x( (controller == PLAYER_1 and -100) or -60 ):zoom(0.7)
+	InitCommand=function(self) self:xy(0, -15)
+	 self:x( (controller == PLAYER_1 and -80) or -40 ):zoom(0.85)
 
 	end
 	
@@ -88,9 +88,10 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 	args.Profile = PROFILEMAN:GetProfile(player)
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
 		InitCommand=function(self) self:y(args.RowHeight*9) 
-		 self:x( (controller == PLAYER_1 and -120) or 40 )
+		 self:x( (controller == PLAYER_1 and -999) or 999 ):zoom(0.85)
+		 
 end,
-		OnCommand=function(self) self:xy(0, 170):zoom(0.7) end
+		OnCommand=function(self) self:xy( (controller == PLAYER_1 and -84) or -44,140 ) end
 	}
 
 -- the player did not meet the conditions to show the 8+2 HighScores
@@ -100,7 +101,7 @@ else
 	-- top 10 machine HighScores
 	args.NumHighScores = 10
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
-	OnCommand=function(self) self:xy(-95, 20):zoom(0.7) end
+	OnCommand=function(self) self:xy(-95, 20):zoom(0.85) end
 	}
 end
 	pane[#pane+1] = Def.Sprite{

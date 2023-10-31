@@ -22,9 +22,9 @@ return Def.ActorFrame{
 		Name="Percent",
 		InitCommand=function(self) self:horizalign(right):zoom(0.25):xy( 30, -2) 
 			if player == PLAYER_1 then
-			self:x(-50)
+			self:x(-30)
 		else
-			self:x(-10)
+			self:x(10)
 		end
 		
 		end

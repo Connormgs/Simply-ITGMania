@@ -147,25 +147,25 @@ for i=lower,upper do
 	row[#row+1] = LoadFont(Font)..{
 		Name="Rank",
 		Text=i..". ",
-		InitCommand=function(self) self:horizalign(right):xy(-120, row_index*row_height) end,
+		InitCommand=function(self) self:horizalign(right):xy(-120, row_index*row_height):zoom(0.7) end,
 	}
 
 	row[#row+1] = LoadFont(Font)..{
 		Name="Name",
 		Text=name,
-		InitCommand=function(self) self:horizalign(left):xy(-110, row_index*row_height) end,
+		InitCommand=function(self) self:horizalign(left):xy(-110, row_index*row_height):zoom(0.7) end,
 	}
 
 	row[#row+1] = LoadFont(Font)..{
 		Name="Score",
 		Text=score,
-		InitCommand=function(self) self:horizalign(left):xy(-45, row_index*row_height) end,
+		InitCommand=function(self) self:horizalign(left):xy(-45, row_index*row_height):zoom(0.7) end,
 	}
 
 	row[#row+1] = LoadFont(Font)..{
 		Name="Date",
 		Text=date,
-		InitCommand=function(self) self:horizalign(left):xy(50, row_index*row_height) end,
+		InitCommand=function(self) self:horizalign(left):xy(50, row_index*row_height):zoom(0.7) end,
 	}
 
 	af[#af+1] = row
