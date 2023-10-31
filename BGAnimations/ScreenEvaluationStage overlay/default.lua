@@ -225,7 +225,9 @@ for player in ivalues(Players) do
 	-- the per-player upper half of ScreenEvaluation, including: letter grade, nice
 	-- stepartist, difficulty text, difficulty meter, machine/personal HighScore text
 	t[#t+1] = LoadActor("./PerPlayer/Upper/default.lua", player)
-	t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
+	
+	-- ITG theme isn't using lower, it just loads panes instead. Move the lower elements into the appropriate pane.
+	-- t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
 	t[#t+1] = LoadActor("./PerPlayer/ItlFile.lua", player)
 
 end
