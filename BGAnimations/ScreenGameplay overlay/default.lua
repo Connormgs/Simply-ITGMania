@@ -47,9 +47,7 @@ for player in ivalues(PlayerNumber) do
 			:visible( Settings.CurrentScreen ~= "ScreenGameplaySyncMachine" )
 			:diffuse( CurColor() ):addy(-100):sleep(0.5)
 			:decelerate(0.8):addy(100)
-			if ThemePrefs.Get("CompareScores") and GAMESTATE:GetNumPlayersEnabled() == 2 then
-				self:pulse():effectclock("bgm"):effectmagnitude(1.05,0.95,0):effectperiod(1)
-			end
+		
 		end;
 		JudgmentMessageCommand=function(self) self:queuecommand("UpdateScore") end;
 		UpdateScoreCommand=function(self)

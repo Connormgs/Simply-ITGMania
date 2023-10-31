@@ -241,7 +241,7 @@ end
 local af = Def.ActorFrame{
 	Name="ScoreBox"..pn,
 	InitCommand=function(self)
-		self:xy(70 * (player==PLAYER_1 and 1 or -1), -115)
+		self:xy(70 * (player==PLAYER_1 and 1 or -1), -200)
 		-- offset a bit more when NoteFieldIsCentered
 		if NoteFieldIsCentered and IsUsingWideScreen() then
 			self:addx( 2 * (player==PLAYER_1 and 1 or -1) )

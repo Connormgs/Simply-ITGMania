@@ -162,7 +162,7 @@ for index, label in ipairs(RadarCategories) do
 		Condition=not GAMESTATE:Env()["WorkoutMode"],
 		OnCommand=function(self) self:xy(0,0) end;
 		Def.BitmapText{ Font="_eurostile normal", Text=label,
-			InitCommand=function(self) self:zoom(0.5):horizalign(left) end,
+			InitCommand=function(self) self:zoom(0.5):shadowlength(0):horizalign(left) end,
 			BeginCommand=function(self)
 				self:x( (controller == PLAYER_1 and -120) or 120 )
 				self:y((index-1)*17 + 108)
