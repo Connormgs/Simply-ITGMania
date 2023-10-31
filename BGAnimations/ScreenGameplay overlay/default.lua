@@ -43,7 +43,7 @@ for player in ivalues(PlayerNumber) do
 		Font="_futurist metalic";
 		Text=" 0.00%";
 		OnCommand=function(self)
-			self:xy( player == PLAYER_1 and SCREEN_CENTER_X-150 or SCREEN_CENTER_X+150, SCREEN_TOP+56 )
+			self:xy( player == PLAYER_1 and SCREEN_CENTER_X-200 or SCREEN_CENTER_X+185, SCREEN_TOP+56 )
 			:visible( Settings.CurrentScreen ~= "ScreenGameplaySyncMachine" )
 			:diffuse( CurColor() ):addy(-100):sleep(0.5)
 			:decelerate(0.8):addy(100)
