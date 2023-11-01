@@ -102,13 +102,14 @@ local pane = Def.ActorFrame{
 	InitCommand=function(self)
 		self:xy(-pane_width*0.5, pane_height*1.95)
 		self:addx(-57)
+		if player == PLAYER_2 then self:x(-180) end
 	end
 }
 pane[#pane+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:zoomx(1.06):xy(137,-55):diffuse(GetCurrentColor(true))
+		self:zoomx(1.06):xy(147,-55):diffuse(GetCurrentColor(true))
 		if player == PLAYER_2 then self:x(9999) end
 	end,
 }
@@ -117,7 +118,7 @@ pane[#pane+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base2",
 	InitCommand=function(self)
-		self:zoomx(1.06):xy(177,-55):diffuse(GetCurrentColor(true))
+		self:zoomx(1.06):xy(147,-55):diffuse(GetCurrentColor(true))
 		if player == PLAYER_1 then self:x(9999) end
 	end,
 }
@@ -127,9 +128,10 @@ pane[#pane+1] = Def.Quad{
 		local x = pane_width/2
 
 		self:vertalign(top)
-			:zoomto(1, pane_height - (topbar_height+bottombar_height) )
+			:zoomto(1.8, pane_height - (topbar_height+bottombar_height) )
 			:vertalign(bottom):xy(x, 0)
 			:diffuse(1,1,1,0.666)
+			
 	end,
 }
 
@@ -138,7 +140,7 @@ pane[#pane+1] = Def.BitmapText{
 	Font="Common Bold",
 	Text=ScreenString("Early"),
 	InitCommand=function(self)
-		self:addx(-5):addy(-125)
+		self:addx(1):addy(-125)
 			:zoom(0.7)
 			:horizalign(left)
 	end,
@@ -149,7 +151,7 @@ pane[#pane+1] = Def.BitmapText{
 	Font="Common Bold",
 	Text=ScreenString("Late"),
 	InitCommand=function(self)
-		self:addx(pane_width-24):addy(-125)
+		self:addx(pane_width-8):addy(-125)
 			:zoom(0.7)
 			:horizalign(right)
 	end,
@@ -160,10 +162,8 @@ pane[#pane+1] = Def.BitmapText{
 -- darkened quad behind bottom judgment labels
 pane[#pane+1] = Def.Quad{
 	InitCommand=function(self)
-		self:vertalign(top)
-			:zoomto(280,13 )
-			:xy(273/2, 0)
-			:diffuse(color("#101519"))
+		self:vertalign(top):zoomto(297,13 ):xy(292/2, 0):diffuse(color("#101519"))
+			if player == PLAYER_2 then self:x(147) end
 	end,
 }
 
@@ -236,10 +236,8 @@ end
 -- topbar background quad
 pane[#pane+1] = Def.Quad{
 	InitCommand=function(self)
-		self:vertalign(top)
-			:zoomto(281, 26 )
-			:xy(139, -180 + 26/2)
-			:diffuse(color("#101519"))
+		self:vertalign(top):zoomto(297, 26 ):xy(146, -180 + 26/2):diffuse(color("#101519"))
+		if player == PLAYER_2 then self:x(147) end
 	end,
 }
 

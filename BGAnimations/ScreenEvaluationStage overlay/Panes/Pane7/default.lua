@@ -73,9 +73,9 @@ pane[#pane+1] = Def.Sprite{
 pane[#pane+1] = LoadFont("Common Normal")..{
 	Text="GrooveStats QR",
 	InitCommand=function(self) self:xy(20,-20):zoom(0.6) 
-	self:x( (controller == PLAYER_1 and 20) or 120 ) 
+	self:x( (controller == PLAYER_1 and 80) or 220 ) 
+	if player == PLAYER_2 then self:x(120) end
 	end
-
 }
 local qr_amv
 -- don't generate the QR code twice if only one player is joined
@@ -86,7 +86,7 @@ else
 	local qr_module_path = THEME:GetPathB("", "_modules/QR Code/SL-QRCode.lua")
 	qr_amv = LoadActor( qr_module_path , {url, qrcode_size} )..{
 		Name="QRCode",
-		InitCommand=function(self) self:xy(-20, 20):align(0,0.5) end,
+		InitCommand=function(self) self:x( (controller == PLAYER_1 and -10) or 29 ):align(0,0.5) end,
 		
 		HideCommand=function(self) self:GetChild("QRCodeData"):queuecommand("Hide") end
 		
@@ -100,7 +100,8 @@ pane[#pane+1] = qr_amv
 if not allChecksPassed then
 	pane[#pane+1] = LoadActor("x.png")..{
 		InitCommand=function(self)
-			self:zoom(1):xy(-24,25):align(0,0)
+			self:zoom(1):x( (controller == PLAYER_1 and -10) or 29,25 ):align(0,0)
+			
 		end,
 		-- blink the red X once when the player first toggles into the QR pane
 		BlinkXCommand=function(self)
@@ -116,9 +117,7 @@ pane[#pane+1] = LoadActor("../Pane3/Percentage.lua", player)..{
 
 
 
-pane[#pane+1] = Def.Quad{
-	InitCommand=function(self) self:y(23):zoomto(96,1):align(0,0):diffuse(1,1,1,0.33) end
-}
+
 
 -- if there are multiple reasons the score was invalid for GrooveStats ranking
 -- the help text might spill outside the vertical bounds of the pane
@@ -134,14 +133,14 @@ pane[#pane+1] = LoadFont("Common Normal")..{
 	Text=text,
 	Name="HelpText",
 	InitCommand=function(self)
-		self:align(0,0):vertspacing(-3):MaskDest()
+		self:align(0,0):vertspacing(-3):MaskDest():diffuse(Color.Blue)
 
 		local z = allChecksPassed and 0.8 or 0.675
 		self:zoom(z)
 		self:y( scale(35, 0,0.8,   0,z) )
 		self:x( scale(-4, 0,0.675, 0,z) )
 		self:wrapwidthpixels( scale(98, 0,0.675, 0,z)/z)
-
+		if player == PLAYER_2 then self:x(35) end
 		-- FIXME: Oof.
 		if THEME:GetCurLanguage() == "ja" then self:_wrapwidthpixels( scale(96, 0,0.8, 0,z)/z ) end
 	end,

@@ -386,8 +386,8 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
 		Name="MachineHighScore",
 		InitCommand=function(self)
-			self:zoom(0.48):diffuse(Color.White):horizalign(right)
-			self:x(-95)
+			self:zoom(0.45):diffuse(Color.White):horizalign(right)
+			self:x(-93)
 			if player == PLAYER_2 then self:x(-53) end
 			if IsWide then self:x(-75) end
 			self:y(-9)
@@ -448,8 +448,8 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
 		Name="PlayerHighScore",
 		InitCommand=function(self)
-			self:zoom(0.48):diffuse(Color.White):horizalign(right)
-			self:x(-95)
+			self:zoom(0.45):diffuse(Color.White):horizalign(right)
+			self:x(-93)
 			if IsWide then self:x(-75) end
 			self:y(5)
 			if player == PLAYER_2 then self:x(-53) end

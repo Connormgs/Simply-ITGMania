@@ -121,7 +121,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				InitCommand=function(self)
 					self:zoom(0.48):xy(
 						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 45 or 0) - 100
-						,-33+14*(vind-1)):horizalign(right)
+						,-33+14*(vind-1)):halign(right)
 				end;
 				CurrentSongChangedMessageCommand=function(s) s:diffuse(Color.White):settext("") end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)

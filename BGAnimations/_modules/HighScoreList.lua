@@ -147,7 +147,7 @@ for i=lower,upper do
 	row[#row+1] = LoadFont(Font)..{
 		Name="Rank",
 		Text=i..". ",
-		InitCommand=function(self) self:horizalign(right):xy(-120, row_index*row_height):zoom(0.7) end,
+		InitCommand=function(self) self:horizalign(right):xy(-110, row_index*row_height):zoom(0.7) end,
 	}
 
 	row[#row+1] = LoadFont(Font)..{
