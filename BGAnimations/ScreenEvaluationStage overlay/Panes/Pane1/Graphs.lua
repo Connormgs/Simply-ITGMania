@@ -115,7 +115,7 @@ if storage.DeathSecond ~= nil then
 		LoadFont("Common Normal")..{
 			InitCommand=function(self)
 				self:zoom(0.5)
-				self:diffuse(Color.Red)
+				self:diffuse(Color.White)
 				local text
 				-- fail time formatting
 				if secondsLeft > 3600 then

@@ -74,7 +74,7 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 	args.NumHighScores = 8
 	pane[#pane+1] = LoadActor(THEME:GetPathB("", "_modules/HighScoreList.lua"), args)..{
 	InitCommand=function(self) self:xy(0, -15)
-	 self:x( (controller == PLAYER_1 and -80) or -45 ):zoom(0.85)
+	 self:x( (controller == PLAYER_1 and -89) or -36 ):zoom(0.85)
 
 	end
 	
@@ -91,7 +91,7 @@ if (not EarnedMachineRecord and EarnedTop2Personal) then
 		 self:x( (controller == PLAYER_1 and -999) or 999 ):zoom(0.85)
 		 
 end,
-		OnCommand=function(self) self:xy( (controller == PLAYER_1 and -84) or -46,140 ) end
+		OnCommand=function(self) self:xy( (controller == PLAYER_1 and -90) or -40,140 ) end
 	}
 
 -- the player did not meet the conditions to show the 8+2 HighScores

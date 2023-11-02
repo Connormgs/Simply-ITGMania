@@ -460,7 +460,7 @@ for i=1,NumEntries do
 		Name="Name"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(zoom)
+			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(0.65)
 		end,
 		LoopScoreboxCommand=function(self)
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")
@@ -482,7 +482,7 @@ for i=1,NumEntries do
 		Name="Score"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 160, y):horizalign(right):zoom(zoom)
+			self:diffuse(Color.White):xy(-width/2 + 160, y):horizalign(right):zoom(0.66)
 		end,
 		LoopScoreboxCommand=function(self)
 			self:linear(transition_seconds/2):diffusealpha(0):queuecommand("SetScorebox")

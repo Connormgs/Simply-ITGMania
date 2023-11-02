@@ -26,5 +26,5 @@ return Def.ActorFrame{
 	
 
 	-- Record Texts (Machine and/or Personal)
-	LoadActor("./RecordTexts.lua", player)
+	
 }

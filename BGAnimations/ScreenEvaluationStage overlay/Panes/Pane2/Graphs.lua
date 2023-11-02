@@ -11,7 +11,7 @@ local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y(_screen.cy +0)
 		self:addx(-80)
-		if player == PLAYER_2 then self:x(50)
+		if player == PLAYER_2 then self:x(-40)
 			-- not quite an even 0.25 because we need to accomodate the extra 10px
 			-- that would normally be between the left and right panes
 			
@@ -21,8 +21,9 @@ local af = Def.ActorFrame{
 	-- Draw a Quad behind the GraphDisplay (lifebar graph) and Judgment ScatterPlot
 	Def.Quad{
 		InitCommand=function(self)
-			self:zoomto(GraphWidth, GraphHeight):diffuse(color("#101519")):vertalign(top)
-			self:addx(20)
+			self:zoomto(GraphWidth+18, GraphHeight):diffuse(color("#101519")):vertalign(top)
+			self:addx(9)
+			self:addy(1)
 		end
 	},
 }
@@ -114,7 +115,7 @@ if storage.DeathSecond ~= nil then
 		LoadFont("Common Normal")..{
 			InitCommand=function(self)
 				self:zoom(0.5)
-				self:diffuse(Color.Red)
+				self:diffuse(Color.White)
 				local text
 				-- fail time formatting
 				if secondsLeft > 3600 then
