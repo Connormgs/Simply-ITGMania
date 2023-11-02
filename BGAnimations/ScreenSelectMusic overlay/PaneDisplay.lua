@@ -221,6 +221,7 @@ local PaneItems = {
 local af = Def.ActorFrame{ Name="PaneDisplayMaster" }
 
 af[#af+1] = RequestResponseActor(17, 50)..{
+
 	Name="GetScoresRequester",
 	OnCommand=function(self)
 		-- Create variables for both players, even if they're not currently active.
@@ -251,7 +252,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 					loadingText:visible(true)
 				end
 			end
-			
+		
 			return
 		end
 
@@ -357,12 +358,16 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
 		Name="MachineHighScoreName",
 		InitCommand=function(self)
+		local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 			self:zoom(0.49):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
 			if player == PLAYER_2 then self:x(-125) end
 			if IsWide then self:x(-141) end
 			self:y(-9)
 			if IsWide and player == PLAYER_2 then self:x(-145) end
+			if styletype == "StyleType_OnePlayerTwoSides" then
+			self:x(30)
+			end
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
@@ -386,13 +391,18 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
 		Name="MachineHighScore",
 		InitCommand=function(self)
+		local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 			self:zoom(0.45):diffuse(Color.White):horizalign(right)
 			self:x(-93)
 			if player == PLAYER_2 then self:x(-53) end
 			if IsWide then self:x(-75) end
 			self:y(-9)
 			if IsWide and player == PLAYER_2 then self:x(-74) end
+			if styletype == "StyleType_OnePlayerTwoSides" then
+			self:x(103)
+			end
 		end,
+		
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
 			-- We overload this actor to work both for GrooveStats and also offline.
@@ -420,12 +430,16 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
 		Name="PlayerHighScoreName",
 		InitCommand=function(self)
+		local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 			self:zoom(0.50):diffuse(Color.White):maxwidth(50)
 			self:x(-163)
 			if player == PLAYER_2 then self:x(-125) end
 			if IsWide then self:x(-141) end
 			self:y(5)
 			if IsWide and player == PLAYER_2 then self:x(-145) end
+			if styletype == "StyleType_OnePlayerTwoSides" then
+			self:x(30)
+			end
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
@@ -448,12 +462,16 @@ for player in ivalues(PlayerNumber) do
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
 		Name="PlayerHighScore",
 		InitCommand=function(self)
+		local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 			self:zoom(0.45):diffuse(Color.White):horizalign(right)
 			self:x(-93)
 			if IsWide then self:x(-75) end
 			self:y(5)
 			if player == PLAYER_2 then self:x(-53) end
 			if IsWide and player == PLAYER_2 then self:x(-74) end
+			if styletype == "StyleType_OnePlayerTwoSides" then
+			self:x(103)
+			end
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomx(0) end,
 		SetCommand=function(self)
@@ -476,13 +494,18 @@ for player in ivalues(PlayerNumber) do
 	}
 
 	af2[#af2+1] = LoadFont("_eurostile normal")..{
+	
 		Name="Loading",
 		Text="Loading ... ",
 		InitCommand=function(self)
+		local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 			self:zoom(0.5)
 			self:x(-67)
 			self:y(23)
 			self:visible(false)
+			if styletype == "StyleType_OnePlayerTwoSides" then
+			self:x(107)
+			end
 		end,
 		SetCommand=function(self)
 			self:settext("Loading ...")

@@ -124,12 +124,16 @@ af2[#af2+1] = LoadFont("_eurostile normal")..{
 	Name="NPS",
 	Text="Peak NPS: ",
 	InitCommand=function(self)
+	local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 		self:horizalign(left):zoom(0.40)
 		if player == PLAYER_1 then
 			self:xy(60,157)
 		else
 			self:addx(44):addy(-17)
 		end
+		if styletype == "StyleType_OnePlayerTwoSides" then
+			self:x(250)
+			end
 		-- We want black text in Rainbow mode except during HolidayCheer(), white otherwise.
 		self:diffuse((ThemePrefs.Get("RainbowMode") and not HolidayCheer()) and {0, 0, 0, 1} or {1, 1, 1, 1})
 	end,
@@ -179,11 +183,14 @@ af2[#af2+1] = Def.ActorFrame{
 		Text="",
 		Name="BreakdownText",
 		InitCommand=function(self)
+		local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 			local textZoom = 0.5
 			self:maxwidth(200):zoom(textZoom)
 			self:xy(10,132)
 			if player == PLAYER_2 then self:xy(-5,-40) end
-			
+			if styletype == "StyleType_OnePlayerTwoSides" then
+			self:x(200)
+			end
 		end,
 
 		HideCommand=function(self)
@@ -204,11 +211,17 @@ af2[#af2+1] = Def.ActorFrame{
 af2[#af2+1] = Def.ActorFrame{
 	Name="PatternInfo",
 	InitCommand=function(self)
+	local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 		if GAMESTATE:GetNumSidesJoined() == 2 then
 			self:y(88 * (player == PLAYER_1 and 1 or -1))
 		else
+
 			self:y(88 * (player == PLAYER_1 and 1 or -1))
 		end
+			if styletype == "StyleType_OnePlayerTwoSides" then
+			self:y(88 * (player == PLAYER_1 and 1 or -1))
+			self:x(190)
+			end
 		self:visible(GAMESTATE:GetNumSidesJoined() == 1 or 2)
 	end,
 	PlayerJoinedMessageCommand=function(self, params)
