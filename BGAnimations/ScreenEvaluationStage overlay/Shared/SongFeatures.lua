@@ -28,7 +28,7 @@ return Def.ActorFrame{
 
 	-- text for Song Length
 	LoadFont("_eurostile normal")..{
-		InitCommand=function(self) self:zoom(0.6):maxwidth(418/0.875):xy(120,-130):horizalign("right") end,
+		InitCommand=function(self) self:zoom(0.6):maxwidth(418/0.875):xy(150,-130):horizalign("right") end,
 		OnCommand=function(self)
 			local seconds = nil
 			if GAMESTATE:IsCourseMode() then
