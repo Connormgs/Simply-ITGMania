@@ -83,7 +83,7 @@ LoadFont("_eurostile white glow")..{
 			end,
 			OffCommand=function(self)
 				self:accelerate(0.2):zoomx(2):zoomy(0):diffusealpha(0)
-				SOUND:PlayOnce( THEME:GetPathS("_ITGCommon","start") )
+				
 			end
 		},
 LoadFont("_eurostile normal")..{
