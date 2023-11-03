@@ -21,7 +21,7 @@ return Def.ActorFrame{
 	},
 
 	Def.Sprite{
-		Texture="../_red streak";
+		Texture="../_red streak2";
 		OnCommand=function(self)
 			self:Center()
 			:zoom(3.2):rotationz(-30):fadeleft(0.3):faderight(0.3):cropleft(1.3):cropright(-0.3):linear(1):cropleft(-0.3):zoom(2.8):linear(2):zoom(2.0):linear(1):cropright(1.3):zoom(1.6)
