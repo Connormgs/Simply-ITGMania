@@ -71,7 +71,7 @@ Handle.Start = function(event)
 		finished = true
 		-- otherwise, play the StartButton sound
 		MESSAGEMAN:Broadcast("StartButton")
-		SOUND:PlayOnce( THEME:GetPathS("_ITGCommon","start") )
+		
 		-- and queue the OffCommand for the entire screen
 		topscreen:queuecommand("Off"):sleep(0.4)
 	end
