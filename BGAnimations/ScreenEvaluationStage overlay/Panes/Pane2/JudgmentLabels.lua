@@ -139,7 +139,7 @@ for index, label in ipairs(RadarCategories) do
 	-- Replace hands with the EX score only in FA+ mode.
 	-- We have a separate FA+ pane for ITG mode.
 	if index == 1 and SL.Global.GameMode == "FA+" then
-		t[#t+1] = LoadFont("Wendy/_wendy small")..{
+		t[#t+1] = LoadFont("_eurostile normal")..{
 			Text="EX",
 			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
 			BeginCommand=function(self)
@@ -153,17 +153,7 @@ for index, label in ipairs(RadarCategories) do
 		local performance = stats:GetRadarActual():GetValue( "RadarCategory_"..firstToUpper(EnglishRadarCategories[label]) )
 		local possible = stats:GetRadarPossible():GetValue( "RadarCategory_"..firstToUpper(EnglishRadarCategories[label]) )
 
-		t[#t+1] = Def.ActorFrame{
-		Condition=not GAMESTATE:Env()["WorkoutMode"],
-		OnCommand=function(self) self:xy(0,0) end;
-		Def.BitmapText{ Font="_eurostile normal", Text=label,
-			InitCommand=function(self) self:zoom(0.5):horizalign(left) end,
-			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -120) or 120 )
-				self:y((index-1)*17 + 108)
-			end
-		}
-		}
+
 	end
 	
 
@@ -247,7 +237,7 @@ t[#t+1] = Def.ActorFrame{
 	end;
 	Def.BitmapText{ Font="_eurostile normal", Text="Max Combo",
 	OnCommand=function(self)
-		self:xy( -120, 16*7-2+80 ):zoom(0.5):halign(0):maxwidth(140)
+		self:xy( -120, 16*7-2+80 ):zoom(0.5):halign(0):maxwidth(150)
 		if player == PLAYER_2 then self:x(120) end
 	end;
 	};
@@ -333,7 +323,12 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 				self:xy(66,32-18+itgstylemargin)
 			end
 		end;
-
+	Def.BitmapText{ Font="Common Normal", Text=THEME:GetString("RadarCategory",RCType),
+		OnCommand=function(self)
+			self:xy( -85, 16*index -1 ):zoom(0.5):halign(0)
+			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:xy(-134,-1+15.8*index) end
+		end;
+		};
 		Def.BitmapText{ Font="ScreenEvaluation judge",
 		OnCommand=function(self)
 			self:xy( -40, 16*index ):zoom(0.5):halign(1)
