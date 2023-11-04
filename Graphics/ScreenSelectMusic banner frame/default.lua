@@ -197,7 +197,7 @@ return Def.ActorFrame{
 		Text=string.upper(THEME:GetString("BannerFrame","Artist"));
 		Font="_eurostile normal",
 		OnCommand=function(s)
-			s:halign(0):shadowlength(2):zoom(0.45):xy(-165,-38):diffusealpha(0.5)
+			s:halign(0):shadowlength(2):zoom(0.55):xy(-165,-40):diffusealpha(0.5)
 		end;
 		},
 

@@ -32,7 +32,7 @@ af[#af+1] = Def.ActorFrame{
 
 	-- Song Duration Value
 	LoadFont("_eurostile normal")..{
-		InitCommand=function(self) self:align(0,0):xy(430,20) end,
+		InitCommand=function(self) self:align(0,0):xy(430,20):rotationz(1) end,
 		OnCommand=function(s) s:shadowlength(2):zoom(0.6) end,
 		OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 		SetCommand=function(self)
