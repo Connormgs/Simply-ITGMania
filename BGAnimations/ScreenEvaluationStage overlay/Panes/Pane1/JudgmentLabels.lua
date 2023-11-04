@@ -332,6 +332,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 		OnCommand=function(self)
 			self:xy( -85, 16*index -1 ):zoom(0.5):halign(0)
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:xy(-134,-1+15.8*index) end
+			if player == PLAYER_2 then self:x(155) end
 		end;
 		};
 		Def.BitmapText{ Font="ScreenEvaluation judge",
