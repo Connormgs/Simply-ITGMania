@@ -49,7 +49,11 @@ if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
     table.remove(MenuChoices, 3)
     table.remove(padloc, 3)
 end
-
+if GAMESTATE:GetNumPlayersEnabled() == 2 then
+    table.remove(modes, 1)
+    table.remove(MenuChoices, 1)
+    table.remove(padloc, 1)
+end
 local function CheckValueOffsets(offset)
     MenuIndex = MenuIndex + offset
     if MenuIndex > #padloc  then MenuIndex = 1 end
