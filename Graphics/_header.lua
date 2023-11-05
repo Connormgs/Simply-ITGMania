@@ -21,7 +21,4 @@ return Def.ActorFrame{
 				self:diffuse(GetCurrentColor(true))
 			end
 		end,
-	},
-
-
-}
+	}
