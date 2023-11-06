@@ -169,7 +169,7 @@ end
 af[#af+1] = LoadFont("Common Normal")..{
 	InitCommand=function(self)
 		remBMT = self
-		self:x(0)
+		self:x(10):zoom(0.85)
 		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
 
 		-- flip alignment and adjust for smaller pane size
@@ -230,7 +230,7 @@ af[#af+1] = LoadFont("Common Normal")..{
 -- song duration in normal gameplay, overall course duration in CourseMode
 af[#af+1] = LoadFont("Common Normal")..{
 	InitCommand=function(self)
-		self:xy(0,20)
+		self:xy(10,20):zoom(0.85)
 		self:halign(PlayerNumber:Reverse()[player]):vertalign(bottom)
 		if IsUltraWide and #GAMESTATE:GetHumanPlayers() > 1 then
 			self:halign( PlayerNumber:Reverse()[OtherPlayer[player]] )
