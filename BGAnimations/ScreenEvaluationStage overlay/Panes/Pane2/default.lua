@@ -31,5 +31,5 @@ return Def.ActorFrame{
 
 	-- was this player disqualified from ranking?
 	LoadActor("./Disqualified.lua", player),
-
+	LoadActor("./RecordTexts.lua", player)
 }
