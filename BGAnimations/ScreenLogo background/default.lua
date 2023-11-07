@@ -9,6 +9,12 @@ t[#t+1] = Def.ActorFrame{
 			PROFILEMAN:GetMachineProfile():SetLastUsedHighScoreName(""):SetDisplayName("")
 		end;
 	},
+	
+	Def.Quad{
+	OnCommand=function(self)
+		self:stretchto(SCREEN_LEFT,SCREEN_TOP,SCREEN_RIGHT,SCREEN_BOTTOM):diffuse(GetCurrentColor(true)):diffusealpha(1):blend('BlendMode_Modulate')
+	end
+	},
 
 	Def.Sprite{
 		Texture="roxor",
