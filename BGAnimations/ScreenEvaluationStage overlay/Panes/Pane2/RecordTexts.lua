@@ -76,7 +76,7 @@ end
 -- We always want to return this actor frame in case we need to "hijack" it for GrooveStats functionality.
 local t = Def.ActorFrame{
 	Name="RecordTexts",
-	InitCommand=function(self) self:zoom(0.4) end,
+	InitCommand=function(self) self:zoom(0.36) end,
 	OnCommand=function(self)
 		self:x( player == PLAYER_1 and -45 or 95 )
 		self:y( 232 )
@@ -85,24 +85,25 @@ local t = Def.ActorFrame{
 
 t[#t+1] = LoadFont("_eurostile normal")..{
 	Name="MachineRecord",
-	InitCommand=function(self) self:x(-83):maxwidth(220) end,
+	InitCommand=function(self) self:x(-90) end,
 	OnCommand=function(self)
 		if EarnedMachineRecord and HighScoreIndex.Machine+1 > 0 then
 			self:settext(ScreenString("MachineRecord"):format(HighScoreIndex.Machine+1))
 		end
-		if player == PLAYER_2 then self:x(-330) end
+		if player == PLAYER_2 then self:x(-377) end
 	end,
 }
 
 t[#t+1] = LoadFont("_eurostile normal")..{
 	Name="PersonalRecord",
-	InitCommand=function(self) self:x(155):maxwidth(220) end,
+	InitCommand=function(self) self:x(174) end,
 	OnCommand=function(self)
 		if EarnedPersonalRecord and HighScoreIndex.Personal+1 > 0 then
 			self:settext(ScreenString("PersonalRecord"):format(HighScoreIndex.Personal+1))
 		end
-		if player == PLAYER_2 then self:x(-80) end
+		if player == PLAYER_2 then self:x(-98) end
 	end,
 }
+
 
 return t

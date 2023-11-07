@@ -82,8 +82,7 @@ local RadarCategories = {
 }
 for index, RCType in ipairs(RadarCategories.Types) do
 	if index == 1 then
-		t[#t+1] = Def.RollingNumbers{
-			Font="ScreenEvaluation judge",
+		t[#t+1] = LoadFont("ScreenEvaluation judge")..{
 			Name="Percent",
 			Text=("%.2f"):format(CalculateExScore(player)),
 			InitCommand=function(self)
