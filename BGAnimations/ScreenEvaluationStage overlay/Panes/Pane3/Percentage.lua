@@ -24,7 +24,7 @@ return Def.ActorFrame{
 			if player == PLAYER_1 then
 			self:x(-30)
 		else
-			self:x(10)
+			self:x(-8)
 		end
 		
 		end

@@ -60,7 +60,7 @@ if player == PLAYER_1 then
 
 if player == PLAYER_2 then
 			
-			self:addx(-34)
+			self:addx(-48)
 		end
 		end
 af.GraphCommand=function(self, params)
@@ -108,7 +108,7 @@ for i, column in ipairs( cols ) do
 				Text=SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i][judgment],
 				InitCommand=function(self)
 					self:xy(_x, j*row_height + 4)
-						:zoom(0.9)
+						:zoom(0.7)
 					if j == #rows then miss_bmt = self else judge_bmt[j] = self end
 				end
 			}

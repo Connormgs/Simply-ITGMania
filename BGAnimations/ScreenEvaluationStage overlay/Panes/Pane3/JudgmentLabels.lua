@@ -52,7 +52,7 @@ local t = Def.ActorFrame{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(-120,92):diffuse(GetCurrentColor(true))
+		self:xy(-112,92):diffuse(GetCurrentColor(true)):zoomx(1.08)
 		if player == PLAYER_2 then self:x(9999) end
 	
 	end,
@@ -61,7 +61,7 @@ t[#t+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),
 	Name="base",
 	InitCommand=function(self)
-		self:xy(20,92):diffuse(GetCurrentColor(true))
+		self:xy(12,92):diffuse(GetCurrentColor(true)):zoomx(1.08)
 		if player == PLAYER_1 then self:x(9999) end
 	end,
 }
@@ -81,7 +81,7 @@ for i=1, #TapNoteScores.Types do
 			Text=label:upper(),
 			InitCommand=function(self)
 				self:zoom(0.5):horizalign(right):maxwidth(65/self:GetZoom())
-					:x( (player == PLAYER_1 and -195) or -55 )
+					:x( (player == PLAYER_1 and -195) or -71 )
 					:y( i * row_height )
 					:diffuse( Colors[i] )
 
