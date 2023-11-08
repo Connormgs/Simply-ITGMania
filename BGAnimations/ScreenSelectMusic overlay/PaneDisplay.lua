@@ -92,28 +92,9 @@ local GetScoresRequestProcessor = function(res, params)
 		local rivalNum = 1
 		local worldRecordSet = false
 		local personalRecordSet = false
-		
-		local itlScore = nil
-		local isItlSong = false
-		
-		if data and data[playerStr] and data[playerStr]["itl"] and data[playerStr]["itl"]["itlLeaderboard"] then
-		-- And then also ensure that the chart hash matches the currently parsed one.
-			-- It's better to just not display anything than display the wrong scores.
-			if SL["P"..i].Streams.Hash == data[playerStr]["chartHash"] then
-				isItlSong = true
-				for gsEntry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-					if gsEntry["isSelf"] then
-						UpdateItlExScore(PlayerNumber[i], SL["P"..i].Streams.Hash, gsEntry["score"])
-						-- GS's score entry is a value like 9823, so we need to divide it by 100 to get 98.23
-						itlScore = string.format("%.2f%%", gsEntry["score"]/100)
-						itlRaw = gsEntry["score"]/100
-					end
-				end
-			end
-		end
 
 		-- First check to see if the leaderboard even exists.
-		if data and data[playerStr] and data[playerStr]["gsLeaderboard"] and #data[playerStr]["gsLeaderboard"] > 0 then
+		if data and data[playerStr] and data[playerStr]["gsLeaderboard"] then
 			-- And then also ensure that the chart hash matches the currently parsed one.
 			-- It's better to just not display anything than display the wrong scores.
 			if SL["P"..i].Streams.Hash == data[playerStr]["chartHash"] then
@@ -155,39 +136,7 @@ local GetScoresRequestProcessor = function(res, params)
 							GetMachineTag(gsEntry),
 							string.format("%.2f%%", gsEntry["score"]/100),
 							rivalName,
-							rivalScore,
-							"#000000"
-						)
-						rivalNum = rivalNum + 1
-					end
-				end
-			end
-		elseif data and data[playerStr] and data[playerStr]["itl"] and data[playerStr]["itl"]["itlLeaderboard"] then
-			
-			-- And then also ensure that the chart hash matches the currently parsed one.
-			-- It's better to just not display anything than display the wrong scores.
-			if SL["P"..i].Streams.Hash == data[playerStr]["chartHash"] then
-				for gsEntry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
-					if gsEntry["rank"] == 1 then
-						SetNameAndScore(
-							GetMachineTag(gsEntry),
-							string.format("%.2f%%", gsEntry["score"]/100),
-							machineName,
-							machineScore,
-							"#21CCE8"
-						)
-						worldRecordSet = true
-					end
-
-					if gsEntry["isRival"] then
-						local rivalScore = paneDisplay:GetChild("Rival"..rivalNum.."Score")
-						local rivalName = paneDisplay:GetChild("Rival"..rivalNum.."Name")
-						SetNameAndScore(
-							GetMachineTag(gsEntry),
-							string.format("%.2f%%", gsEntry["score"]/100),
-							rivalName,
-							rivalScore,
-							"#21CCE8"
+							rivalScore
 						)
 						rivalNum = rivalNum + 1
 					end
@@ -227,19 +176,7 @@ local GetScoresRequestProcessor = function(res, params)
 			end
 		else
 			if data and data[playerStr] then
-				if itlScore ~= nil then
-					loadingText:settext("ITL   "..itlScore):diffuse(color("#21CCE8"))
-					SL["P"..i].itlScore = itlRaw*100
-					local stepartist = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("StepArtistAF_P"..i)
-
-					if stepartist ~= nil then
-					  stepartist:queuecommand("ITL")
-					end
-					-- SCREENMAN:GetTopScreen():GetChild("StepArtistAF_"..i):queuecommand("Reset")
-				elseif isItlSong and itlScore == nil then
-					loadingText:settext("No ITL Score"):diffuse(color("#21CCE8"))
-					SL["P"..i].itlScore = 0
-				elseif data[playerStr]["isRanked"] then
+				if data[playerStr]["isRanked"] then
 					loadingText:settext("Loaded")
 				else
 					loadingText:settext("Not Ranked")
@@ -325,26 +262,19 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 		-- This makes sure that the Hash in the ChartInfo cache exists.
 		local sendRequest = false
 		local headers = {}
-		local query = {
-			maxLeaderboardResults=NumEntries,
-		}
+		local query = {}
 		local requestCacheKey = ""
 
-		if ThemePrefs.Get("MusicWheelGS") == "Pane" then
-			for i=1,2 do
-				local pn = "P"..i
-				if IsItlSong(PlayerNumber[i]) then
-					UpdatePathMap(PlayerNumber[i], SL[pn].Streams.Hash)
-				end
-				if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
-					query["chartHashP"..i] = SL[pn].Streams.Hash
-					headers["x-api-key-player-"..i] = SL[pn].ApiKey
-					requestCacheKey = requestCacheKey .. SL[pn].Streams.Hash .. SL[pn].ApiKey .. pn
-					local loadingText = master:GetChild("PaneDisplayP"..i):GetChild("Loading")
-					loadingText:visible(true)
-					loadingText:settext("Loading ..."):diffuse(Color.Black)
-					sendRequest = true
-				end
+		for i=1,2 do
+			local pn = "P"..i
+			if SL[pn].ApiKey ~= "" and SL[pn].Streams.Hash ~= "" then
+				query["chartHashP"..i] = SL[pn].Streams.Hash
+				headers["x-api-key-player-"..i] = SL[pn].ApiKey
+				requestCacheKey = requestCacheKey .. SL[pn].Streams.Hash .. SL[pn].ApiKey .. pn
+				local loadingText = master:GetChild("PaneDisplayP"..i):GetChild("Loading")
+				loadingText:visible(true)
+				loadingText:settext("Loading ...")
+				sendRequest = true
 			end
 		end
 
@@ -360,7 +290,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 				GetScoresRequestProcessor(res, params)
 			else
 				self:playcommand("MakeGrooveStatsRequest", {
-					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
+					endpoint="player-scores.php?"..NETWORK:EncodeQueryParameters(query),
 					method="GET",
 					headers=headers,
 					timeout=10,
@@ -393,15 +323,6 @@ for player in ivalues(PlayerNumber) do
 		self:y(_screen.h - footer_height - pane_height)
 	end
 
-	af2.PlayerJoinedMessageCommand=function(self, params)
-		if player==params.Player then
-			-- ensure BackgroundQuad is colored before it is made visible
-			self:GetChild("BackgroundQuad"):playcommand("Set")
-			self:visible(true)
-				:zoom(0):croptop(0):bounceend(0.3):zoom(1)
-				:playcommand("Update")
-		end
-	end
 
 	af2.PlayerUnjoinedMessageCommand=function(self, params)
 		if player==params.Player then
