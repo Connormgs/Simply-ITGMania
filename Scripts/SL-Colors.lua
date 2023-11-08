@@ -43,3 +43,7 @@ end
 function LightenColor(c)
 	return { c[1]*1.25, c[2]*1.25, c[3]*1.25, c[4] }
 end
+
+function DarkenColor(c)
+	return { c[1]*0.75, c[2]*0.75, c[3]*0.75, c[4] }
+end

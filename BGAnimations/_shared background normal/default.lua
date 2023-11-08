@@ -98,15 +98,15 @@ return Def.ActorFrame{
 	end,		
 		Def.Model{ Meshes="arrow.txt", Materials="ITG2arrowmaterial.txt", Bones="arrow.txt",
 			InitCommand=function(self)
-				self:diffusealpha(ThemePrefs.Get("ITG1") and 0 or .12):zoom(2):wag():effectmagnitude(0,0,5):effectperiod(5):diffuse(GetCurrentColor(true)):diffusealpha(0.25)
+				self:zoom(2):wag():effectmagnitude(0,0,5):effectperiod(5):diffuse(GetCurrentColor(true)):diffusealpha(ThemePrefs.Get("ITG1") and 0 or .25)
 			end,
-			UpdateColoringMessageCommand=function(self) self:finishtweening():linear(0.5):diffusealpha( ThemePrefs.Get("ITG1") and 0 or .12 ):diffuse(GetCurrentColor(true)) end
+			UpdateColoringMessageCommand=function(self) self:finishtweening():linear(0.5):diffuse(GetCurrentColor(true)):diffusealpha( ThemePrefs.Get("ITG1") and 0 or .25 ) end
 		},		
 		Def.Model{ Meshes="arrow.txt", Materials="ITG1arrowmaterial.txt", Bones="arrow.txt",
 			InitCommand=function(self)
-				self:diffusealpha(ThemePrefs.Get("ITG1") and .12 or 0):zoom(2):wag():effectmagnitude(0,0,5):effectperiod(5):diffuse(GetCurrentColor(true)):diffusealpha(0.25)
+				self:zoom(2):wag():effectmagnitude(0,0,5):effectperiod(5):diffuse(GetCurrentColor(true)):diffusealpha(ThemePrefs.Get("ITG1") and 0 or .25)
 			end,
-			UpdateColoringMessageCommand=function(self) self:finishtweening():linear(0.5):diffusealpha( ThemePrefs.Get("ITG1") and .12 or 0 ):diffuse(GetCurrentColor(true)):diffusealpha(0.25) end
+			UpdateColoringMessageCommand=function(self) self:finishtweening():linear(0.5):diffuse(GetCurrentColor(true)):diffusealpha( ThemePrefs.Get("ITG1") and 0 or 0.25 ) end
 		}
 	},
 
