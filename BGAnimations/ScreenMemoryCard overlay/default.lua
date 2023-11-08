@@ -11,7 +11,7 @@ t[#t+1] = Def.ActorFrame{ OnCommand=function(s) s:fov(70) end;
 t[#t+1] = Def.Sprite{
     Texture="../_red streak",
     OnCommand=function(s)
-        s:zoom(0.5):xy( SCREEN_CENTER_X, SCREEN_CENTER_Y-80 ):fadeleft(0.3):faderight(0.3):cropleft(1.3):cropright(-0.3)
+        s:diffuse(GetCurrentColor(true)):zoom(0.5):xy( SCREEN_CENTER_X, SCREEN_CENTER_Y-80 ):fadeleft(0.3):faderight(0.3):cropleft(1.3):cropright(-0.3)
         :linear(1):cropleft(-0.3):zoom(2.5):linear(9):zoom(1.2)
     end;
     OffCommand=function(s) s:stoptweening():linear(0.5):cropright(1.3):zoom(0.5) end;

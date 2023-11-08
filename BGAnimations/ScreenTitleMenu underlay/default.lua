@@ -12,14 +12,14 @@ return Def.ActorFrame{
 	Def.Sprite{
 		Texture=style,
 		 OnCommand=function(self)
-			self:xy(SCREEN_LEFT-64,SCREEN_CENTER_Y-165):rotationz(0):linear(1):x(SCREEN_RIGHT+64):rotationz(360)
+			self:diffuse(GetCurrentColor(true)):xy(SCREEN_LEFT-64,SCREEN_CENTER_Y-197):rotationz(0):linear(1):x(SCREEN_RIGHT+64):rotationz(360)
 		end
 	},
 	
 	Def.Sprite{
 		Texture=style,
 		 OnCommand=function(self)
-			self:xy(SCREEN_LEFT-64,SCREEN_CENTER_Y+165):rotationz(0):linear(1):x(SCREEN_RIGHT+64):rotationz(360)
+			self:diffuse(GetCurrentColor(true)):xy(SCREEN_LEFT-64,SCREEN_CENTER_Y+202):rotationz(0):linear(1):x(SCREEN_RIGHT+64):rotationz(360)
 		end
 	},
 
