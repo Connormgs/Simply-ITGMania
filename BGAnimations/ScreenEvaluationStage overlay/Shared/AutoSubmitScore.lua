@@ -1,4 +1,4 @@
-if not IsServiceAllowed(SL.GrooveStats.AutoSubmit) then return end
+if not IsServiceAllowed(SL.GrooveStats.AutoSubmit) or GAMESTATE:IsCourseMode() then return end
 
 local NumEntries = 10
 
@@ -12,17 +12,16 @@ local SetEntryText = function(rank, name, score, date, actor)
 end
 
 local GetMachineTag = function(gsEntry)
-	if not gsEntry then return end
-	if gsEntry["machineTag"] then
-		-- Make sure we only use up to 4 characters for space concerns.
-		return gsEntry["machineTag"]:sub(1, 4):upper()
-	end
-
-	-- User doesn't have a machineTag set. We'll "make" one based off of
-	-- their name.
+	if not gsEntry then return end	
+	-- Groovestats username.
 	if gsEntry["name"] then
 		-- 4 Characters is the "intended" length.
-		return gsEntry["name"]:sub(1,4):upper()
+		return gsEntry["name"]
+	end
+
+	if gsEntry["machineTag"] then
+		-- User doesn't have a username (?).
+		return gsEntry["machineTag"]:sub(1, 4):upper()
 	end
 
 	return ""
@@ -46,12 +45,21 @@ local GetJudgmentCounts = function(player)
 		["Rolls"] = "rollsHeld",
 		["totalRolls"] = "totalRolls"
 	}
+	local translation15 = {
+		["W015"] = "fantasticPlus",
+		["W115"] = "fantastic"
+	}
 
 	local judgmentCounts = {}
 
 	for key, value in pairs(counts) do
 		if translation[key] ~= nil then
 			judgmentCounts[translation[key]] = value
+		end
+	end
+	for key, value in pairs(counts) do
+		if translation15[key] ~= nil then
+			judgmentCounts[translation15[key]] = value
 		end
 	end
 
@@ -121,6 +129,8 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 	-- Hijack the leaderboard pane to display the GrooveStats leaderboards.
 	if panes then
 		local data = JsonDecode(res.body)
+		local headers = res.headers
+	
 		for i=1,2 do
 			local playerStr = "player"..i
 			local entryNum = 1
@@ -129,6 +139,19 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 			local highScorePane = panes:GetChild("Pane8_SideP"..i):GetChild("")
 			local QRPane = panes:GetChild("Pane7_SideP"..i):GetChild("")
 
+			local RPGPane = panes:GetChild("Pane9_SideP"..i):GetChild("")
+			local ITLPane = panes:GetChild("Pane10_SideP"..i):GetChild("")
+
+			local boogie = false
+			local boogie_ex = false
+			if headers["bs-leaderboard-player-" .. i] == "BS" then
+				boogie = true
+				MESSAGEMAN:Broadcast("BoogieLogo",{ player = i })
+			elseif headers["bs-leaderboard-player-" .. i] == "BS-EX" then
+				boogie_ex = true
+				MESSAGEMAN:Broadcast("BoogieEXLogo",{ player = i })
+			end
+		
 			-- If only one player is joined, we then need to update both panes with only
 			-- one players' data.
 			local side = i
@@ -154,7 +177,9 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 						elseif i == 2 and P2SubmitText then
 							P2SubmitText:queuecommand("ChartNotRanked")
 						end
-					elseif data[playerStr]["gsLeaderboard"] then
+					end
+					
+					if data[playerStr]["gsLeaderboard"] then
 						for gsEntry in ivalues(data[playerStr]["gsLeaderboard"]) do
 							local entry = highScorePane:GetChild("HighScoreList"):GetChild("HighScoreEntry"..entryNum)
 							entry:stoptweening()
@@ -188,6 +213,64 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 						end
 					end
 
+					if data[playerStr]["rpg"] then
+						local rpgEntry = 1
+						local rpgRival = 1
+						for gsEntry in ivalues(data[playerStr]["rpg"]["rpgLeaderboard"]) do
+							local entry = RPGPane:GetChild("HighScoreList"):GetChild("HighScoreEntry"..rpgEntry)
+							entry:stoptweening()
+							entry:diffuse(Color.White)
+							SetEntryText(
+								gsEntry["rank"]..".",
+								GetMachineTag(gsEntry),
+								string.format("%.2f%%", gsEntry["score"]/100),
+								ParseGroovestatsDate(gsEntry["date"]),
+								entry
+							)
+							if gsEntry["isRival"] then
+								entry:diffuse(color("#BD94FF"))
+								rpgRival = rpgRival + 1
+							elseif gsEntry["isSelf"] then
+								entry:diffuse(color("#A1FF94"))
+								-- personalRank = gsEntry["rank"]
+							end
+
+							if gsEntry["isFail"] then
+								entry:GetChild("Score"):diffuse(Color.Red)
+							end
+							rpgEntry = rpgEntry + 1
+						end
+					end
+
+					if data[playerStr]["itl"] then
+						local itlEntry = 1
+						local itlRival = 1
+						for gsEntry in ivalues(data[playerStr]["itl"]["itlLeaderboard"]) do
+							local entry = ITLPane:GetChild("HighScoreList"):GetChild("HighScoreEntry"..itlEntry)
+							entry:stoptweening()
+							entry:diffuse(Color.White)
+							SetEntryText(
+								gsEntry["rank"]..".",
+								GetMachineTag(gsEntry),
+								string.format("%.2f%%", gsEntry["score"]/100),
+								ParseGroovestatsDate(gsEntry["date"]),
+								entry
+							)
+							if gsEntry["isRival"] then
+								entry:diffuse(color("#BD94FF"))
+								itlRival = itlRival + 1
+							elseif gsEntry["isSelf"] then
+								entry:diffuse(color("#A1FF94"))
+								-- personalRank = gsEntry["rank"]
+							end
+
+							if gsEntry["isFail"] then
+								entry:GetChild("Score"):diffuse(Color.Red)
+							end
+							itlEntry = itlEntry + 1
+						end
+					end
+
 					-- Only display the overlay on the sides that are actually joined.
 					if ToEnumShortString("PLAYER_P"..i) == "P"..side and (data[playerStr]["rpg"] or data[playerStr]["itl"]) then
 						local eventAf = overlay:GetChild("AutoSubmitMaster"):GetChild("EventOverlay"):GetChild("P"..i.."EventAf")
@@ -195,24 +278,48 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 						shouldDisplayOverlay = true
 					end
 
-					local upperPane = overlay:GetChild("P"..side.."_AF_Upper")
-					if upperPane then
-						if data[playerStr]["result"] == "score-added" or data[playerStr]["result"] == "improved" then
-							local recordText = overlay:GetChild("AutoSubmitMaster"):GetChild("P"..side.."RecordText")
-							local GSIcon = overlay:GetChild("AutoSubmitMaster"):GetChild("P"..side.."GrooveStats_Logo")
+					-- Only update PB/WR messages on the side that is joined
+					if ToEnumShortString("PLAYER_P"..i) == "P"..side then
+						local upperPane = overlay:GetChild("P"..side.."_AF_Upper")
+						if upperPane then
+							if data[playerStr]["result"] == "score-added" or data[playerStr]["result"] == "improved" then
+								local recordText = overlay:GetChild("AutoSubmitMaster"):GetChild("P"..side.."RecordText")
+								local GSIcon = overlay:GetChild("AutoSubmitMaster"):GetChild("P"..side.."GrooveStats_Logo")
+								local BSIcon = overlay:GetChild("AutoSubmitMaster"):GetChild("P"..side.."BoogieStats_Logo")
+								local BSEXIcon = overlay:GetChild("AutoSubmitMaster"):GetChild("P"..side.."BoogieStatsEX_Logo")
 
-							recordText:visible(true)
-							GSIcon:visible(true)
-							recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3)
-							if personalRank == 1 then
-								recordText:settext("World Record!")
-							else
-								recordText:settext("Personal Best!")
+								recordText:visible(true)
+
+								if boogie then BSIcon:visible(true)
+								elseif boogie_ex then BSEXIcon:visible(true)
+								else GSIcon:visible(true) end
+
+								recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3)
+								local soundDir = THEME:GetCurrentThemeDirectory() .. "Sounds/"
+								if personalRank == 1 then
+									recordText:settext("World Record!")
+									-- Play random sound in Sounds/Evaluation WR/
+									soundDir = soundDir .. "Evaluation WR/"
+									audio_files = findFiles(soundDir)
+									if #audio_files > 0 then
+										SOUND:PlayOnce(audio_files[math.random(#audio_files)])
+									end
+								else
+									recordText:settext("Personal Best!")
+									-- Play random sound in Sounds/Evaluation PB/
+									soundDir = soundDir .. "Evaluation PB/"
+									audio_files = findFiles(soundDir)
+									if #audio_files > 0 then
+										SOUND:PlayOnce(audio_files[math.random(#audio_files)])
+									end
+								end
+								local recordTextXStart = recordText:GetX() - recordText:GetWidth()*recordText:GetZoom()/2
+								local GSIconWidth = GSIcon:GetWidth()*GSIcon:GetZoom()
+								local BSIconWidth = BSIcon:GetWidth()*BSIcon:GetZoom()
+								-- This will automatically adjust based on the length of the recordText length.
+								GSIcon:xy(recordTextXStart - GSIconWidth/2, recordText:GetY())
+								BSIcon:xy(recordTextXStart - BSIconWidth/2, recordText:GetY())
 							end
-							local recordTextXStart = recordText:GetX() - recordText:GetWidth()*recordText:GetZoom()/2
-							local GSIconWidth = GSIcon:GetWidth()*GSIcon:GetZoom()
-							-- This will automatically adjust based on the length of the recordText length.
-							GSIcon:xy(recordTextXStart - GSIconWidth/2, recordText:GetY())
 						end
 					end
 				end
@@ -395,7 +502,25 @@ af[#af+1] = Def.Sprite{
 	end,
 }
 
-af[#af+1] = LoadFont("Common Bold")..{
+af[#af+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","BoogieStats.png"),
+	Name="P1BoogieStats_Logo",
+	InitCommand=function(self)
+		self:zoom(0.2)
+		self:visible(false)
+	end,
+}
+
+af[#af+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","BoogieStatsEX.png"),
+	Name="P1BoogieStatsEX_Logo",
+	InitCommand=function(self)
+		self:zoom(0.2)
+		self:visible(false)
+	end,
+}
+
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 	Name="P1RecordText",
 	InitCommand=function(self)
 		local x = _screen.cx - 225
@@ -414,7 +539,25 @@ af[#af+1] = Def.Sprite{
 	end,
 }
 
-af[#af+1] = LoadFont("Common Bold")..{
+af[#af+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","BoogieStats.png"),
+	Name="P2BoogieStats_Logo",
+	InitCommand=function(self)
+		self:zoom(0.2)
+		self:visible(false)
+	end,
+}
+
+af[#af+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","BoogieStatsEX.png"),
+	Name="P2BoogieStatsEX_Logo",
+	InitCommand=function(self)
+		self:zoom(0.2)
+		self:visible(false)
+	end,
+}
+
+af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 	Name="P2RecordText",
 	InitCommand=function(self)
 		local x = _screen.cx + 225
