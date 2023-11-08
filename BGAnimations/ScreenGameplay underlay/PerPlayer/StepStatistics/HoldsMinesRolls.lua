@@ -5,7 +5,7 @@ local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 
 -- gray is used for leading 0s
 local gray = color("#5A6166")
-local row_height = 28
+local row_height = 20
 
 local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
 
@@ -88,8 +88,8 @@ local af = Def.ActorFrame{ Name="HoldsMinesRolls" }
 
 -- position the ActorFrame
 af.InitCommand=function(self)
-	self:x(player==PLAYER_1 and 155 or -85)
-	self:y(-140)
+	self:x(player==PLAYER_1 and 175 or -105)
+	self:y(-60)
 
 	if NoteFieldIsCentered and IsUsingWideScreen() then
 		self:x( player==PLAYER_1 and 155 or -88 )
@@ -113,20 +113,20 @@ for i, category in ipairs(RadarCategories) do
 		Name=("%s_Label"):format(category),
 		Text=THEME:GetString("ScreenEvaluation", category),
 		InitCommand=function(self)
-			self:zoom(0.833):horizalign( right )
+			self:zoom(0.6):horizalign( right )
 			self:y( (i-1)*row_height )
 		end,
 		PositionCommand=function(self, params)
-			self:x((player==PLAYER_1 and -10 or 90) - (params.Offset or 0))
+			self:x((player==PLAYER_1 and 30 or 160) - (params.Offset or 0))
 		end
 	}
 
 	-- player performance value / possible value
-	af[#af+1] = LoadFont("Wendy/_ScreenEvaluation numbers")..{
+	af[#af+1] = LoadFont("Common Normal")..{
 		Name=("%s_Values"):format(category),
 		InitCommand=function(self)
-			self:zoom(0.4):horizalign( right )
-			self:x( player==PLAYER_1 and 0 or 100 )
+			self:zoom(0.6):horizalign( right )
+			self:x( player==PLAYER_1 and -35 or 100 )
 			self:y( (i-1)*row_height )
 		end,
 		BeginCommand=function(self)

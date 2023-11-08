@@ -48,7 +48,7 @@ local SingleBPMDisplay = function()
 		LoadFont("_eurostile normal")..{
 			Name="BPMDisplay",
 			InitCommand=function(self)
-				self:zoom(.8)
+				self:zoom(.5)
 				bpmDisplay = self
 			end
 		}
