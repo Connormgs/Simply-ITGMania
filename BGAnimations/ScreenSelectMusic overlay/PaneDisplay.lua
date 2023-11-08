@@ -94,7 +94,7 @@ local GetScoresRequestProcessor = function(res, params)
 		local personalRecordSet = false
 
 		-- First check to see if the leaderboard even exists.
-		if data and data[playerStr] and data[playerStr]["gsLeaderboard"] then
+		if data and data[playerStr] and data[playerStr]["gsLeaderboard"] and #data[playerStr]["gsLeaderboard"] > 0 then
 			-- And then also ensure that the chart hash matches the currently parsed one.
 			-- It's better to just not display anything than display the wrong scores.
 			if SL["P"..i].Streams.Hash == data[playerStr]["chartHash"] then
