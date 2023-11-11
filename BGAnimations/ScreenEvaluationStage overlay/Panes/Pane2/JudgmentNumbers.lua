@@ -19,9 +19,9 @@ local TapNoteScores = {
 }
 
 local RadarCategories = {
-	Types = { 'Holds', 'Mines', 'Rolls' },
+	Types = { 'Holds', 'Mines', 'Rolls',   },
 	-- x values for P1 and P2
-	x = { P1=-290, P2=218 }
+	x = { P1=-180, P2=218 }
 }
 
 -- TODO(Zankoku) - EX judgments are in storage now, so we shouldn't have to calculate this all over again
@@ -32,7 +32,7 @@ local t = Def.ActorFrame{
 	OnCommand=function(self)
 		-- shift the x position of this ActorFrame to -90 for PLAYER_2
 		if controller == PLAYER_2 then
-			self:x( self:GetX() * -1 )
+			self:x( self:GetX() + 40 )
 		end
 	end
 }
@@ -44,89 +44,63 @@ for v in ivalues( SL[pn].ActiveModifiers.TimingWindows) do
 	windows[#windows + 1] = v
 end
 
+local PColor = {
+	["PlayerNumber_P1"] = color("#836002"),
+	["PlayerNumber_P2"] = color("#2F8425"),
+};
 -- do "regular" TapNotes first
 for i=1,#TapNoteScores.Types do
 	local window = TapNoteScores.Types[i]
 	local number = counts[window] or 0
+	local number15 = number
+	local display15 = false
+	
+	if i == 1 then
+		number15 = counts["W015"]
+	elseif i == 2 then
+		number15 = counts["W115"]
+	end
+
 
 	-- actual numbers
-	t[#t+1] = Def.RollingNumbers{
-		Font="Wendy/_ScreenEvaluation numbers",
+	t[#t+1] = Def.BitmapText{
+		Font="ScreenEvaluation judge",
 		InitCommand=function(self)
-			self:zoom(0.5):horizalign(right)
+			self:zoom(0.63):horizalign(right):diffuse(GetCurrentColor(true))
 
-			self:diffuse( TapNoteScores.Colors[i] )
+			
+
+			
 
 			-- if some TimingWindows were turned off, the leading 0s should not
 			-- be colored any differently than the (lack of) JudgmentNumber,
 			-- so load a unique Metric group.
 			if windows[i]==false and i ~= #TapNoteScores.Types then
 				self:Load("RollingNumbersEvaluationNoDecentsWayOffs")
-				self:diffuse(color("#444444"))
+				
 
 			-- Otherwise, We want leading 0s to be dimmed, so load the Metrics
 			-- group "RollingNumberEvaluationA"	which does that for us.
 			else
-				self:Load("RollingNumbersEvaluationA")
+				self:Load("RollingNumbersEvaluationA"):diffuse(color("#836002"))
 			end
 		end,
 		BeginCommand=function(self)
-			self:x( TapNoteScores.x[ToEnumShortString(controller)] )
-			self:y((i-1)*32 -24)
+			self:x( TapNoteScores.x[ToEnumShortString(controller)] ):diffuse(GetCurrentColor(true))
+		
+			self:settext(("%04.0f"):format( number ))
+			local leadingZeroAttr = { Length=4-tonumber(tostring(number):len()); Diffuse=PColor[player] }
+			self:AddAttribute(0, leadingZeroAttr)
+				self:x(-218)
+			self:y((i-1)*20 -20)
+			self:addy(140)
 			self:targetnumber(number)
+			
 		end
 	}
 
 end
-
 -- then handle hands/ex, holds, mines, rolls
-for index, RCType in ipairs(RadarCategories.Types) do
-	if index == 1 then
-		t[#t+1] = LoadFont("Wendy/_wendy white")..{
-			Name="Percent",
-			Text=("%.2f"):format(CalculateExScore(player)),
-			InitCommand=function(self)
-				self:horizalign(right):zoom(0.4)
-				self:x( ((controller == PLAYER_1) and -114) or 286 )
-				self:y(47)
-				self:diffuse( SL.JudgmentColors[SL.Global.GameMode][1] )
-			end
-		}
-	end
 
-	local possible = counts["total"..RCType]
-	local performance = counts[RCType]
-
-	if RCType == "Mines" then
-		-- The mines in the counts is mines hit but we want to display mines dodged.
-		performance = possible - performance
-	end
-
-	possible = clamp(possible, 0, 999)
-
-	-- player performance value
-	-- use a RollingNumber to animate the count tallying up for visual effect
-	t[#t+1] = Def.RollingNumbers{
-		Font="Wendy/_ScreenEvaluation numbers",
-		InitCommand=function(self) self:zoom(0.5):horizalign(right):Load("RollingNumbersEvaluationB") end,
-		BeginCommand=function(self)
-			self:x( RadarCategories.x[ToEnumShortString(controller)] )
-			self:y((index)*35 + 53)
-			self:targetnumber(performance)
-		end
-	}
-
-	-- slash and possible value
-	t[#t+1] = LoadFont("Wendy/_ScreenEvaluation numbers")..{
-		InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
-		BeginCommand=function(self)
-			self:x( ((controller == PLAYER_1) and -114) or 286 )
-			self:y(index*35 + 53)
-			self:settext(("/%03d"):format(possible))
-			local leadingZeroAttr = { Length=4-tonumber(tostring(possible):len()), Diffuse=color("#5A6166") }
-			self:AddAttribute(0, leadingZeroAttr )
-		end
-	}
-end
 
 return t

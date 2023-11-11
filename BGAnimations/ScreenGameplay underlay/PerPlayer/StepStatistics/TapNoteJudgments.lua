@@ -163,7 +163,7 @@ for index, window in ipairs(TNS.Types) do
 			af[#af+1] = LoadFont("Common Normal")..{
 				Text=TNS.Names[index]:upper(),
 				InitCommand=function(self)
-					self:zoom(0.833):maxwidth(72)
+					self:zoom(0.7):maxwidth(200)
 					self:halign( PlayerNumber:Reverse()[player] )
 					if player==PLAYER_1 then
 						self:x( 80 + (digits-4)*16)

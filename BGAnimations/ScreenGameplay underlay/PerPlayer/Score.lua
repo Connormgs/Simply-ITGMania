@@ -26,8 +26,8 @@ local styletype = ToEnumShortString(GAMESTATE:GetCurrentStyle():GetStyleType())
 -- scores are not aligned symmetrically around screen.cx for aesthetic reasons
 -- and this is the cause of many code-induced headaches
 local pos = {
-	[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3),  y=56 },
-	[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75), y=56 },
+	[PLAYER_1] = { x=(_screen.cx - clamp(_screen.w, 640, 854)/4.3+30),  y=70 },
+	[PLAYER_2] = { x=(_screen.cx + clamp(_screen.w, 640, 854)/2.75-50), y=70 },
 }
 
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
@@ -52,17 +52,19 @@ local zoom_factor = clamp(scale(GetScreenAspectRatio(), 16/10, 16/9, ar_scale.si
 
 -- -----------------------------------------------------------------------
 
-return LoadFont("Wendy/_wendy monospace numbers")..{
+return LoadFont("_futurist metalic")..{
 	Text="0.00",
 
 	Name=pn.."Score",
 	InitCommand=function(self)
 		self:valign(1):horizalign(right)
-		self:zoom(0.5)
+		self:zoom(1)
+	
 		if IsEX then
 			-- If EX Score, let's diffuse it to be the same as the FA+ top window.
 			-- This will make it consistent with the EX Score Pane.
 			self:diffuse(SL.JudgmentColors["FA+"][1])
+			
 		end
 	end,
 

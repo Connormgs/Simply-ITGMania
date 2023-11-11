@@ -18,10 +18,12 @@ return Def.ActorFrame{
 	-- labels like "FANTASTIC", "MISS", "holds", "rolls", etc.
 	LoadActor("./JudgmentLabels.lua", ...),
 
-
-	-- numbers (How many Fantastics? How many Misses? etc.)
+	LoadActor("./JudgmentNumbers.lua", ...),
 	LoadActor("./fa.lua", ...),
 	LoadActor("./fa2.lua", ...),
+	-- numbers (How many Fantastics? How many Misses? etc.)
+
+
 	
 	-- "Look at this graph."  –Some sort of meme on The Internet
 	LoadActor("./Graphs.lua", player),

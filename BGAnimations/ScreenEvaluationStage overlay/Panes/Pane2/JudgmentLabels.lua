@@ -3,21 +3,35 @@ local player, controller = unpack(...)
 local pn = ToEnumShortString(player)
 local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
 
-local tns_string = "TapNoteScore" .. (SL.Global.GameMode=="ITG" and "" or SL.Global.GameMode)
-
 local firstToUpper = function(str)
     return (str:gsub("^%l", string.upper))
 end
-
-local GetTNSStringFromTheme = function( arg )
-	return THEME:GetString(tns_string, arg)
-end
-
 -- iterating through the TapNoteScore enum directly isn't helpful because the
 -- sequencing is strange, so make our own data structures for this purpose
 local TapNoteScores = {}
-TapNoteScores.Types = { 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' }
-TapNoteScores.Names = map(GetTNSStringFromTheme, TapNoteScores.Types)
+local TapNoteScores = {
+	Types = { 'W0', 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss' },
+	Names = {
+		THEME:GetString("TapNoteScoreFA+", "W1"),
+		THEME:GetString("TapNoteScoreFA+", "W2"),
+		THEME:GetString("TapNoteScoreFA+", "W3"),
+		THEME:GetString("TapNoteScoreFA+", "W4"),
+		THEME:GetString("TapNoteScoreFA+", "W5"),
+		THEME:GetString("TapNoteScore", "W5"), -- FA+ mode doesn't have a Way Off window. Extract name from the ITG mode.
+		THEME:GetString("TapNoteScoreFA+", "Miss"),
+	},
+	Colors = {
+		SL.JudgmentColors["FA+"][1],
+		SL.JudgmentColors["FA+"][2],
+		SL.JudgmentColors["FA+"][3],
+		SL.JudgmentColors["FA+"][4],
+		SL.JudgmentColors["FA+"][5],
+		SL.JudgmentColors["ITG"][5], -- FA+ mode doesn't have a Way Off window. Extract color from the ITG mode.
+		SL.JudgmentColors["FA+"][6],
+	},
+	-- x values for P1 and P2
+	x = { P1=64, P2=94 }
+}
 
 local RadarCategories = {
 	THEME:GetString("ScreenEvaluation", 'Jumps'),
@@ -37,11 +51,7 @@ local EnglishRadarCategories = {
 	
 }
 
-local scores_table = {}
-for index, window in ipairs(TapNoteScores.Types) do
-	local number = stats:GetTapNoteScores( "TapNoteScore_"..window )
-	scores_table[window] = number
-end
+
 
 
 local t = Def.ActorFrame{
@@ -183,6 +193,38 @@ for index, label in ipairs(RadarCategories) do
 		};
 		
 	};
+	if i==1 and SL[pn].ActiveModifiers.SmallerWhite then
+			local show15 = false
+			t[#t+1] = LoadFont("Common Normal")..{
+				Text="10ms",
+				InitCommand=function(self) self:zoom(0.6):horizalign(right):maxwidth(76) end,
+				BeginCommand=function(self)
+					self:x( (controller == PLAYER_1 and 28) or -28 )
+					if maxCount > 9999 then
+						length = math.floor(math.log10(maxCount)+1)
+						modifier = controller == PLAYER_1 and -11*(length-4) or 11*(length-4)
+						finalPos = 28 + modifier
+						finalZoom = 0.6 - 0.1*(length-4)
+						self:x( (controller == PLAYER_1 and finalPos) or -finalPos ):zoom(finalZoom)
+					end
+					self:y(i*26-36)
+					-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
+					self:diffuse( TapNoteScores.Colors[i] )
+					self:playcommand("Marquee")
+				end,
+				MarqueeCommand=function(self)
+					if show15 then
+						self:settext("15ms")
+						show15 = false
+					else
+						self:settext("10ms")
+						show15 = true
+					end
+					
+					self:sleep(2):queuecommand("Marquee")
+				end
+			}
+		end
 end
 
 local function side(pn)
@@ -301,7 +343,7 @@ Def.Sprite{
 		:diffuse( PlayerColor(player) )
 		if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
 			self:x(137) end
-			if player == PLAYER_2 then self:x(249) end
+			if player == PLAYER_2 then self:x(249):diffuse(GetCurrentColor(true)) end
 	
 	end;
 	};
@@ -331,7 +373,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			if player == PLAYER_2 then self:x(155) end
 		end;
 		};
-		Def.BitmapText{ Font="ScreenEvaluation judge",
+			Def.BitmapText{ Font="ScreenEvaluation judge",
 		OnCommand=function(self)
 			self:xy( -40, 16*index ):zoom(0.5):halign(1)
 			self:settext(("%03.0f"):format(performance)):diffuse( PlayerColor(player) )
@@ -339,7 +381,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:AddAttribute(0, leadingZeroAttr )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
 			if player == PLAYER_1 then self:x(6) end
-			if player == PLAYER_2 then self:x(244) end
+			if player == PLAYER_2 then self:x(244):diffuse(GetCurrentColor(true)) end
 		end;
 		};
 		
@@ -351,7 +393,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:AddAttribute(0, leadingZeroAttr )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
 			if player == PLAYER_1 then self:x(45) end
-			if player == PLAYER_2 then self:x(284) end
+			if player == PLAYER_2 then self:x(284):diffuse(GetCurrentColor(true)) end
 		end;
 		};
 
@@ -361,14 +403,14 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:xy( -40, 16*index -1 ):zoom(0.5):halign(0):diffuse( PlayerColor(player) )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
 			if player == PLAYER_1 then self:x(5) end
-			if player == PLAYER_2 then self:x(243) end
+			if player == PLAYER_2 then self:x(243):diffuse(GetCurrentColor(true)) end
 		end;
 
 		};
 			Def.BitmapText{
 		 Font="_futurist metalic", Text=CalculatePercentage(player), OnCommand=function(self)
 			self:horizalign(right):xy(5,-92+(itgstylemargin*2.7)):diffuse(PlayerColor(player))
-			if player == PLAYER_2 then self:x(220) end
+			if player == PLAYER_2 then self:x(220):diffuse(GetCurrentColor(true)) end
 			
 		end
 	},
@@ -376,31 +418,8 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 	
 	
 end
-
---player judgment values
-for index, ScWin in ipairs(JudgmentInfo.Types) do
-	t[#t+1] = Def.ActorFrame{
-		Condition=not GAMESTATE:Env()["WorkoutMode"],
-		OnCommand=function(self) self:xy(-180,95) end;
-		Def.BitmapText{ Font="ScreenEvaluation judge",
-		OnCommand=function(self)
-			self:y(16*index):zoom(0.5):halign(1):diffuse( PlayerColor(player) )
-			local sco = GetPSStageStats(player):GetTapNoteScores("TapNoteScore_"..ScWin)
-			self:settext(("%04.0f"):format( sco )):diffuse( PlayerColor(player) )
-			local leadingZeroAttr = { Length=4-tonumber(tostring(sco):len()); Diffuse=PColor[player] }
-			self:AddAttribute(0, leadingZeroAttr )
-			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
-				self:xy(84,-70+15.8*index)
-			end
-			if player == PLAYER_1 then self:x(45) end
-			if player == PLAYER_2 then self:x(285) end
-		end;
-		};
-	};
-	
 end
 
-end
 
 return t
 

@@ -5,7 +5,7 @@ local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 
 -- gray is used for leading 0s
 local gray = color("#5A6166")
-local row_height = 20
+local row_height = 17
 
 local StepsOrTrail = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentTrail(player)) or GAMESTATE:GetCurrentSteps(player)
 
@@ -88,7 +88,7 @@ local af = Def.ActorFrame{ Name="HoldsMinesRolls" }
 
 -- position the ActorFrame
 af.InitCommand=function(self)
-	self:x(player==PLAYER_1 and 175 or -105)
+	self:x(player==PLAYER_1 and 175 or 111)
 	self:y(-60)
 
 	if NoteFieldIsCentered and IsUsingWideScreen() then
@@ -117,7 +117,8 @@ for i, category in ipairs(RadarCategories) do
 			self:y( (i-1)*row_height )
 		end,
 		PositionCommand=function(self, params)
-			self:x((player==PLAYER_1 and 30 or 160) - (params.Offset or 0))
+			self:x((player==PLAYER_1 and -170 or 160) - (params.Offset or 0))
+			self:addy(55)
 		end
 	}
 
@@ -126,8 +127,9 @@ for i, category in ipairs(RadarCategories) do
 		Name=("%s_Values"):format(category),
 		InitCommand=function(self)
 			self:zoom(0.6):horizalign( right )
-			self:x( player==PLAYER_1 and -35 or 100 )
+			self:x( player==PLAYER_1 and -235 or 100 )
 			self:y( (i-1)*row_height )
+			self:addy(55)
 		end,
 		BeginCommand=function(self)
 

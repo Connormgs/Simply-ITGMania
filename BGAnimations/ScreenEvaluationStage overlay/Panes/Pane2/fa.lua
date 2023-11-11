@@ -69,6 +69,7 @@ for i=1, #TapNoteScores.Types do
 			BeginCommand=function(self)
 				self:x( (controller == PLAYER_1 and -185) or -45 )
 				self:y(94)
+				self:diffuse(color("#3bfcff"))
 				-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
 				
 			end

@@ -38,33 +38,7 @@ for player in ivalues(PlayerNumber) do
 		end;
 	};
 
-	t[#t+1] = Def.BitmapText{
-		Condition=GAMESTATE:IsPlayerEnabled(player) and (GAMESTATE:GetPlayMode() ~= "PlayMode_Rave" and GAMESTATE:GetPlayMode() ~= "PlayMode_Oni") and not GAMESTATE:Env()["WorkoutMode"] and not GAMESTATE:Env()["Training"];
-		Font="_futurist metalic";
-		Text=" 0.00%";
-		OnCommand=function(self)
-			self:xy( player == PLAYER_1 and SCREEN_CENTER_X-200 or SCREEN_CENTER_X+185, SCREEN_TOP+56 )
-			:visible( Settings.CurrentScreen ~= "ScreenGameplaySyncMachine" )
-			:diffuse( CurColor() ):addy(-100):sleep(0.5)
-			:decelerate(0.8):addy(100)
-		
-		end;
-		JudgmentMessageCommand=function(self) self:queuecommand("UpdateScore") end;
-		UpdateScoreCommand=function(self)
-			self:settext( CalculatePercentage(player) )
-			-- time to check who's winning
-			if GAMESTATE:GetNumPlayersEnabled() == 2 then
-				if CalPerNum(player) < CalPerNum(player == PLAYER_1 and 1 or 0) then
-					self:effectmagnitude(1,1,0)
-				else
-					self:effectmagnitude(1.05,0.95,0)
-				end
-			end
-		end,
-		OffCommand=function(self)
-			self:sleep(1):accelerate(0.8):addy(-100)
-		end
-	}
+
 
 	t[#t+1] = Def.BitmapText{
 		Condition=GAMESTATE:IsPlayerEnabled(player) and GAMESTATE:GetPlayMode() == "PlayMode_Oni";

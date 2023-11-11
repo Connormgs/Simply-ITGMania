@@ -307,7 +307,7 @@ Def.Sprite{
 		:diffuse( PlayerColor(player) )
 		if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then
 			self:x(137) end
-			if player == PLAYER_2 then self:x(249) end
+			if player == PLAYER_2 then self:x(249):diffuse(GetCurrentColor(true)) end
 	
 	end;
 	};
@@ -344,7 +344,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:AddAttribute(0, leadingZeroAttr )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
 			if player == PLAYER_1 then self:x(6) end
-			if player == PLAYER_2 then self:x(244) end
+			if player == PLAYER_2 then self:x(244):diffuse(GetCurrentColor(true)) end
 		end;
 		};
 		
@@ -356,7 +356,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:AddAttribute(0, leadingZeroAttr )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
 			if player == PLAYER_1 then self:x(45) end
-			if player == PLAYER_2 then self:x(284) end
+			if player == PLAYER_2 then self:x(284):diffuse(GetCurrentColor(true)) end
 		end;
 		};
 
@@ -366,14 +366,14 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 			self:xy( -40, 16*index -1 ):zoom(0.5):halign(0):diffuse( PlayerColor(player) )
 			if GAMESTATE:GetPlayMode() == "PlayMode_Rave" then self:y(15.8*index) end
 			if player == PLAYER_1 then self:x(5) end
-			if player == PLAYER_2 then self:x(243) end
+			if player == PLAYER_2 then self:x(243):diffuse(GetCurrentColor(true)) end
 		end;
 
 		};
 			Def.BitmapText{
 		 Font="_futurist metalic", Text=CalculatePercentage(player), OnCommand=function(self)
-			self:horizalign(right):xy(5,-92+(itgstylemargin*2.7)):diffuse(PlayerColor(player))
-			if player == PLAYER_2 then self:x(220) end
+			self:horizalign(right):xy(5,-92+(itgstylemargin*2.7)):diffuse(GetCurrentColor(true))
+			if player == PLAYER_2 then self:x(220):diffuse(GetCurrentColor(true)) end
 			
 		end
 	},
@@ -398,7 +398,7 @@ for index, ScWin in ipairs(JudgmentInfo.Types) do
 				self:xy(84,-70+15.8*index)
 			end
 			if player == PLAYER_1 then self:x(45) end
-			if player == PLAYER_2 then self:x(285) end
+			if player == PLAYER_2 then self:x(285):diffuse(GetCurrentColor(true)) end
 		end;
 		};
 	};

@@ -52,7 +52,7 @@ for player in ivalues(Players) do
 
 	
 	t[#t+1] = LoadActor("./PerPlayer/TargetScore/default.lua", player)
-
+t[#t+1] = LoadActor("./PerPlayer/Score.lua", player)
 	-- All NoteField specific actors are contained in this file.
 	t[#t+1] = LoadActor("./PerPlayer/NoteField/default.lua", player)
 end

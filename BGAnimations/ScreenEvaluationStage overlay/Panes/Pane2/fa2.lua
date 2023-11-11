@@ -4,7 +4,7 @@ local pn = ToEnumShortString(player)
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 
 local TapNoteScores = {
-	Types = { 'W0' },
+	Types = { 'W0', 'W1' },
 	Colors = {
 		SL.JudgmentColors["FA+"][1],
 		SL.JudgmentColors["FA+"][2],
@@ -39,40 +39,7 @@ for v in ivalues( SL[pn].ActiveModifiers.TimingWindows) do
 	windows[#windows + 1] = v
 end
 
--- do "regular" TapNotes first
-for i=1,#TapNoteScores.Types do
-	local window = TapNoteScores.Types[i]
-	local number = counts[window] or 0
 
-	-- actual numbers
-	t[#t+1] = Def.RollingNumbers{
-		Font="ScreenEvaluation judge",
-		InitCommand=function(self)
-			self:zoom(0.62):horizalign(right)
-
-			self:diffuse( PlayerColor(player) )
-
-			-- if some TimingWindows were turned off, the leading 0s should not
-			-- be colored any differently than the (lack of) JudgmentNumber,
-			-- so load a unique Metric group.
-			if windows[i]==false and i ~= #TapNoteScores.Types then
-				self:Load("RollingNumbersEvaluationNoDecentsWayOffs")
-				self:diffuse(color("#444444"))
-
-			-- Otherwise, We want leading 0s to be dimmed, so load the Metrics
-			-- group "RollingNumberEvaluationA"	which does that for us.
-			else
-				self:Load("RollingNumbersEvaluationA")
-			end
-		end,
-		BeginCommand=function(self)
-			self:x( (controller == PLAYER_1 and -219) or 56 )
-			self:y(120)
-			self:targetnumber(number)
-		end
-	}
-
-end
 
 -- then handle hands/ex, holds, mines, rolls
 local RadarCategories = {
@@ -90,7 +57,7 @@ for index, RCType in ipairs(RadarCategories.Types) do
 				self:x( (controller == PLAYER_1 and -37) or 236 )
 				self:y(118)
 				self:diffuse( PlayerColor(player) )
-				self:Load("RollingNumbersEvaluationA")
+				if player == PLAYER_2 then self:diffuse(GetCurrentColor(true)) end
 			end
 		}
 	end
