@@ -207,9 +207,9 @@ for index, label in ipairs(RadarCategories) do
 						finalZoom = 0.6 - 0.1*(length-4)
 						self:x( (controller == PLAYER_1 and finalPos) or -finalPos ):zoom(finalZoom)
 					end
-					self:y(i*26-36)
+					self:y(i*26-36):diffuse(color("#03e8fc"))
 					-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
-					self:diffuse( TapNoteScores.Colors[i] )
+					
 					self:playcommand("Marquee")
 				end,
 				MarqueeCommand=function(self)
