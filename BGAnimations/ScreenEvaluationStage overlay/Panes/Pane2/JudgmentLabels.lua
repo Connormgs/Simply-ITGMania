@@ -101,9 +101,9 @@ t[#t+1] = LoadActor(THEME:GetPathG("", "_grade models/"..grade..".lua"), playerS
 	InitCommand=function(self)
 		self:x(-100 * (player==PLAYER_1 and -1 or 1))
 		self:y(_screen.cy-252)
-		self:zoom(0.95)
+		self:zoom(0.85)
 		if player == PLAYER_1 then self:x(-217) end
-		if player == PLAYER_2 then self:x(23) end
+		if player == PLAYER_2 then self:x(26) end
 	end,
 	
 }
@@ -407,9 +407,9 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 		end;
 
 		};
-			Def.BitmapText{
+		Def.BitmapText{
 		 Font="_futurist metalic", Text=CalculatePercentage(player), OnCommand=function(self)
-			self:horizalign(right):xy(5,-92+(itgstylemargin*2.7)):diffuse(PlayerColor(player))
+			self:horizalign(right):xy(10,-92+(itgstylemargin*2.7)):diffuse(GetCurrentColor(true))
 			if player == PLAYER_2 then self:x(220):diffuse(GetCurrentColor(true)) end
 			
 		end

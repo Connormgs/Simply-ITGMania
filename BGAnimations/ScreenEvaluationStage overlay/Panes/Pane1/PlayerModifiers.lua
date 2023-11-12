@@ -53,7 +53,7 @@ return Def.ActorFrame{
 		Text=optionslist,
 		InitCommand=function(self) self:xy(-230,-260):zoom(0.5):wrapwidthpixels(400) 
 		if player == PLAYER_1 then
-			self:x(-30)
+			self:x(-20)
 		else
 			self:x(-10)
 		end
