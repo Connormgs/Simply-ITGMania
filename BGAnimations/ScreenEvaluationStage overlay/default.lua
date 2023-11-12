@@ -179,7 +179,7 @@ LoadFont("_eurostile normal")..{
 		Condition=not ThemePrefs.Get("ITG1"),
 		InitCommand=function(self) self:xy(SCREEN_CENTER_X-1,SCREEN_CENTER_Y-126) end,
 		OnCommand=function(self)
-			self:y(SCREEN_TOP-100):sleep(3):decelerate(0.3):y(SCREEN_CENTER_Y-124):diffuse(GetCurrentColor(true))
+			self:y(SCREEN_TOP-100):sleep(3):decelerate(0.3):y(SCREEN_CENTER_Y-125):diffuse(GetCurrentColor(true)):zoomy(0.84):zoomx(0.95)
 		end,
 		OffCommand=function(self)
 			self:accelerate(0.3):addy(-SCREEN_CENTER_X)
