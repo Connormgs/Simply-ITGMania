@@ -410,7 +410,7 @@ for index, RCType in ipairs(JudgmentInfo.RadarVal) do
 		Def.BitmapText{
 		 Font="_futurist metalic", Text=CalculatePercentage(player), OnCommand=function(self)
 			self:horizalign(right):xy(10,-92+(itgstylemargin*2.7)):diffuse(GetCurrentColor(true))
-			if player == PLAYER_2 then self:x(220):diffuse(GetCurrentColor(true)) end
+			if player == PLAYER_2 then self:x(240):diffuse(GetCurrentColor(true)) end
 			
 		end
 	},
