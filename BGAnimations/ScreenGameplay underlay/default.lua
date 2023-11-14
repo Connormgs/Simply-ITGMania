@@ -47,6 +47,7 @@ t[#t+1] = LoadActor("./Shared/VersusStepStatistics.lua")
 
 -- per-player UI elements
 for player in ivalues(Players) do
+if not SL[ToEnumShortString(player)].ActiveModifiers.BreakUI then
 	t[#t+1] = LoadActor("./PerPlayer/UpperNPSGraph.lua", player)
 
 
@@ -56,7 +57,7 @@ t[#t+1] = LoadActor("./PerPlayer/Score.lua", player)
 	-- All NoteField specific actors are contained in this file.
 	t[#t+1] = LoadActor("./PerPlayer/NoteField/default.lua", player)
 end
-
+end
 -- add to the ActorFrame last; overlapped by StepStatistics otherwise
 t[#t+1] = LoadActor("./Shared/BPMDisplay.lua")
 
