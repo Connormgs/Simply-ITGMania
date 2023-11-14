@@ -271,9 +271,17 @@ local NewSessionRequestProcessor = function(res, gsInfo)
 		end
 	end
 
-	-- All services are enabled, display a green check.
+-- All services are enabled, display a green check.
 	if SL.GrooveStats.GetScores and SL.GrooveStats.Leaderboard and SL.GrooveStats.AutoSubmit then
-		groovestats:settext("✔ GrooveStats")
+		if ThemePrefs.Get("EnableBoogieStats") then
+			if string.find(PREFSMAN:GetPreference("HttpAllowHosts"), "boogiestats.andr.host") then
+				groovestats:settext("✔ BoogieStats")
+			else
+				groovestats:settext("✔ GrooveStats (BoogieStats host not in allow list)")
+			end
+		else
+			groovestats:settext("✔ GrooveStats")
+		end
 		SL.GrooveStats.IsConnected = true
 	-- All services are disabled, display a red X.
 	elseif not SL.GrooveStats.GetScores and not SL.GrooveStats.Leaderboard and not SL.GrooveStats.AutoSubmit then
