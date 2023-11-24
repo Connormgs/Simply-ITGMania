@@ -1,4 +1,4 @@
-local t = Def.ActorFrame{}
+local t = Def.ActorFrame{Name="ScreenEval Common"}
 local itgstylemargin = ThemePrefs.Get("ITG1") and -10 or 0
 local Players = GAMESTATE:GetHumanPlayers()
 local NumPanes = SL.Global.GameMode=="Casual" and 1 or 8

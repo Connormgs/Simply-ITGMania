@@ -11,6 +11,46 @@ local paneWidth = (GAMESTATE:GetNumSidesJoined() == 1) and paneWidth1Player or p
 local paneHeight = 360
 local borderWidth = 2
 
+local returnBannerAndSong = function(x,y,zoom)
+	-- Putting the banner on, but it loads multiple times, pretty messy
+	-- heh, beenis
+	local bns = Def.ActorFrame{ 
+			Name="bns",
+			InitCommand=function(self) 
+				self:xy(x,y):zoom(zoom):vertalign("top") 
+			end,
+			ResetCommand=function(self)
+				self:visible(false)
+			end
+		}
+
+	bns[#bns+1] = Def.Banner{
+			Name="Banner",
+			InitCommand=function(self)
+				local SongOrCourse = GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse() or GAMESTATE:GetCurrentSong()
+				if SongOrCourse and SongOrCourse:HasBanner() then
+						--song or course banner, if there is one
+					if GAMESTATE:IsCourseMode() then
+						self:LoadFromCourse( GAMESTATE:GetCurrentCourse() )
+					else
+						self:LoadFromSong( GAMESTATE:GetCurrentSong() )
+					end
+				end
+				self:setsize(418,164)
+			end
+		}
+	bns[#bns+1] = LoadFont("Common Normal")..{
+		Name="SongName",
+		InitCommand=function(self)
+			local songtitle = (GAMESTATE:IsCourseMode() and GAMESTATE:GetCurrentCourse():GetDisplayFullTitle()) or GAMESTATE:GetCurrentSong():GetDisplayFullTitle()
+			if songtitle then self:settext(songtitle):zoom(1.5):maxwidth(500)
+							:vertalign("top"):y(90) end
+		end
+	}
+	
+	return bns
+end
+
 local SetRpgStyle = function(eventAf)
 	eventAf:GetChild("MainBorder"):diffuse(RpgGreen)
 	eventAf:GetChild("BackgroundImage"):visible(true)
@@ -68,7 +108,7 @@ local SetLeaderboardData = function(eventAf, leaderboardData, event)
 	local entryNum = 1
 	local rivalNum = 1
 	local leaderboard = eventAf:GetChild("Leaderboard")
-	local defaultTextColor = event == "itl" and Color.White or Color.Black
+	local defaultTextColor = event == "itl" and Color.White or Color.White
 
 	-- Hide the rival and self highlights.
 	-- They will be unhidden and repositioned as needed below.
@@ -156,6 +196,13 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 	local statImprovements = {}
 	local skillImprovements = {}
 	local quests = {}
+
+	
+	local box_quests = {}
+	local box_progress = {}
+	local box_stats = {}
+	local box_score = {scoreDelta,rateDelta}
+
 	local progress = rpgData["progress"]
 	if progress then
 		if progress["statImprovements"] then
@@ -165,16 +212,42 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 						statImprovements,
 						string.format("+%d %s", improvement["gained"], string.upper(improvement["name"]))
 					)
+
+					table.insert(
+						box_stats,
+						string.format("%d %s", improvement["gained"], string.upper(improvement["name"]))
+					)
+
 				end
 			end
 		end
 
 		if progress["skillImprovements"] then
 			skillImprovements = progress["skillImprovements"]
+			for i in ivalues(skillImprovements) do
+				
+				-- Make string into array so we can find out what kind of skill improvement we made
+				local words = {}
+				for word in (i.." "):gmatch("(.-)".." ") do
+					table.insert(words, word)
+				end
+				
+				if words[4] == "Skill" then
+					local sp_level = words[6]
+					local sp_bpm = words[8]
+					local sp_text = sp_bpm .. " BPM Lvl " .. sp_level
+					table.insert(box_progress,sp_text)	
+				elseif words[4] == "Life" then
+					local life_level = words[6]:sub(1,string.len(words[6])-1)
+					local life_text = "Life Lvl " .. life_level
+					table.insert(box_progress,life_text)
+				end
+			end
 		end
-
+		
 		if progress["questsCompleted"] then
 			for quest in ivalues(progress["questsCompleted"]) do
+				table.insert(box_quests,quest["title"])
 				local questStrings = {}
 				table.insert(questStrings, string.format(
 					"Completed \"%s\"!\n",
@@ -202,6 +275,8 @@ local GetRpgPaneFunctions = function(eventAf, rpgData, player)
 				table.insert(quests, table.concat(questStrings, "\n"))
 			end
 		end
+		QuestPane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild(ToEnumShortString(player).."_AF_Upper"):GetChild("Events"..ToEnumShortString(player)):GetChild("RPGQuest"..ToEnumShortString(player))
+		QuestPane:playcommand("RpgQuests",{ box_score=box_score, box_progress=box_progress, box_stats=box_stats, box_quests=box_quests })
 	end
 
 	table.insert(paneTexts, string.format(
@@ -321,6 +396,13 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 
 	local statImprovements = {}
 	local quests = {}
+
+	local box_quests = {}
+	local box_rp = {prev=previousRankingPointTotal,curr=currentRankingPointTotal,delta=rankingDelta}
+	local box_tp = {prev=previousPointTotal,curr=currentPointTotal,delta=totalDelta}
+	local box_score = {score=score,delta=scoreDelta}
+	local box_clearType = {}
+
 	local progress = itlData["progress"]
 	if progress then
 		if progress["statImprovements"] then
@@ -337,6 +419,8 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 						}
 						local curr = improvement["current"]
 						local prev = curr - improvement["gained"]
+						
+						table.insert(box_clearType,prev,curr)
 
 						table.insert(
 							statImprovements,
@@ -354,6 +438,7 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 
 		if progress["questsCompleted"] then
 			for quest in ivalues(progress["questsCompleted"]) do
+				table.insert(box_quests,quest["title"])
 				local questStrings = {}
 				table.insert(questStrings, string.format(
 					"Completed \"%s\"!\n",
@@ -380,6 +465,10 @@ local GetItlPaneFunctions = function(eventAf, itlData, player)
 
 				table.insert(quests, table.concat(questStrings, "\n"))
 			end
+		end
+		ItlPane = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"):GetChild(ToEnumShortString(player).."_AF_Upper"):GetChild("Events"..ToEnumShortString(player)):GetChild("ItlProgress"..ToEnumShortString(player))
+		if ItlPane ~= nil then
+			ItlPane:playcommand("ItlBox",{ box_score=box_score, box_rp=box_rp, box_tp=box_tp, box_clearType=box_clearType, box_quests=box_quests })
 		end
 	end
 
@@ -596,6 +685,8 @@ for player in ivalues(PlayerNumber) do
 							-- Wrap around if we incremented past #Leaderboards
 							self.PaneIndex = 1
 						end
+					elseif event.GameButton == "Select" then
+						MESSAGEMAN:Broadcast("Code", { Name="Screenshot", PlayerNumber=player })
 					end
 
 					if event.GameButton == "MenuLeft" or event.GameButton == "MenuRight" then
@@ -654,7 +745,7 @@ for player in ivalues(PlayerNumber) do
 		},
 
 		-- Header Text
-		LoadFont("Wendy/_wendy small").. {
+		LoadFont(ThemePrefs.Get("ThemeFont") == "Common" and "Wendy/_wendy small" or "Mega/_mega font").. {
 			Name="Header",
 			Text="Stamina RPG",
 			InitCommand=function(self)
@@ -664,7 +755,7 @@ for player in ivalues(PlayerNumber) do
 		},
 
 		-- EX Score text (if applicable)
-		LoadFont("Wendy/_wendy small").. {
+		LoadFont(ThemePrefs.Get("ThemeFont") == "Common" and "Wendy/_wendy small" or "Mega/_mega font").. {
 			Name="EX",
 			Text="EX",
 			InitCommand=function(self)
@@ -769,6 +860,7 @@ for player in ivalues(PlayerNumber) do
 				self:diffuse(color("#A1FF94")):zoomto(paneWidth, RowHeight)
 			end,
 		},
+		returnBannerAndSong(0,112,0.34),
 	}
 
 	local af3 = af2[#af2]
