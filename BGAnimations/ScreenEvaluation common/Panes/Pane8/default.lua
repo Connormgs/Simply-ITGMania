@@ -3,7 +3,7 @@
 if not IsServiceAllowed(SL.GrooveStats.AutoSubmit) then return end
 
 local player, controller = unpack(...)
-
+local p = player:sub(-1)
 local pane = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y(_screen.cy - 62):zoom(0.8)
