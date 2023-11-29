@@ -28,6 +28,41 @@ pane[#pane+1] = Def.Sprite{
 		self:addx(-240):addy(-40)
 		if player == PLAYER_2 then self:x(90) end
 	end,
+	BoogieLogoMessageCommand=function(self,params)
+		if (params.player-p) == 0 then 
+			self:visible(false)
+		end
+	end
+}
+pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","BoogieStats.png"),
+	Name="BoogieStats_Logo",
+	InitCommand=function(self)
+		self:visible(false)
+	self:zoom(0.3)
+		self:addx(-240):addy(-40)
+		if player == PLAYER_2 then self:x(90) end
+	end,
+	BoogieLogoMessageCommand=function(self,params)
+		if (params.player-p) == 0 then
+			self:visible(true)
+		end
+	end
+}
+pane[#pane+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","BoogieStatsEX.png"),
+	Name="BoogieStatsEX_Logo",
+	InitCommand=function(self)
+		self:visible(false)
+	self:zoom(0.3)
+		self:addx(-240):addy(-40)
+		if player == PLAYER_2 then self:x(90) end
+	end,
+	BoogieEXLogoMessageCommand=function(self,params)
+		if (params.player-p) == 0 then
+			self:visible(true)
+		end
+	end
 }
 pane[#pane+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),

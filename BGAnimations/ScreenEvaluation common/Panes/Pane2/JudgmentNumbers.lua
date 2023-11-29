@@ -79,10 +79,7 @@ for i=1,#TapNoteScores.Types do
 				self:Load("RollingNumbersEvaluationNoDecentsWayOffs")
 				
 
-			-- Otherwise, We want leading 0s to be dimmed, so load the Metrics
-			-- group "RollingNumberEvaluationA"	which does that for us.
-			else
-				self:Load("RollingNumbersEvaluationA"):diffuse(color("#836002"))
+	
 			end
 		end,
 		BeginCommand=function(self)
@@ -94,7 +91,7 @@ for i=1,#TapNoteScores.Types do
 				self:x(-218)
 			self:y((i-1)*20 -20)
 			self:addy(140)
-			self:targetnumber(number)
+			
 			
 		end
 	}
