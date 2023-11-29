@@ -2,7 +2,7 @@ local frame = ThemePrefs.Get("ITG1") and "_options" or "options"
 return Def.ActorFrame{
 	LoadActor(frame.. " page")..{
 	OnCommand=function(self)
-		self:addy(-1):diffuse(GetCurrentColor(true)):diffusealpha(0.35)
+		self:addy(-1):diffuse(GetCurrentColor(true)):diffusealpha(1)
 	end;
 	},
 
