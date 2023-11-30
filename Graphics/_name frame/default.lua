@@ -19,6 +19,8 @@ return Def.ActorFrame{
 	LoadActor( "icon ".. ToEnumShortString(player) )..{
 		 OnCommand=function(self)
 			self:shadowlength(2):x(44):y(-4+itgmarginspace)
+		
+			
 		end
 	},
 }

@@ -225,6 +225,7 @@ local t = Def.ActorFrame{
 			title_bmt:settext( ("%s\nbpm: %s"):format(THEME:GetString("OptionTitles", "MusicRate"), text) )
 		end
 	end
+	
 }
 
 -- attach NoteSkin actors and Judgment graphic sprites and Combo bitmaptexts to
@@ -333,7 +334,7 @@ for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 		InitCommand=function(self)
 			self:diffuse(PlayerColor(player)):diffusealpha(0)
 			self:zoom(0.5):y(95)
-			self:x(player==PLAYER_1 and WideScale(-90, -30) or WideScale(140,186))
+			self:x(player==PLAYER_1 and WideScale(-90, -120) or WideScale(140,106))
 			self:shadowlength(0.55)
 		end,
 		OnCommand=function(self) self:linear(0.4):diffusealpha(1) end,
@@ -347,7 +348,7 @@ for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 		Text="",
 		InitCommand=function(self)
 			self:diffuse(PlayerColor(player)):diffusealpha(0)
-			self:zoom(0.3):y(52)
+			self:zoom(0.3):y(95)
 			self:x(player==PLAYER_1 and WideScale(-77, -100) or WideScale(140,154))
 			self:shadowlength(0.55)
 		end,
@@ -357,10 +358,105 @@ for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 			local scroll = CalculateScrollSpeed(player)
 			local pScroll = CalculatePerspectiveSpeed(player)
 			if scroll == pScroll then self:finishtweening():linear(0.5):diffusealpha(0) else self:finishtweening():linear(0.5):diffusealpha(0.8) end
-			self:x(player==PLAYER_1 and WideScale(-77 + (w * 0.4), -100 + (w * 0.4)) or WideScale(140 + (w * 0.4),154 + (w * 0.4)))
+			self:x(player==PLAYER_1 and WideScale(-77 + (w * 0.4), -110 + (w * 0.4)) or WideScale(140 + (w * 0.4),110 + (w * 0.4)))
 			self:settext( ("%s%s"):format(SL[pn].ActiveModifiers.SpeedModType, pScroll) )
 		end
 	}
-end
+	t[#t+1] = Def.ActorFrame{
 
+	Def.ActorFrame{
+		OnCommand=function(self)
+			self:xy(35,38)
+		end,
+
+	
+
+		Def.Sprite{
+			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage","w"..StageIndexBySegment()),
+			Condition=not GAMESTATE:IsCourseMode() and not ThemePrefs.Get("ITG1"),
+			OnCommand=function(self)
+				self:xy(-380,34):addx(-SCREEN_WIDTH):sleep(0.2):decelerate(0.6):addx(SCREEN_WIDTH)
+			end,
+			OffCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end,
+			CancelMessageCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end
+		},
+		Def.Sprite{
+			Texture=THEME:GetPathG("ScreenWithMenuElements Items/stage","o"..StageIndexBySegment()),
+			Condition=not GAMESTATE:IsCourseMode() and not ThemePrefs.Get("ITG1"),
+			OnCommand=function(self)
+				self:diffuse(GetCurrentColor(true)):xy(-380,34):addx(-SCREEN_WIDTH):sleep(0.2):decelerate(0.6):addx(SCREEN_WIDTH)
+			end,
+			OffCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end,
+			CancelMessageCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end
+		},
+		LoadActor( THEME:GetPathG("ScreenWithMenuElements","Items/ITG1") )..{
+			Condition=not GAMESTATE:IsCourseMode() and ThemePrefs.Get("ITG1"),
+			OnCommand=function(self)
+				self:x(SCREEN_RIGHT-140):addx(SCREEN_WIDTH):sleep(0.2):decelerate(0.6):addx(-SCREEN_WIDTH)
+			end,
+			OffCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end,
+			CancelMessageCommand=function(self) self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0) end
+		}
+		
+	},
+
+	Def.HelpDisplay {
+		File="_eurostile normal",
+		OnCommand=function(self)
+			self:xy(20,SCREEN_CENTER_Y+203):zoom(0.7):diffuseblink()
+		end,
+		InitCommand=function(self)
+			local s = THEME:GetString("ScreenPlayerOptions","HelpText") .. "::".. THEME:GetString("ScreenPlayerOptions","SelectAvailableHelpTextAppend")
+			self:SetSecsBetweenSwitches(THEME:GetMetric("HelpDisplay","TipSwitchTime"))
+			self:SetTipsColonSeparated(s)
+		end,
+		CancelMessageCommand=function(self) self:playcommand("TweenOff") end,
+		OffCommand=function(self) self:playcommand("TweenOff") end,
+		TweenOffCommand=function(self) self:linear(0.5):zoomy(0) end
+	},
+
+
+
+}
+
+for player in ivalues(PlayerNumber) do
+	t[#t+1] = LoadActor( THEME:GetPathG("","_name frame"), player )..{
+		OnCommand=function(self)
+			local margin = player == PLAYER_1 and 80 or 500
+			self:diffuse(GetCurrentColor(true)):player(player):x(SCREEN_CENTER_X+(margin-320)):y(91):addx(240):sleep(0.1):decelerate(0.3):addx(-SCREEN_WIDTH*3/4):zoom(0.7)
+		end,
+		CancelMessageCommand=function(self) self:playcommand("TweenOff") end,
+		OffCommand=function(self) self:playcommand("TweenOff") end,
+		TweenOffCommand=function(self)
+			self:accelerate(0.3):addx(SCREEN_WIDTH)
+		end
+	}
+end
+end
+t[#t+1] = Def.ActorFrame{
+    OnCommand=function(self)
+        self:xy(35,38)
+    end,
+
+LoadFont("_eurostile white glow")..{
+        Text="PICK MODIFIERS",
+        InitCommand=function(self) self:diffuse(GetCurrentColor(true)):shadowlength(4):x(-310):skewx( ThemePrefs.Get("ITG1") and 0 or -0.16) end,
+        OnCommand=function(self)
+            self:zoomx(0):zoomy(6):bounceend(.3):zoom(1)
+        end,
+        OffCommand=function(self)
+            self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0)
+        end
+    },
+	LoadFont("_eurostile normal")..{
+        Text="PICK MODIFIERS",
+        InitCommand=function(self) self:shadowlength(4):x(-310):skewx( ThemePrefs.Get("ITG1") and 0 or -0.16) end,
+        OnCommand=function(self)
+            self:zoomx(0):zoomy(6):bounceend(.3):zoom(1)
+        end,
+        OffCommand=function(self)
+            self:accelerate(.2):zoomx(2):zoomy(0):diffusealpha(0)
+        end
+    }
+}
 return t
