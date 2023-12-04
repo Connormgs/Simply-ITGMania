@@ -140,6 +140,7 @@ for i=lower,upper do
 				self:diffuseshift():effectperiod(4/3)
 				self:effectcolor1( PlayerColor(player) )
 				self:effectcolor2( Color.White )
+				self:zoom(1.4)
 			end
 		end
 	end
@@ -153,7 +154,7 @@ for i=lower,upper do
 	row[#row+1] = LoadFont(Font)..{
 		Name="Name",
 		Text=name,
-		InitCommand=function(self) self:horizalign(left):xy(-110, row_index*row_height):zoom(0.65) end,
+		InitCommand=function(self) self:horizalign(left):xy(-120, row_index*row_height):zoom(0.65) end,
 	}
 
 	row[#row+1] = LoadFont(Font)..{

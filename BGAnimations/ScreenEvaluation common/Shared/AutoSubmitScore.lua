@@ -294,7 +294,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								elseif boogie_ex then BSEXIcon:visible(true)
 								else GSIcon:visible(true) end
 
-								recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3)
+								recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3):addy(115)
 								local soundDir = THEME:GetCurrentThemeDirectory() .. "Sounds/"
 								if personalRank == 1 then
 									recordText:settext("World Record!")
@@ -317,8 +317,8 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								local GSIconWidth = GSIcon:GetWidth()*GSIcon:GetZoom()
 								local BSIconWidth = BSIcon:GetWidth()*BSIcon:GetZoom()
 								-- This will automatically adjust based on the length of the recordText length.
-								GSIcon:xy(recordTextXStart - GSIconWidth/2, recordText:GetY())
-								BSIcon:xy(recordTextXStart - BSIconWidth/2, recordText:GetY())
+								GSIcon:xy(recordTextXStart - 5 - GSIconWidth/2, 150)
+								BSIcon:xy(recordTextXStart - 5 - BSIconWidth/2, 150)
 							end
 						end
 					end
