@@ -129,8 +129,6 @@ if storage.DeathSecond ~= nil then
 				self:settext(text)
 				local width = self:GetWidth() * 0.65
 				local addx = math.max(width * 0.8, 10)
-				local quad = self:GetParent():GetChild("BGQuad")
-				quad:playcommand("SetSize", { width=width, addx=addx, lines=(deathMeasures ~= nil and 2 or 1) })
 				self:addx(addx)
 			end
 		}	

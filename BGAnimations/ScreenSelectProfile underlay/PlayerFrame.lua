@@ -234,7 +234,7 @@ return Def.ActorFrame{
 						},
 						LoadActor(THEME:GetPathG("", "_VisualStyles/".. ThemePrefs.Get("VisualStyle") .."/SelectColor"))..{
 							InitCommand=function(self)
-								self:align(0,0):zoom(0.09):diffusealpha(0.9):xy(13, 8)
+								self:align(0,0):zoom(0.09):diffusealpha(0.9):xy(13, 8):diffuse(GetCurrentColor(true))
 							end
 						},
 						LoadFont("Common Normal")..{

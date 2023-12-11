@@ -256,24 +256,25 @@ local af = Def.ActorFrame{
 	Name="ScoreBox"..pn,
 	InitCommand=function(self)
 		if #GAMESTATE:GetHumanPlayers() == 1 then 
-			self:x(_screen.cx + 80):y(_screen.cy + 160)
+			self:x(_screen.cx + 240):y(_screen.cy + 40)
 			if pn == "P2" then
 				self:y(_screen.cy*1.65 - 55)
 			end
 		else
 			if pn == "P1" then
-				self:zoom(0.65):x(_screen.cx - 65):y(_screen.cy + 178)
+				self:zoom(0.65):x(_screen.cx + 205):y(_screen.cy + 25)
 				if IsNotWide then
-					self:x(_screen.cx - 48)
+					self:x(_screen.cx + 205)
 				end
 			else
-				self:zoom(0.65):x(_screen.cx + 371):y(_screen.cy + 178)
+				self:zoom(0.65):x(_screen.cx + 230):y(_screen.cy + 25)
 				if IsNotWide then
-					self:x(_screen.cx + 279)
+					self:x(_screen.cx + 230)
 				end
 			end
 		end
 		self.isFirst = true
+		self:rotationz(-1)
 	end,
 	ResetCommand=function(self) self:stoptweening() end,
 	OffCommand=function(self) self:stoptweening() end,
@@ -341,8 +342,8 @@ local af = Def.ActorFrame{
 		self:GetChild("BoogieStatsEXLogo"):stopeffect()
 		self:GetChild("SRPG7Logo"):visible(true)
 		self:GetChild("ITLLogo"):visible(true)
-		self:GetChild("Outline"):visible(true)
-		self:GetChild("Background"):linear(transition_seconds/2):diffusealpha(1):visible(true)
+		
+
 		
 		local start = cur_style
 
@@ -435,13 +436,12 @@ local af = Def.ActorFrame{
 				self:GetParent():GetChild("Rank3"):settext(""):visible(false)
 				self:GetParent():GetChild("Rank4"):settext(""):visible(false)
 				self:GetParent():GetChild("Rank5"):settext(""):visible(false)
-				self:GetParent():GetChild("GrooveStatsLogo"):visible(true):diffusealpha(0.5):glowshift({color("#C8FFFF"), color("#6BF0FF")})
+					self:GetParent():GetChild("GrooveStatsLogo"):visible(true):diffusealpha(0.5):glowshift({color("#C8FFFF"), color("#6BF0FF")})
 				self:GetParent():GetChild("BoogieStatsLogo"):visible(false)
 				self:GetParent():GetChild("BoogieStatsEXLogo"):visible(false)
 				self:GetParent():GetChild("SRPG7Logo"):diffusealpha(0):visible(false)
 				self:GetParent():GetChild("ITLLogo"):diffusealpha(0):visible(false)
-				self:GetParent():GetChild("Outline"):diffusealpha(0):visible(false)
-				self:GetParent():GetChild("Background"):diffusealpha(0):visible(false)
+			
 				
 				if IsItlSong(player) then
 					UpdatePathMap(player, SL[pn].Streams.Hash)
@@ -459,51 +459,8 @@ local af = Def.ActorFrame{
 		end
 	},
 
-	-- Outline
-	Def.Quad{
-		Name="Outline",
-		InitCommand=function(self)
-			self:diffuse(GrooveStatsBlue):setsize(width + border, height + border)
-			if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
-				self:setsize(width + border - 40, height + border)
-			end
-		end,
-		PlayerJoinedMessageCommand=function(self,params)
-			if IsNotWide then
-				self:setsize(width + border - 40, height + border)
-			else
-				self:setsize(width + border, height + border)
-			end
-		end,
-		PlayerUnjoinedMessageCommand=function(self,params)
-			self:setsize(width + border, height + border)
-		end,
-		LoopScoreboxCommand=function(self)
-			self:linear(transition_seconds):diffuse(style_color[cur_style])
-		end,
-		ResetCommand=function(self) self:stoptweening() end,
-		OffCommand=function(self) self:stoptweening() end
-	},
-	-- Main body
-	Def.Quad{
-		Name="Background",
-		InitCommand=function(self)
-			self:diffuse(color("#000000")):setsize(width, height)
-			if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
-				self:setsize(width - 40, height)
-			end
-		end,
-		PlayerJoinedMessageCommand=function(self,params)
-			if IsNotWide then
-				self:setsize(width - 40, height)
-			else
-				self:setsize(width, height)
-			end
-		end,
-		PlayerUnjoinedMessageCommand=function(self,params)
-			self:setsize(width, height)
-		end,
-	},
+
+
 	-- GrooveStats Logo
 	Def.Sprite{
 		Texture=THEME:GetPathG("", "GrooveStats.png"),
@@ -592,8 +549,7 @@ local af = Def.ActorFrame{
 }
 
 for i=1,NumEntries do
-	local y = -height/2 + 16 * i - 8
-	local zoom = 0.87
+	local y = -height/2 + 19 * i - 18
 
 	-- Rank 1 gets a crown.
 	if i == 1 then
@@ -633,7 +589,7 @@ for i=1,NumEntries do
 			Name="Rank"..i,
 			Text="",
 			InitCommand=function(self)
-				self:diffuse(Color.White):xy(-width/2 + 27, y):maxwidth(30):horizalign(right):zoom(zoom)
+				self:diffuse(Color.White):xy(-width/2 + 27, y):maxwidth(30):horizalign(right):zoom(0.7)
 				if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
 					self:x(-width/2 + 42)
 				end
@@ -671,7 +627,9 @@ for i=1,NumEntries do
 		Name="Name"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(zoom)
+		local height = 28
+			local spacing = 2
+			self:diffuse(Color.White):xy(-width/2 + 30, y):maxwidth(100):horizalign(left):zoom(0.65)
 			if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
 				self:x(-width/2 + 45):maxwidth(70)
 			end
@@ -708,7 +666,7 @@ for i=1,NumEntries do
 		Name="Score"..i,
 		Text="",
 		InitCommand=function(self)
-			self:diffuse(Color.White):xy(-width/2 + 160, y):horizalign(right):zoom(zoom)
+			self:diffuse(Color.White):xy(-width/2 + 160, y):horizalign(right):zoom(0.6)
 			if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
 				self:x(-width/2 + 140)
 			end

@@ -233,7 +233,6 @@ for player in ivalues(Players) do
 	-- the per-player upper half of ScreenEvaluation, including: letter grade, nice
 	-- stepartist, difficulty text, difficulty meter, machine/personal HighScore text
 	t[#t+1] = LoadActor("./PerPlayer/Upper/default.lua", player)
-
 	-- the per-player lower half of ScreenEvaluation, including:
 	-- judgment scatterplot, modifier list, disqualified text
 
