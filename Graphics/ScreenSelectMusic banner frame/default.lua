@@ -207,7 +207,7 @@ Name="Overlay",
 		Def.BitmapText{
 		Font="_eurostile normal",
 		OnCommand=function(s)
-			s:halign(0):shadowlength(2):zoom(0.55):xy(-165,-22):diffusealpha(1):maxwidth(180)
+			s:halign(0):shadowlength(2):zoom(0.55):xy(-165,-19):diffusealpha(1):maxwidth(180)
 		end;
 		CurrentSongChangedMessageCommand=function(s)
 			s:settext( GAMESTATE:GetCurrentSong() and GAMESTATE:GetCurrentSong():GetDisplayArtist() or "" )

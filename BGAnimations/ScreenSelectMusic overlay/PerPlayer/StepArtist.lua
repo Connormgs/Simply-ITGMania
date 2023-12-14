@@ -97,7 +97,7 @@ return Def.ActorFrame{
 			if GAMESTATE:IsCourseMode() then
 				self:x(60):maxwidth(138)
 			else
-				self:x(75):maxwidth(124):diffuse(color("#ffffff"))
+				self:x(81):maxwidth(124):diffuse(color("#ffffff"))
 			end
 		end,
 		ResetCommand=function(self)
