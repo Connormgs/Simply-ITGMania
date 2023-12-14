@@ -6,12 +6,13 @@ local function IsValidUSBProfileFolder( Player )
 end
 
 return Def.ActorFrame{
-
+Name="Overlay",
 	Def.ActorFrame{
+	Name="ScoreBox",
 	OnCommand=function(s) s:fov(58):xy(-10,2):zoomy(0.985):rotationy(-20):addx(450):decelerate(0.75):addx(-450) end;
 	OffCommand=function(s) s:accelerate(0.75):addx( IsUsingWideScreen() and 500 or 450); end,
 	CancelMessageCommand=function(s) if GAMESTATE:Env()["WorkoutMode"] then s:accelerate(0.75):addx( IsUsingWideScreen() and 500 or 450); end end,
-
+ 
   		Def.ActorFrame{
 		InitCommand=function(s) s:xy(40,-110) end;
 
@@ -183,6 +184,8 @@ return Def.ActorFrame{
 		Def.Sprite{ Texture=style.."right frame edge", OnCommand=function(s) s:x(-200):halign(0):zoomx(1) end };
 		Def.Sprite{ Texture=style.."right frame middle", OnCommand=function(s) s:x(-200+158):halign(0):zoomx(40) end };
 		Def.Sprite{ Texture=style.."right frame right", OnCommand=function(s) s:x(200+78):halign(0) end };
+		LoadActor("Scorebox.lua", PLAYER_1);
+		LoadActor("Scorebox.lua", PLAYER_2);
 	},
 
 	Def.ActorFrame{
@@ -197,7 +200,7 @@ return Def.ActorFrame{
 		Text=string.upper(THEME:GetString("BannerFrame","Artist"));
 		Font="_eurostile normal",
 		OnCommand=function(s)
-			s:halign(0):shadowlength(2):zoom(0.55):xy(-165,-40):diffusealpha(0.5)
+			s:halign(0):shadowlength(2):zoom(0.55):xy(-165,-35):diffusealpha(0.5)
 		end;
 		},
 
@@ -236,7 +239,7 @@ return Def.ActorFrame{
 		Text="BPM",
 		Font="_eurostile normal",
 		OnCommand=function(s)
-			s:shadowlength(2):zoom(0.5):xy(-40,-38):diffusealpha(0.5)
+			s:shadowlength(2):zoom(0.5):xy(-39,-35):diffusealpha(0.5)
 		end;
 		},
 
@@ -283,7 +286,7 @@ return Def.ActorFrame{
 
 		-- need to figure out how to get pop
 		Def.BitmapText{ Text="LENGTH", Font="_eurostile normal",
-		OnCommand=function(s) s:shadowlength(2):zoom(0.5):xy(45,-36):diffusealpha(0.5) end;
+		OnCommand=function(s) s:shadowlength(2):zoom(0.5):xy(45,-34):diffusealpha(0.5) end;
 		},
 
 	

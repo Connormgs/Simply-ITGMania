@@ -10,7 +10,7 @@ for player in ivalues( PlayerNumber ) do
 	-- AuthorCredit, Description, and ChartName associated with the current stepchart
 	t[#t+1] = LoadActor("./StepArtist.lua", player)
 	t[#t+1] = LoadActor("./FolderStats.lua", player)
-	t[#t+1] = LoadActor("./ScoreBox.lua", player)
+
 end
 
 

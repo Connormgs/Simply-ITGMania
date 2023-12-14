@@ -79,9 +79,9 @@ return Def.ActorFrame{
 
 	--STEPS label
 	LoadFont("Common Normal")..{
-		Text=GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("Chart"),
+		Text=GAMESTATE:IsCourseMode() and Screen.String("SongNumber"):format(1) or Screen.String("CHART"),
 		InitCommand=function(self)
-			self:diffusealpha(0.5):horizalign(left):x(30):zoom(0.5):shadowlength(2)
+			self:diffusealpha(0.5):horizalign(left):x(30):addy(-1):zoom(0.5):shadowlength(2)
 		end,
 		OffCommand=function(self) self:linear(0.3):zoomy(0) end,
 		UpdateTrailTextMessageCommand=function(self, params)

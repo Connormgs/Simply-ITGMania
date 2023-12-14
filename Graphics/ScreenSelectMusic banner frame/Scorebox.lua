@@ -117,9 +117,9 @@ local LeaderboardRequestProcessor = function(res, master)
 	elseif headers["bs-leaderboard-player-" .. n] == "BS-EX" then
 		boogie_ex = true
 	end
-	local gsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("GrooveStatsLogo")
-	local bsBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("BoogieStatsLogo")
-	local bsExBox = SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("PerPlayer"):GetChild("ScoreBox" .. pn):GetChild("BoogieStatsEXLogo")
+    local gsBox = master:GetChild("GrooveStatsLogo")
+    local bsBox = master:GetChild("BoogieStatsLogo")
+    local bsExBox = master:GetChild("BoogieStatsEXLogo")
 
 	if boogie then
 		style_color[0] = BoogieStatsPurple
@@ -256,7 +256,7 @@ local af = Def.ActorFrame{
 	Name="ScoreBox"..pn,
 	InitCommand=function(self)
 		if #GAMESTATE:GetHumanPlayers() == 1 then 
-			self:x(_screen.cx + 240):y(_screen.cy + 40)
+			self:xy(130,53)
 			if pn == "P2" then
 				self:y(_screen.cy*1.65 - 55)
 			end
@@ -274,7 +274,7 @@ local af = Def.ActorFrame{
 			end
 		end
 		self.isFirst = true
-		self:rotationz(-1)
+		
 	end,
 	ResetCommand=function(self) self:stoptweening() end,
 	OffCommand=function(self) self:stoptweening() end,
@@ -465,14 +465,14 @@ local af = Def.ActorFrame{
 	Def.Quad{
 		Name="Outline",
 		InitCommand=function(self)
-			self:diffuse(GrooveStatsBlue):setsize(width + border, height + border):rotationz(-2)
+			self:diffuse(GrooveStatsBlue):setsize(width + border, height + border + 14):addy(4)
 			if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
-				self:setsize(127, height + border)
+				self:setsize(width + border - 40, height + border)
 			end
 		end,
 		PlayerJoinedMessageCommand=function(self,params)
 			if IsNotWide then
-				self:setsize(127, height + border)
+				self:setsize(width + border - 40, height + border)
 			else
 				self:setsize(width + border, height + border)
 			end
@@ -481,7 +481,12 @@ local af = Def.ActorFrame{
 			self:setsize(width + border, height + border)
 		end,
 		LoopScoreboxCommand=function(self)
-			self:linear(transition_seconds):diffuse(style_color[cur_style])
+		local currentSteps = GAMESTATE:GetCurrentSteps(player)
+			if currentSteps then
+				local currentDifficulty = currentSteps:GetDifficulty()
+				self:diffuse(DifficultyColor(currentDifficulty))
+			end
+			self:linear(transition_seconds)
 		end,
 		ResetCommand=function(self) self:stoptweening() end,
 		OffCommand=function(self) self:stoptweening() end
@@ -490,20 +495,20 @@ local af = Def.ActorFrame{
 	Def.Quad{
 		Name="Background",
 		InitCommand=function(self)
-			self:diffuse(color("#000000")):setsize(width, height):rotationz(-2)
+			self:diffuse(color("#000000")):setsize(width, height + 16):addy(4)
 			if IsNotWide and #GAMESTATE:GetHumanPlayers() > 1 then
-				self:setsize(127, height)
+				self:setsize(width - 40, height + 10)
 			end
 		end,
 		PlayerJoinedMessageCommand=function(self,params)
 			if IsNotWide then
-				self:setsize(127, height)
+				self:setsize(50, 50)
 			else
-				self:setsize(width, height)
+				self:setsize(50, 50)
 			end
 		end,
 		PlayerUnjoinedMessageCommand=function(self,params)
-			self:setsize(width, height)
+			self:setsize(width, height + 50)
 		end,
 	},
 
@@ -595,7 +600,7 @@ local af = Def.ActorFrame{
 }
 
 for i=1,NumEntries do
-	local y = -height/2 + 19 * i - 18
+	local y = -height/2 + 20 * i - 18
 
 	-- Rank 1 gets a crown.
 	if i == 1 then
