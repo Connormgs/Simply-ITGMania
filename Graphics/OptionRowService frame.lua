@@ -27,7 +27,9 @@ t[#t+1] = Def.BitmapText{
         GAMESTATE:Env()["CurrentServiceItem"] = tonumber(s:GetText())
     end;
 };
-t[#t+1] = LoadActor( THEME:GetPathB("","_frame 3x1") , {style,320});
+t[#t+1] = LoadActor( THEME:GetPathB("","_frame 3x1") , {style,320})..{
+InitCommand=function(self) self:diffuse(GetCurrentColor(true)) end;
+};
 t[#t+1] = LoadActor( THEME:GetPathB("","_frame 3x1") , {"small green",312})..{
     GainFocusMessageCommand=function(self) self:visible(true) end;
     LoseFocusMessageCommand=function(self) self:visible(false) end;
