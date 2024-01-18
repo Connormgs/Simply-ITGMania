@@ -1,3 +1,35 @@
+local BTInput = {
+    -- This will control the menu
+    ["MenuRight"] = function(event)
+        CheckValueOffsets(1)
+    end,
+    ["MenuLeft"] = function(event)
+        CheckValueOffsets(-1)
+    end,
+    ["Start"] = function(event)
+        SOUND:PlayOnce( ThemePrefs.Get("ITG1") and THEME:GetPathS("ITG1/Common","start")
+		or THEME:GetPathS("_ITGCommon","start") )
+        local mode = modes[MenuIndex] == "dance" and "regular" or modes[MenuIndex]
+        GAMESTATE:ApplyGameCommand("playmode,".. mode)
+        SCREENMAN:GetTopScreen():SetNextScreenName( "ScreenSelectStyle" ):StartTransitioningScreen("SM_GoToNextScreen")
+    end,
+    ["Back"] = function(event)
+        SCREENMAN:PlayCancelSound()
+        SCREENMAN:GetTopScreen():SetPrevScreenName(Branch.TitleMenu()):Cancel()
+    end,
+}
+local function InputHandler(event)
+    -- Safe check to input nothing if any value happens to be not a player.
+    -- ( AI, or engine input )
+    if not event.PlayerNumber then return end
+    local ET = ToEnumShortString(event.type)
+    -- Input that occurs at the moment the button is pressed.
+    if ET == "FirstPress" or ET == "Repeat" then
+        if BTInput[event.GameButton] then
+            BTInput[event.GameButton](event.PlayerNumber)
+        end
+    end
+end
 local af = Def.ActorFrame{
 	-- GameplayReloadCheck is a kludgy global variable used in ScreenGameplay in.lua to check
 	-- if ScreenGameplay is being entered "properly" or being reloaded by a scripted mod-chart.
@@ -75,6 +107,7 @@ LoadActor("./overlay.lua"),
 
 	LoadActor("./EscapeFromEventMode.lua"),
 	LoadActor("./SongSearch/default.lua"),
+
 }
 
 return af

@@ -6,7 +6,7 @@ af.Name="Panes"
 
 local offset = {
 	[PLAYER_1] = _screen.cx-155,
-	[PLAYER_2] = _screen.cx+256
+	[PLAYER_2] = _screen.cx+220
 }
 
 -- -----------------------------------------------------------------------
@@ -55,11 +55,11 @@ elseif #players == 1 then
 
 	for i=1, NumPanes do
 		local left_pane  = LoadActor("./Pane"..i, {mpn, PLAYER_1, ComputedData})
-		local right_pane = LoadActor("./Pane"..i, {mpn, PLAYER_2, ComputedData})
+	
 
 		-- These need to be wrapped in an extra AF to offset left and right.
 		-- Panes can be nil, however, so don't add extra AFs with nil children
-		if left_pane and right_pane then
+		if left_pane then
 			af[#af+1] = Def.ActorFrame{
 				Name="Pane"..i.."_SideP1",
 				InitCommand=function(self) self:x(offset.PlayerNumber_P1) end,

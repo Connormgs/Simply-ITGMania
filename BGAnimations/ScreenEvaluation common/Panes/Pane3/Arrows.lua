@@ -1,7 +1,8 @@
 local player = ...
 local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local track_missbcheld = mods.MissBecauseHeld
 local track_earlyjudgments = mods.TrackEarlyJudgments
 local track_foot = mods.TrackFoot
@@ -62,6 +63,7 @@ if player == PLAYER_2 then
 			
 			self:addx(-48)
 		end
+		if IsNotWide and player == PLAYER_1 then self:x(-100) end
 		end
 af.GraphCommand=function(self, params)
 	activeGraph = params.graph

@@ -6,14 +6,15 @@ if not ThemePrefs.Get("FolderStats") then return end
 
 local player = ...
 local pn = ToEnumShortString(player)
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
 
 local IsWider = (GetScreenAspectRatio() > 16/9)
 
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:xy(692,31):zoom(0.8)
-		if IsWider then self:xy(777,32)
+		if IsWider then self:xy(777,32) end
+		if IsNotWide then self:xy(600,32)
 		end
 	end,
 	CurrentSongChangedMessageCommand=function(self)

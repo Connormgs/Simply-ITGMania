@@ -4,10 +4,10 @@ local machine_profile = PROFILEMAN:GetMachineProfile()
 -- the height of the footer is defined in ./Graphics/_footer.lua, but we'll
 -- use it here when calculating where to position the PaneDisplay
 local footer_height = 32
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
 -- height of the PaneDisplay in pixels
 local pane_height = 60
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
 local text_zoom = WideScale(0.8, 0.9)
 local IsWide = (GetScreenAspectRatio() > 16/9)
 -- -----------------------------------------------------------------------
@@ -250,6 +250,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 					local loadingText = master:GetChild("PaneDisplayP"..i):GetChild("Loading")
 					loadingText:settext("Disabled")
 					loadingText:visible(true)
+					
 				end
 			end
 		
@@ -364,6 +365,7 @@ for player in ivalues(PlayerNumber) do
 			if player == PLAYER_2 then self:x(-125) end
 			if IsWide then self:x(-141) end
 			self:y(-9)
+			if IsNotWide then self:x(-126) end
 			if IsWide and player == PLAYER_2 then self:x(-145) end
 			if styletype == "StyleType_OnePlayerTwoSides" then
 			self:x(30)
@@ -394,12 +396,14 @@ for player in ivalues(PlayerNumber) do
 		local styletype = GAMESTATE:GetCurrentStyle():GetStyleType()
 			self:zoom(0.45):diffuse(Color.White):horizalign(right)
 			self:x(-93)
+			if IsNotWide then self:x(-45) end
 			if player == PLAYER_2 then self:x(-53) end
 			if IsWide then self:x(-75) end
 			self:y(-9)
 			if IsWide and player == PLAYER_2 then self:x(-74) end
 			if styletype == "StyleType_OnePlayerTwoSides" then
 			self:x(103)
+			
 			end
 		end,
 		
@@ -435,6 +439,7 @@ for player in ivalues(PlayerNumber) do
 			self:x(-163)
 			if player == PLAYER_2 then self:x(-125) end
 			if IsWide then self:x(-141) end
+			if IsNotWide then self:x(-126) end
 			self:y(5)
 			if IsWide and player == PLAYER_2 then self:x(-145) end
 			if styletype == "StyleType_OnePlayerTwoSides" then
@@ -467,6 +472,7 @@ for player in ivalues(PlayerNumber) do
 			self:x(-93)
 			if IsWide then self:x(-75) end
 			self:y(5)
+			if IsNotWide then self:x(-45) end
 			if player == PLAYER_2 then self:x(-53) end
 			if IsWide and player == PLAYER_2 then self:x(-74) end
 			if styletype == "StyleType_OnePlayerTwoSides" then
@@ -506,11 +512,16 @@ for player in ivalues(PlayerNumber) do
 			if styletype == "StyleType_OnePlayerTwoSides" then
 			self:x(107)
 			end
+			if IsNotWide then self:xy(95,8)
+					end
+		end,
+		OffCommand=function(self) self:linear(0.3):zoomx(0) 
 		end,
 		SetCommand=function(self)
 			self:settext("Loading ...")
 			self:visible(false)
 		end
+		
 	}
 
 

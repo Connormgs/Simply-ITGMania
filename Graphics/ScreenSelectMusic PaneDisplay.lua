@@ -30,7 +30,9 @@ function RadarValue(pn,n)
 	end
 	return Result and (Result >= 0 and Result or "???") or 0
 end
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
+local pn1 = ...
 local function PercentScore(pn,scoremethod)
 	local SongOrCourse, StepsOrTrail;
 	if GAMESTATE:IsCourseMode() then
@@ -63,11 +65,45 @@ local function PercentScore(pn,scoremethod)
 	return {text,Rname}
 end
 
-local style = ThemePrefs.Get("ITG1") and LoadActor( THEME:GetPathB("","_frame 3x1") , {"pane",250}) or LoadActor( THEME:GetPathG('PaneDisplay','Frame') )
 local t = Def.ActorFrame{
-	style..{
-		OnCommand=function(s) s:y( ThemePrefs.Get("ITG1") and -2 or 0 ):diffuse(GetCurrentColor(true)) end;
+Name=base,
+		OnCommand=function(s) s:y( ThemePrefs.Get("ITG1") and -2 or 0 ) end;
+		CodeMessageCommand=function(s,p)
+        if p.PlayerNumber == pn1 then
+		if p.Name == "1OpenPanes" then
+		 s:GetChild("base"):visible(false)
+		s:GetChild("base2"):visible(true)
+		end
+		 if p.Name == "1ClosePanes" then
+		  s:GetChild("base"):visible(true)
+			s:GetChild("base2"):visible(false)
+        end
+		end
+		end
 	}
+local af3 = Def.ActorFrame{
+
+		OnCommand=function(s) s:x(1) end;
+	}
+
+t[#t+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","PaneDisplay Frame.png"),
+Name="base",
+	InitCommand=function(self)
+		self:xy(-48,-9):diffuse(GetCurrentColor(true))
+		if player == PLAYER_2 then self:x(9999) end
+		if IsNotWide then self:x(20) end
+	end
+}
+t[#t+1] = Def.Sprite{
+	Texture=THEME:GetPathG("","PaneDisplay Frame2.png"),
+Name="base2",
+	InitCommand=function(self)
+	self:visible(false)
+		self:xy(0,-2):diffuse(GetCurrentColor(true))
+		if player == PLAYER_2 then self:x(9999) end
+		if IsNotWide then self:x(71) end
+	end,
 }
 
 local levelcolors = { color("#FFFFFF"), color("#00FF00"), color("#FFDD23"), color("#DB6073") }
@@ -82,6 +118,8 @@ if GAMESTATE:IsPlayerEnabled(args) then
 
 		
 			xpos = {-125,-20},
+			xpos2 = {-125,-20},
+			xpos3 = {-125,-20},
 		},
 		--RIGHT SIDE
 		{
@@ -90,8 +128,11 @@ if GAMESTATE:IsPlayerEnabled(args) then
 			{"Hands", function() return StepsOrCourse() and RadarValue(args, 10) or 0 end, {1,10,35,75} },
 			{"Rolls", function() return StepsOrCourse() and RadarValue(args, 11) or 0 end, {1,10,35,75} },
 			xpos = {-40,64},
+			xpos2 = {-125,-20},
+			xpos3 = {-20,84},
 		},
 		DiffPlacement = args == PLAYER_1 and 160 or -160
+		
 	}
 	
 	for ind,content in ipairs(ObtainData) do
@@ -103,6 +144,9 @@ if GAMESTATE:IsPlayerEnabled(args) then
 					self:zoom(0.5):xy(
 						ObtainData[ind].xpos[1] + (args == PLAYER_2 and 45 or 0) - 54
 						,-34+14*(vind-1)):halign(0)
+						if IsNotWide then self:zoom(0.5):xy(
+						ObtainData[ind].xpos[1] + (args == PLAYER_2 and 45 or 0) - 40
+						,-34+14*(vind-1)):halign(0):x(ObtainData[ind].xpos3[1] + 15) end
 				end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)
 					if GAMESTATE:GetCurrentSteps(args) then
@@ -112,8 +156,10 @@ if GAMESTATE:IsPlayerEnabled(args) then
 				["CurrentTrail"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)
 					if GAMESTATE:GetCurrentTrail(args) then
 						if val[1] and type(val[1]) == "function" then s:settext( val[1]() ) else s:settext(THEME:GetString("PaneDisplay",val[1])) end
+						
 					end
 				end;
+				
 			};
 			t[#t+1] = Def.BitmapText{
 				Font="_eurostile normal",
@@ -122,7 +168,11 @@ if GAMESTATE:IsPlayerEnabled(args) then
 					self:zoom(0.48):xy(
 						ObtainData[ind].xpos[2] + (args == PLAYER_2 and 45 or 0) - 100
 						,-33+14*(vind-1))
+						if IsNotWide then self:zoom(0.48):xy(
+						ObtainData[ind].xpos3[2] + (args == PLAYER_2 and 45 or 0) - 25
+						,-33+14*(vind-1)) end
 				end;
+				
 				CurrentSongChangedMessageCommand=function(s) s:diffuse(Color.White):settext("") end;
 				["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(s)
 					
@@ -161,7 +211,20 @@ if GAMESTATE:IsPlayerEnabled(args) then
 	end
 	t[#t+1] = Def.BitmapText{
 		Font="_futurist normal",
-		InitCommand=function(self) self:x(ObtainData.DiffPlacement):y(-24+13) end;
+		InitCommand=function(self) 
+		if IsWide then self:x(ObtainData.DiffPlacement):y(-24+13) end;
+		if IsNotWide then self:x(118):y(-24) end;
+		end;
+CodeMessageCommand=function(s,p)
+        if p.PlayerNumber == pn1 then
+		if p.Name == "1OpenPanes" then
+		s:addx(ObtainData.DiffPlacement + 999)
+		end
+		end
+		 if p.Name == "1ClosePanes" then
+		s:x(ObtainData.DiffPlacement - 40)
+			end
+		end;
 		CurrentSongChangedMessageCommand=function(s) s:settext("") end;
 		["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(self)
 			if GAMESTATE:GetCurrentSong() and not GAMESTATE:IsCourseMode() then
@@ -180,7 +243,20 @@ if GAMESTATE:IsPlayerEnabled(args) then
 	};
 	t[#t+1] = Def.BitmapText{
 		Font="_eurostile normal",
-		InitCommand=function(self) self:x(ObtainData.DiffPlacement):y(-24+38):maxwidth(90):zoom(0.55) end;
+		InitCommand=function(self) 
+		if IsWide then self:x(ObtainData.DiffPlacement):y(-24+38):maxwidth(90):zoom(0.55) end;
+		if IsNotWide then self:x(ObtainData.DiffPlacement - 40):y(0):maxwidth(90):zoom(0.55) end;
+		end;
+	CodeMessageCommand=function(s,p)
+        if p.PlayerNumber == pn1 then
+		if p.Name == "1OpenPanes" then
+		s:x(ObtainData.DiffPlacement + 999)
+		end
+		end
+		 if p.Name == "1ClosePanes" then
+	s:x(ObtainData.DiffPlacement - 40)
+			end
+		end;
 		CurrentSongChangedMessageCommand=function(s) s:settext("") end;
 		["CurrentSteps"..ToEnumShortString(args).."ChangedMessageCommand"]=function(self)
 			if GAMESTATE:GetCurrentSong() and not GAMESTATE:IsCourseMode() then
@@ -191,6 +267,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 						)
 					)
 					self:diffuse( DifficultyColor( GAMESTATE:GetCurrentSteps(args):GetDifficulty() ) )
+					
 				end
 			end
 		end;

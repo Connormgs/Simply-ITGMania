@@ -258,6 +258,7 @@ Def.Sprite{
 
 
 	Def.ActorFrame{
+	
 		InitCommand=function(self)
 			self:Center():diffusealpha(0):zoom(0.9)
 		end,
@@ -269,9 +270,11 @@ Def.Sprite{
 }
 
 for player in ivalues(PlayerNumber) do
-	t[#t+1] = LoadActor( THEME:GetPathG('ScreenSelectMusic','PaneDisplay'), player )..{
+	t[#t+1] = LoadActor( THEME:GetPathG('ScreenSelectMusic','Pane'), player )..{
+
 		Condition=GAMESTATE:IsHumanPlayer(player),
 		OnCommand=function(self)
+		
 			self:x( GAMESTATE:GetCurrentStyle():GetStyleType() == "StyleType_OnePlayerTwoSides" and SCREEN_CENTER_X or (player == PLAYER_1 and SCREEN_CENTER_X-193 or SCREEN_CENTER_X+194) )
 			:y(SCREEN_BOTTOM-95):zoomy(0):sleep(0.5):linear(0.3):zoomy(1)
 		end,
@@ -306,6 +309,7 @@ for player in ivalues(PlayerNumber) do
 	end,
 	}
 	end
+
 return t
 
 

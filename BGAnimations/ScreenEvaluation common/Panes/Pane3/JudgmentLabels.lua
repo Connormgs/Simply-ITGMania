@@ -1,7 +1,8 @@
 local player = ...
 local pn = ToEnumShortString(player)
 local mods = SL[pn].ActiveModifiers
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local TapNoteScores = {Types={}, Names={}}
 local Colors = {}
 if mods.ShowFaPlusWindow and mods.ShowFaPlusPane then
@@ -46,7 +47,11 @@ local box_height = 146
 local row_height = box_height/#TapNoteScores.Types
 
 local t = Def.ActorFrame{
-	InitCommand=function(self) self:xy(50 * (player==PLAYER_2 and -1 or 1), _screen.cy-36) end
+	InitCommand=function(self) self:xy(50 * (player==PLAYER_2 and -1 or 1), _screen.cy-36) 
+
+	if IsNotWide and player == PLAYER_1 then self:x(112) end
+	end
+	
 }
 		t[#t+1] = Def.Sprite{
 	Texture=THEME:GetPathG("","base3.png"),

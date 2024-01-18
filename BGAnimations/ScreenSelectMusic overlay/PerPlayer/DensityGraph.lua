@@ -4,15 +4,17 @@ if GAMESTATE:IsCourseMode() then return end
 
 local player = ...
 local pn = ToEnumShortString(player)
-
+local pn1 = ...
 -- Height and width of the density graph.
 local height = 64
 local width = IsUsingWideScreen() and 286 or 276
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:visible( GAMESTATE:IsHumanPlayer(player) )
-		self:xy(_screen.cx-182, _screen.cy+18)
+		
+		self:xy(_screen.cx-9999, _screen.cy+18)
 
 		if player == PLAYER_2 then
 			self:addy(height+110)
@@ -22,6 +24,7 @@ local af = Def.ActorFrame{
 		if IsUsingWideScreen() then
 			self:addx(-5)
 		end
+	
 	end,
 	PlayerJoinedMessageCommand=function(self, params)
 		if params.Player == player then
@@ -48,6 +51,17 @@ local af = Def.ActorFrame{
 			end
 		end
 	end,
+	CodeMessageCommand=function(s,p)
+        if p.PlayerNumber == pn1 then
+            if p.Name == "1OpenPanes" then
+            s:GetParent():visible(true)
+			s:xy(_screen.cx-182, _screen.cy+18)
+            end
+            if p.Name == "1ClosePanes" then
+           s:GetParent():visible(false)
+            end
+        end
+    end,
 }
 
 -- Background quad for the density graph
@@ -243,7 +257,17 @@ af2[#af2+1] = Def.ActorFrame{
 	TogglePatternInfoCommand=function(self)
 		self:visible(not self:GetVisible())
 	end,
-	
+	CodeMessageCommand=function(s,p)
+        if p.PlayerNumber == pn1 then
+            if p.Name == "1OpenPanes" then
+            s:visible(true)
+		
+            end
+            if p.Name == "1ClosePanes" then
+           s:visible(true)
+            end
+        end
+    end,
 	-- Background for the additional chart info.
 	-- Only shown in 1 Player mode
 	Def.Quad{
@@ -263,6 +287,7 @@ local layout = {
 }
 
 local colSpacing = 75
+local col2Spacing = 85
 local rowSpacing = 20
 
 for i, row in ipairs(layout) do
@@ -274,16 +299,38 @@ for i, row in ipairs(layout) do
 				local textHeight = 9
 				local textZoom = 0.3
 				self:zoom(textZoom):horizalign(left)
+				if IsNotWide then self:addx(180) end
 				if col == "Total Stream" then
 					self:maxwidth(120)
-					
+
 				end
+				
+			
 				self:xy(-10,15)
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
 				self:zoom(0.5)
 			end,
+			
 			OffCommand=function(self) self:linear(0.3):zoomy(0) end,
+			OnCommand=function(self)
+				local textHeight = 9
+				local textZoom = 3
+				self:zoom(textZoom):horizalign(left)
+				
+				if col == "Total Stream" then
+					self:maxwidth(120)
+
+				end
+				
+			
+				self:xy(-10,15)
+				self:addx((j-1)*colSpacing)
+				self:addy((i-1)*rowSpacing)
+				self:zoom(0.5)
+				if IsNotWide then self:addx(110) end
+				
+			end,
 			HideCommand=function(self)
 				if col ~= "Total Stream" then
 					self:settext("0")
@@ -316,6 +363,7 @@ for i, row in ipairs(layout) do
 				local textZoom = 0.44
 				self:maxwidth(width/textZoom):zoom(textZoom):horizalign(left)
 				self:xy(-20,5)
+				if IsNotWide then self:x(80) end
 				self:addx((j-1)*colSpacing)
 				self:addy((i-1)*rowSpacing)
 				

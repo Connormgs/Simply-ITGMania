@@ -1,5 +1,6 @@
 local player, controller = unpack(...)
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local pn = ToEnumShortString(player)
 local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(player)
 
@@ -33,7 +34,9 @@ local t = Def.ActorFrame{
 		-- shift the x position of this ActorFrame to -90 for PLAYER_2
 		if controller == PLAYER_2 then
 			self:x( self:GetX() + 40 )
+			
 		end
+		if IsNotWide and player == PLAYER_1 then self:x(150) end
 	end
 }
 

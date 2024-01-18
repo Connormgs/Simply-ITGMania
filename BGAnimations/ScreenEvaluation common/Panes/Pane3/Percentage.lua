@@ -1,6 +1,8 @@
 local pn = ...
 local player = ...
 local stats = STATSMAN:GetCurStageStats():GetPlayerStageStats(pn)
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local PercentDP = stats:GetPercentDancePoints()
 local percent = FormatPercentScore(PercentDP)
 -- Format the Percentage string, removing the % symbol
@@ -13,6 +15,7 @@ return Def.ActorFrame{
 	InitCommand=function(self)
 		self:x( -115 )
 		self:y( _screen.cy-40 )
+		if IsNotWide and player == PLAYER_1 then self:x(-60) end
 	end,
 
 

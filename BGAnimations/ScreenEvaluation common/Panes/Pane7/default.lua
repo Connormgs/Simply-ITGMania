@@ -3,7 +3,8 @@
 local player, _, ComputedData = unpack(...)
 local player, controller = unpack(...)
 local checks, allChecksPassed = ValidForGrooveStats(player)
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local url, text = nil, ""
 local X_HasBeenBlinked = false
 
@@ -50,6 +51,7 @@ local pane = Def.ActorFrame{
 		if self:GetVisible() and not allChecksPassed and not X_HasBeenBlinked then
 			self:queuecommand("BlinkX")
 		end
+		if IsNotWide and player == PLAYER_1 then self:x(-81) end
 	end
 }
 

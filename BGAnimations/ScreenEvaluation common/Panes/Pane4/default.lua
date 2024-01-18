@@ -1,11 +1,13 @@
 -- Pane4 displays a list of HighScores for the stepchart that was played.
 
 local player, controller = unpack(...)
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local pane = Def.ActorFrame{
 	InitCommand=function(self)
 		self:y(_screen.cy - 62):zoom(1)
 		if player == PLAYER_2 then self:x(0) end
+if IsNotWide and player == PLAYER_1 then self:x(59) end
 	end
 }
 ---------------------------------------------------------
