@@ -7,6 +7,8 @@ On fresh installs you might get a bug in the evaluation screen that says incorre
 
 Restart the game after picking your color for the background to properly change
 
+Press up-left arrows to open the expanded panedisplay with the chart breakdown, press down-right to close it.
+
 Huge thanks to jose_varela for making the SM5 ITG2 theme and helping me out with a few issues along the way.
 
 Big thanks to sheepychris, Ian Underwood, and teejusb for helping me solve problems with this theme. 
