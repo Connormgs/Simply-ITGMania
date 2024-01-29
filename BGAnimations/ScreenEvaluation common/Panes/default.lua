@@ -64,10 +64,7 @@ elseif #players == 1 then
 				Name="Pane"..i.."_SideP1",
 				InitCommand=function(self) self:x(offset.PlayerNumber_P1) end,
 				left_pane
-				OnCommand=function(self)
-				if ThemePrefs.Get("P1Off") then
-				self:visible(false)
-				end,
+				
 			}
 			af[#af+1] = Def.ActorFrame{
 				Name="Pane"..i.."_SideP2",
