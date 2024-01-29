@@ -212,7 +212,7 @@ if GAMESTATE:IsPlayerEnabled(args) then
 	t[#t+1] = Def.BitmapText{
 		Font="_futurist normal",
 		InitCommand=function(self) 
-		if IsWide then self:x(ObtainData.DiffPlacement):y(-24+13) end;
+		if IsWide then self:x(55):y(-24+4) end;
 		if IsNotWide then self:x(118):y(-24) end;
 		end;
 CodeMessageCommand=function(s,p)
@@ -221,7 +221,10 @@ CodeMessageCommand=function(s,p)
 		s:addx(ObtainData.DiffPlacement + 999)
 		end
 		end
-		 if p.Name == "1ClosePanes" then
+		 if p.Name == "1ClosePanes" and IsWide then
+		s:x(55)
+			end
+			 if p.Name == "1ClosePanes" and IsNotWide then
 		s:x(ObtainData.DiffPlacement - 40)
 			end
 		end;
@@ -244,7 +247,7 @@ CodeMessageCommand=function(s,p)
 	t[#t+1] = Def.BitmapText{
 		Font="_eurostile normal",
 		InitCommand=function(self) 
-		if IsWide then self:x(ObtainData.DiffPlacement):y(-24+38):maxwidth(90):zoom(0.55) end;
+		if IsWide then self:x(ObtainData.DiffPlacement - 105):y(-24+30):maxwidth(90):zoom(0.55) end;
 		if IsNotWide then self:x(ObtainData.DiffPlacement - 40):y(0):maxwidth(90):zoom(0.55) end;
 		end;
 	CodeMessageCommand=function(s,p)
@@ -253,7 +256,10 @@ CodeMessageCommand=function(s,p)
 		s:x(ObtainData.DiffPlacement + 999)
 		end
 		end
-		 if p.Name == "1ClosePanes" then
+		 if p.Name == "1ClosePanes" and IsWide then
+	s:x(ObtainData.DiffPlacement - 105)
+			end
+			if p.Name == "1ClosePanes" and IsNotWide then
 	s:x(ObtainData.DiffPlacement - 40)
 			end
 		end;

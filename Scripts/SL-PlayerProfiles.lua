@@ -108,7 +108,6 @@ local permitted_profile_settings = {
 	
 	JudgmentBack         = "boolean",
 	ErrorMSDisplay       = "boolean",
-	GhostFault 			 = "boolean",
 	GhostTilt            = "boolean",
 	BreakUI              = "boolean",
 

@@ -303,15 +303,15 @@ Branch.AfterEvaluation = function()
 		if GAMESTATE:IsEventMode() or stagesLeft >= 1 then
 			return "ScreenProfileSave"
 		elseif song:IsLong() and maxStages <= 2 and stagesLeft < 1 and allFailed then
-			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenGameOver"
+			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenEnding"
 		elseif song:IsMarathon() and maxStages <= 3 and stagesLeft < 1 and allFailed then
-			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenGameOver"
+			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenEnding"
 		elseif maxStages >= 2 and stagesLeft < 1 and allFailed then
-			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenGameOver"
+			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenEnding"
 		elseif allFailed then
-			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenGameOver"
+			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenEnding"
 		else
-			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenGameOver"
+			return GAMESTATE:AnyPlayerHasRankingFeats() and "ScreenNameEntryTraditional" or "ScreenEnding"
 		end
 	end
 end

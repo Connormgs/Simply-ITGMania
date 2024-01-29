@@ -303,7 +303,7 @@ end
 
 Branch.AfterProfileSaveSummary = function()
 	if ThemePrefs.Get("AllowScreenGameOver") then
-		return "ScreenGameOver"
+		return "ScreenEnding"
 	else
 		return Branch.AfterInit()
 	end

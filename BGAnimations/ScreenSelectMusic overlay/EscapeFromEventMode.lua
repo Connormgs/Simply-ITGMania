@@ -29,7 +29,7 @@ local af = Def.ActorFrame{
 
 	-- the SM5 engine has broadcast that the player input a Metrics-based button code
 	CodeMessageCommand=function(self, params)
-		if params.Name == "EscapeFromEventMode" then
+		if params.Name == "EscapeFromEventMode" or params.Name == "EscapeFromEventMode2" or params.Name == "EscapeFromEventMode3"then
 			self:queuecommand("Show")
 		end
 	end,
@@ -132,7 +132,7 @@ local no = Def.ActorFrame{
 		self:y(250):diffuse( PlayerColor(PLAYER_2) )
 	end,
 
-	LoadFont("Common Bold")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 		Text=THEME:GetString("ScreenPromptToResetPreferencesToStock","No"),
 		InitCommand=function(self) self:zoom(1.1) end
 	},
@@ -149,7 +149,7 @@ local yes = Def.ActorFrame{
 		self:y(250)
 	end,
 
-	LoadFont("Common Bold")..{
+	LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 		Text=THEME:GetString("ScreenPromptToResetPreferencesToStock","Yes"),
 		InitCommand=function(self) self:zoom(1.1) end
 	},
