@@ -5,7 +5,7 @@ local Players = GAMESTATE:GetHumanPlayers()
 -- The number of stages that were played this game cycle
 local NumStages = SL.Global.Stages.PlayedThisGame
 -- The duration (in seconds) each stage should display onscreen before cycling to the next
-local DurationPerStage = 4
+local DurationPerStage = 2
 ---------------------------------------------------------------------------
 for player in ivalues(Players) do
 	if SL[ToEnumShortString(player)].HighScores.EnteringName then
