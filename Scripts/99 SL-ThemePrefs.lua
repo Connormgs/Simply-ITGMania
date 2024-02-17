@@ -17,14 +17,14 @@ end
 SL_CustomPrefs.Get = function()
 	 -- emojis are our lingua franca for the 21st century
 	local visualStyleChoices = { "❤", "↖", "🐻", "🦆", "😺", "🎃", "🌈", "⭐", "🤔", "🌀" }
-	local visualStyleValues  = { "Hearts", "Arrows", "Bears", "Ducks", "Cats", "Spooky", "Gay", "Stars", "Thonk", "Technique"}
+	local visualStyleValues  = { "Hearts", "Arrows", "Bears", "Ducks", "Cats", "Spooky", "Gay", "Stars", "Thonk", "Technique" }
 
 	local year = Year()
 	local month = MonthOfYear()+1
 	local day = DayOfMonth()
 	local today = year * 10000 + month * 100 + day
 
-	if today >= 20230619 then
+	if today >= 20230620 then
 		visualStyleChoices[#visualStyleChoices+1] = "😈"
 		visualStyleValues[#visualStyleValues+1] = "SRPG7"
 	else
@@ -75,7 +75,7 @@ SL_CustomPrefs.Get = function()
 				THEME:GetString("ScreenSelectPlayMode", "ITG"),
 				THEME:GetString("ScreenSelectPlayMode", "FA+"),
 			},
-			Values = { "Casual", "ITG", "FA+" }
+			Values = { "Casual", "ITG" }
 		},
 		AutoStyle =
 		{
@@ -90,7 +90,7 @@ SL_CustomPrefs.Get = function()
 		},
 		VisualStyle =
 		{
-			Default = "Hearts",
+			Default = "Technique",
 			Choices = visualStyleChoices,
 			Values  = visualStyleValues
 		},

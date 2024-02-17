@@ -151,6 +151,14 @@ local LeaderboardRequestProcessor = function(res, master)
 					}
 					master[pn]["LeaderboardIndex"] = 1
 				end
+				if data[playerStr]["exLeaderboard"] then
+					leaderboardList[#leaderboardList + 1] = {
+						Name="GrooveStats",
+						Data=DeepCopy(data[playerStr]["exLeaderboard"]),
+						IsEX=true
+					}
+					master[pn]["LeaderboardIndex"] = 1
+				end
 			elseif boogie_ex then
 				if data[playerStr]["gsLeaderboard"] then
 					leaderboardList[#leaderboardList + 1] = {

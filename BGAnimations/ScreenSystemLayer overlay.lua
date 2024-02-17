@@ -1,100 +1,185 @@
-local function CreditsText( pn )
-	local text = LoadFont(Var "LoadingScreen","credits") .. {
+-- This is mostly copy/pasted directly from SM5's _fallback theme with
+-- very minor modifications.
+
+local t = Def.ActorFrame{
+	InitCommand=function(self)
+		-- In case we loaded the theme with SRPG7 and had Rainbow Mode enabled, disable it.
+		if ThemePrefs.Get("VisualStyle") == "SRPG7" and ThemePrefs.Get("RainbowMode") == true then
+			ThemePrefs.Set("RainbowMode", false)
+			ThemePrefs.Save()
+		end
+	end
+}
+
+-- -----------------------------------------------------------------------
+
+local function CreditsText( player )
+	return LoadFont("Common Normal") .. {
 		InitCommand=function(self)
-			self:name("Credits" .. PlayerNumberToString(pn))
+			self:visible(false)
+			self:name("Credits" .. PlayerNumberToString(player))
 			ActorUtil.LoadAllCommandsAndSetXY(self,Var "LoadingScreen")
 		end,
+		VisualStyleSelectedMessageCommand=function(self) self:playcommand("UpdateVisible") end,
 		UpdateTextCommand=function(self)
-			local str = ScreenSystemLayerHelpers.GetCreditsMessage(pn)
-			MESSAGEMAN:Broadcast("SYSTEMUpdateText")
+			-- this feels like a holdover from SM3.9 that just never got updated
+			local str = ScreenSystemLayerHelpers.GetCreditsMessage(player)
 			self:settext(str)
 		end,
 		UpdateVisibleCommand=function(self)
 			local screen = SCREENMAN:GetTopScreen()
 			local bShow = true
+
+			local textColor = Color.White
+			local shadowLength = 0
+
 			if screen then
-				local sClass = screen:GetName()
-				bShow = THEME:GetMetric( sClass, "ShowCreditDisplay" )
+				bShow = THEME:GetMetric( screen:GetName(), "ShowCreditDisplay" )
+
+				local screenName = screen:GetName()
+				if screenName == "ScreenTitleMenu" or screenName == "ScreenTitleJoin" or screenName == "ScreenLogo" then
+					if ThemePrefs.Get("VisualStyle") == "SRPG7" then
+						textColor = color(SL.SRPG7.TextColor)
+						shadowLength = 0.4
+					end
+				elseif (screen:GetName() == "ScreenEvaluationStage") or (screen:GetName() == "ScreenEvaluationNonstop") or (screen:GetName() == "ScreenGameplay") then
+					-- ignore ShowCreditDisplay metric for ScreenEval
+					-- only show this BitmapText actor on Evaluation if the player is joined
+					bShow = GAMESTATE:IsHumanPlayer(player)
+					--        I am not human^
+					--        today, but there's always hope
+					--        I'll see tomorrow
+
+					-- dark text for RainbowMode
+					if ThemePrefs.Get("RainbowMode") then
+						textColor = Color.Black
+					end
+				end
 			end
+
 			self:visible( bShow )
+			self:diffuse(textColor)
+			self:shadowlength(shadowLength)
 		end
 	}
-	return text
 end
 
-local t = Def.ActorFrame {}
-	-- Aux
+-- -----------------------------------------------------------------------
+-- player avatars
+-- see: https://youtube.com/watch?v=jVhlJNJopOQ
+
+for player in ivalues(PlayerNumber) do
+	t[#t+1] = Def.Sprite{
+		ScreenChangedMessageCommand=function(self)   self:queuecommand("Update") end,
+		PlayerJoinedMessageCommand=function(self, params)   if params.Player==player then self:queuecommand("Update") end end,
+		PlayerUnjoinedMessageCommand=function(self, params) if params.Player==player then self:queuecommand("Update") end end,
+		PlayerProfileSetMessageCommand=function(self, params) if params.Player==player then self:queuecommand("Update") end end,
+
+		UpdateCommand=function(self)
+			local path = GetPlayerAvatarPath(player)
+
+			if path == nil and self:GetTexture() ~= nil then
+				self:Load(nil):diffusealpha(0):visible(false)
+				return
+			end
+
+			-- only read from disk if not currently set or if the path has changed
+			if self:GetTexture() == nil or path ~= self:GetTexture():GetPath() then
+				self:Load(path):finishtweening():linear(0.075):diffusealpha(1)
+
+				local dim = 32
+				local h   = (player==PLAYER_1 and left or right)
+				local x   = (player==PLAYER_1 and    0 or _screen.w)
+
+				self:horizalign(h):vertalign(bottom)
+				self:xy(x, _screen.h):setsize(dim,dim)
+			end
+
+			local screen = SCREENMAN:GetTopScreen()
+			if screen then
+				if THEME:HasMetric(screen:GetName(), "ShowPlayerAvatar") then
+					self:visible( THEME:GetMetric(screen:GetName(), "ShowPlayerAvatar") )
+				else
+					self:visible( THEME:GetMetric(screen:GetName(), "ShowCreditDisplay") )
+				end
+			end
+		end,
+	}
+end
+
+-- -----------------------------------------------------------------------
+
+-- what is aux?
 t[#t+1] = LoadActor(THEME:GetPathB("ScreenSystemLayer","aux"))
-	-- Credits
+
+-- Credits
 t[#t+1] = Def.ActorFrame {
  	CreditsText( PLAYER_1 ),
 	CreditsText( PLAYER_2 )
 }
 
--- MemoryCard management
-local cardpos = {
-	["PlayerNumber_P1"] = {WideScale(18,18),SCREEN_BOTTOM-14},
-	["PlayerNumber_P2"] = {SCREEN_RIGHT-WideScale(18,18),SCREEN_BOTTOM-14},
-}
-for player in ivalues(PlayerNumber) do
-	local shortplr = ToEnumShortString(player)
-	t[#t+1] = Def.Sprite{
-		Texture=THEME:GetPathG("MemoryCardDisplay ready", shortplr ),
-		InitCommand=function(s) s:xy( cardpos[player][1] ,cardpos[player][2]-2 ):visible(true) end,
-		SYSTEMUpdateTextMessageCommand=function(self)
-			self:visible(false)
-			-- Based on what the player contains, update the sprite accordingly.
-			local status = {
-				["ready"] = THEME:GetPathG("MemoryCardDisplay ready", shortplr ),
-				["checking"] = THEME:GetPathG("MemoryCardDisplay checking", shortplr ),
-				["late"] = THEME:GetPathG("MemoryCardDisplay late", shortplr ),
-				["error"] = THEME:GetPathG("MemoryCardDisplay error", shortplr ),
-				["removed"] = THEME:GetPathG("MemoryCardDisplay removed", shortplr ),
-			}
-			local CardStatus = ToEnumShortString(MEMCARDMAN:GetCardState(player))
-			if CardStatus ~= "none" then
-				self:visible(true):Load( status[ CardStatus ] )
+-- "Event Mode" or CreditText at lower-center of screen
+t[#t+1] = LoadFont("_eurostile normal")..{
+	InitCommand=function(self) self:xy(_screen.cx, _screen.h-16):zoom(0.5):horizalign(center) end,
+
+	OnCommand=function(self) self:playcommand("Refresh") end,
+	ScreenChangedMessageCommand=function(self) self:playcommand("Refresh") end,
+	CoinModeChangedMessageCommand=function(self) self:playcommand("Refresh") end,
+	CoinsChangedMessageCommand=function(self) self:playcommand("Refresh") end,
+	VisualStyleSelectedMessageCommand=function(self) self:playcommand("Refresh") end,
+
+	RefreshCommand=function(self)
+		local screen = SCREENMAN:GetTopScreen()
+
+		-- if this screen's Metric for ShowCreditDisplay=false, then hide this BitmapText actor
+		-- PS: "ShowCreditDisplay" isn't a real Metric as far as the engine is concerned.
+		-- I invented it for Simply Love and it has (understandably) confused other themers.
+		-- Sorry about this.
+		if screen then
+			self:visible( THEME:GetMetric( screen:GetName(), "ShowCreditDisplay" ) )
+		end
+
+		if GAMESTATE:GetCoinMode() == "CoinMode_Pay" then
+			local credits = GetCredits()
+			local text
+
+			if credits.CoinsPerCredit > 1 then
+				text = ("%s     %d     %d/%d"):format(
+					THEME:GetString("ScreenSystemLayer", "CreditsCredits"),
+					credits.Credits,
+					credits.Remainder,
+					credits.CoinsPerCredit
+				)
+			else
+				text = ("%s     %d"):format(
+					THEME:GetString("ScreenSystemLayer", "CreditsCredits"),
+					credits.Credits
+				)
+			end
+
+			self:settext(text)
+
+		elseif GAMESTATE:GetCoinMode() == "CoinMode_Free" then
+			self:settext( THEME:GetString("ScreenSystemLayer", "FreePlay") )
+
+		elseif GAMESTATE:GetCoinMode() == "CoinMode_Home" then
+			self:settext('')
+		end
+
+		local textColor = Color.White
+		local screenName = screen:GetName()
+		if screen ~= nil and (screenName == "ScreenTitleMenu" or screenName == "ScreenTitleJoin" or screenName == "ScreenLogo") then
+			if ThemePrefs.Get("VisualStyle") == "SRPG7" then
+				textColor = color(SL.SRPG7.TextColor)
 			end
 		end
-	}
-end
-
-	-- Text
-t[#t+1] = Def.ActorFrame {
-	Def.Quad {
-		InitCommand=function(self)
-			self:zoomtowidth(SCREEN_WIDTH):zoomtoheight(30):align(0,0):diffuse(color("0,0,0,0"))
-		end,
-		OnCommand=function(self)
-			self:finishtweening():diffusealpha(0.85)
-		end,
-		OffCommand=function(self)
-			self:sleep(3):linear(0.5):diffusealpha(0)
-		end
-	},
-	Def.BitmapText{
-		Font="Common Normal",
-		Name="Text",
-		InitCommand=function(self)
-			self:maxwidth(750):align(0,0):xy(10,10):shadowlength(1):diffusealpha(0)
-		end,
-		OnCommand=function(self)
-			self:finishtweening():diffusealpha(1):zoom(0.5)
-		end,
-		OffCommand=function(self)
-			self:sleep(3):linear(0.5):diffusealpha(0)
-		end
-	},
-	SystemMessageMessageCommand = function(self, params)
-		self:GetChild("Text"):settext( params.Message )
-		self:playcommand( "On" )
-		if params.NoAnimate then
-			self:finishtweening()
-		end
-		self:playcommand( "Off" )
-	end,
-	HideSystemMessageMessageCommand = function(self) self:finishtweening() end
+		self:diffuse(textColor)
+	end
 }
+
+-- -----------------------------------------------------------------------
+-- Modules
+
 local function LoadModules()
 	-- A table that contains a [ScreenName] -> Table of Actors mapping.
 	-- Each entry will then be converted to an ActorFrame with the actors as children.
@@ -154,6 +239,7 @@ local function LoadModules()
 end
 
 LoadModules()
+
 -- -----------------------------------------------------------------------
 -- The GrooveStats service info pane.
 -- We put this in ScreenSystemLayer because if people move through the menus too fast,
@@ -271,17 +357,9 @@ local NewSessionRequestProcessor = function(res, gsInfo)
 		end
 	end
 
--- All services are enabled, display a green check.
+	-- All services are enabled, display a green check.
 	if SL.GrooveStats.GetScores and SL.GrooveStats.Leaderboard and SL.GrooveStats.AutoSubmit then
-		if ThemePrefs.Get("EnableBoogieStats") then
-			if string.find(PREFSMAN:GetPreference("HttpAllowHosts"), "boogiestats.andr.host") then
-				groovestats:settext("✔ BoogieStats")
-			else
-				groovestats:settext("✔ GrooveStats (BoogieStats host not in allow list)")
-			end
-		else
-			groovestats:settext("✔ GrooveStats")
-		end
+		groovestats:settext("✔ GrooveStats")
 		SL.GrooveStats.IsConnected = true
 	-- All services are disabled, display a red X.
 	elseif not SL.GrooveStats.GetScores and not SL.GrooveStats.Leaderboard and not SL.GrooveStats.AutoSubmit then
@@ -400,6 +478,7 @@ t[#t+1] = Def.ActorFrame{
 		end
 	}
 }
+
 -- -----------------------------------------------------------------------
 -- Loads the UnlocksCache from disk for SRPG unlocks.
 LoadUnlocksCache()
@@ -463,4 +542,5 @@ t[#t+1] = Def.ActorFrame {
 	}
 }
 -- -----------------------------------------------------------------------
+
 return t

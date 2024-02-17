@@ -1,7 +1,8 @@
 local player = ...
 local pn = ToEnumShortString(player)
 local p = PlayerNumber:Reverse()[player]
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 local text_table, marquee_index
 
 return Def.ActorFrame{
@@ -36,25 +37,25 @@ return Def.ActorFrame{
 
 		if player == PLAYER_1 then
 
-			if GAMESTATE:IsCourseMode() then
-				self:x( _screen.cx - (IsUsingWideScreen() and 356 or 346))
-				self:y(_screen.cy + 32)
+			if IsNotWide then
+				self:x(488)
+				self:y(_screen.cy - 20)
+				self:zoom(0.93)
 			else
-				self:x( _screen.cx - (IsUsingWideScreen() and -180 or 346))
+				self:x(999)
 				self:y(_screen.cy + -20)
 			end
 
 		elseif player == PLAYER_2 then
 
-			if GAMESTATE:IsCourseMode() then
-				self:x( _screen.cx - 210)
-				self:y(_screen.cy + 75)
+		if IsNotWide then
+				self:x(0)
+				self:y(_screen.cy + 32)
 			else
-				self:x( _screen.cx + 180)
-				self:y(_screen.cy - 60)
+				self:x(999)
+				self:y(_screen.cy + -20)
 			end
-		end
-
+			end
 		if GAMESTATE:IsHumanPlayer(player) then
 			self:queuecommand("Appear" .. pn)
 		end

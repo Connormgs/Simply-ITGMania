@@ -85,7 +85,7 @@ local t = Def.ActorFrame{
 
 t[#t+1] = LoadFont("_eurostile normal")..{
 	Name="MachineRecord",
-	InitCommand=function(self) self:x(-90) end,
+	InitCommand=function(self) self:x(-80) end,
 	OnCommand=function(self)
 		if EarnedMachineRecord and HighScoreIndex.Machine+1 > 0 then
 			self:settext(ScreenString("MachineRecord"):format(HighScoreIndex.Machine+1))
@@ -96,7 +96,7 @@ t[#t+1] = LoadFont("_eurostile normal")..{
 
 t[#t+1] = LoadFont("_eurostile normal")..{
 	Name="PersonalRecord",
-	InitCommand=function(self) self:x(174) end,
+	InitCommand=function(self) self:x(184) end,
 	OnCommand=function(self)
 		if EarnedPersonalRecord and HighScoreIndex.Personal+1 > 0 then
 			self:settext(ScreenString("PersonalRecord"):format(HighScoreIndex.Personal+1))

@@ -1,6 +1,7 @@
 -- don't bother showing the bpm and music rate in Casual mode
 if SL.Global.GameMode == "Casual" then return end
-
+local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
+local IsWide = (GetScreenAspectRatio() > 4 / 3)
 return Def.ActorFrame{
 	InitCommand=function(self) self:xy(440, 170) end,
 
@@ -18,10 +19,16 @@ return Def.ActorFrame{
 				-- format a string like "150 - 300 bpm (1.5x Music Rate)"
 				self:settext( ("%s bpm (%gx %s)"):format(bpms, MusicRate, THEME:GetString("OptionTitles", "MusicRate")) )
 				self:xy(-40, -105)
+				if IsNotWide then
+				self:xy(-110, -105)
+				end
 			else
 				-- format a string like "100 - 200 bpm"
 				self:settext( ("%s bpm"):format(bpms))
 				self:xy(-40, -105)
+				if IsNotWide then
+				self:xy(-110, -105)
+				end
 			end
 		end
 	},

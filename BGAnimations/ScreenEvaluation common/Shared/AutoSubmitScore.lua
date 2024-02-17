@@ -12,16 +12,17 @@ local SetEntryText = function(rank, name, score, date, actor)
 end
 
 local GetMachineTag = function(gsEntry)
-	if not gsEntry then return end	
-	-- Groovestats username.
-	if gsEntry["name"] then
-		-- 4 Characters is the "intended" length.
-		return gsEntry["name"]
+	if not gsEntry then return end
+	if gsEntry["machineTag"] then
+		-- Make sure we only use up to 4 characters for space concerns.
+		return gsEntry["machineTag"]:sub(1, 4):upper()
 	end
 
-	if gsEntry["machineTag"] then
-		-- User doesn't have a username (?).
-		return gsEntry["machineTag"]:sub(1, 4):upper()
+	-- User doesn't have a machineTag set. We'll "make" one based off of
+	-- their name.
+	if gsEntry["name"] then
+		-- 4 Characters is the "intended" length.
+		return gsEntry["name"]:sub(1,4):upper()
 	end
 
 	return ""
@@ -169,14 +170,13 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 				-- It's better to just not display anything than display the wrong scores.
 				if SL["P"..side].Streams.Hash == data[playerStr]["chartHash"] then
 					local personalRank = nil
-					if not data[playerStr]["isRanked"] then
-						QRPane:GetChild("QRCode"):queuecommand("Hide")
-						QRPane:GetChild("HelpText"):settext("This chart is not ranked on GrooveStats.")
-						if i == 1 and P1SubmitText then
-							P1SubmitText:queuecommand("ChartNotRanked")
-						elseif i == 2 and P2SubmitText then
-							P2SubmitText:queuecommand("ChartNotRanked")
-						end
+					local showExScore = SL["P"..side].ActiveModifiers.ShowEXScore and data[playerStr]["exLeaderboard"]
+
+					local leaderboardData = nil
+					if showExScore then
+						leaderboardData = data[playerStr]["exLeaderboard"]
+					elseif data[playerStr]["leaderboard"] then
+						leaderboardData = data[playerStr]["gsLeaderboard"]
 					end
 					
 					if data[playerStr]["gsLeaderboard"] then
@@ -191,6 +191,15 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								ParseGroovestatsDate(gsEntry["date"]),
 								entry
 							)
+
+							-- TODO(teejusb): Determine how we want to easily display EX scores.
+							-- For now just highlight blue because it's simple.
+							if showExScore then
+								entry:GetChild("Score"):diffuse(SL.JudgmentColors["FA+"][1])
+							else
+								entry:GetChild("Score"):diffuse(Color.White)
+							end
+
 							if gsEntry["isRival"] then
 								entry:diffuse(color("#BD94FF"))
 								rivalNum = rivalNum + 1
@@ -523,7 +532,7 @@ af[#af+1] = Def.Sprite{
 af[#af+1] = LoadFont(ThemePrefs.Get("ThemeFont") .. " Bold")..{
 	Name="P1RecordText",
 	InitCommand=function(self)
-		local x = _screen.cx - 225
+		local x = _screen.cx - 180
 		self:zoom(0.225)
 		self:xy(x,40)
 		self:visible(false)

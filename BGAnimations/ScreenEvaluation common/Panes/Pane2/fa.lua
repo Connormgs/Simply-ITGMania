@@ -116,13 +116,27 @@ end
 -- labels: hands/ex, holds, mines, rolls
 for index, label in ipairs(RadarCategories) do
 	if index == 1 then
+	text = nil
+		if SL[pn].ActiveModifiers.ShowEXScore then
+			text = "ITG"
+		else
+			text = "EX"
+		end
+
+
 		t[#t+1] = LoadFont("_eurostile normal")..{
-			Text="EX",
+			Text=text,
 			InitCommand=function(self) self:zoom(0.5):horizalign(right) end,
 			BeginCommand=function(self)
-				self:x( (controller == PLAYER_1 and -102) or 38 )
+				self:x( (controller == PLAYER_1 and -101) or 38 )
 				self:y(94)
 				
+				if SL[pn].ActiveModifiers.ShowEXScore then
+					self:diffuse(Color.White)
+					self:addx(5)
+				else
+					self:diffuse(Color.White)
+				end
 			end
 		}
 	end

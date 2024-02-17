@@ -161,7 +161,7 @@ local graph_and_lifeline = Def.ActorFrame{
 		-- to the nearest multiple of 8ths to avoid jaggies
 		if not TimingData:HasBPMChanges() then
 			local bpm = TimingData:GetBPMs()[1]
-			if bpm >= 60 and bpm <= 300 then
+			if bpm >= 60 then
 				-- make sure that the BPM makes sense
 				local Interval8th = (60 / bpm) / 2
 				UpdateRate = Interval8th * math.ceil(UpdateRate / Interval8th)

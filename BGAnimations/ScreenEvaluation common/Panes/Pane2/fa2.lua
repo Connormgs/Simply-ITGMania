@@ -51,16 +51,30 @@ local RadarCategories = {
 	x = { P1=-180, P2=218 }
 }
 for index, RCType in ipairs(RadarCategories.Types) do
+-- Swap to displaying ITG score if we're showing EX score in gameplay.
+	local percent = nil
+	if SL[pn].ActiveModifiers.ShowEXScore then
+		local PercentDP = pss:GetPercentDancePoints()
+		percent = FormatPercentScore(PercentDP):gsub("%%", "")
+		-- Format the Percentage string, removing the % symbol
+		percent = tonumber(percent)
+	else
+		percent = CalculateExScore(player)
+	end
+
 	if index == 1 then
 		t[#t+1] = LoadFont("ScreenEvaluation judge")..{
 			Name="Percent",
-			Text=("%.2f"):format(CalculateExScore(player)),
+			Text=("%.2f"):format(percent),
 			InitCommand=function(self)
 				self:horizalign(right):zoom(0.63)
-				self:x( (controller == PLAYER_1 and -37) or 236 )
+				self:x( (controller == PLAYER_1 and -10) or 236 )
 				self:y(118)
-				self:diffuse( PlayerColor(player) )
-				if player == PLAYER_2 then self:diffuse(GetCurrentColor(true)) end
+				if SL[pn].ActiveModifiers.ShowEXScore then
+					self:diffuse(GetCurrentColor(True))
+				else
+					self:diffuse(GetCurrentColor(True))
+				end
 			end
 		}
 	end

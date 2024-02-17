@@ -294,12 +294,13 @@ local t = Def.ActorFrame {
 		-- present a choice that would allow them to switch to FA+.
 		if SL.Global.Stages.PlayedThisGame == 0 then
 			if SL.Global.GameMode ~= "ITG"      then table.insert(wheel_options, {"ChangeMode", "ITG"}) end
-		
+			if SL.Global.GameMode ~= "FA+"      then table.insert(wheel_options, {"ChangeMode", "FA+"}) end
 			-- Casual players often choose the wrong mode and an experienced player in the area may notice this
 			-- and offer to switch them back to casual mode. This allows them to do so again.
 			-- It's technically not possible to reach the sort menu in Casual Mode, but juuust in case let's still
 			-- include the check.
-			
+			if SL.Global.GameMode ~= "Casual"   then table.insert(wheel_options, {"ChangeMode", "Casual"}) end
+
 		end
 
 		-- Add operator functions if in event mode. (Public arcades probably don't want random players
@@ -310,14 +311,14 @@ local t = Def.ActorFrame {
 			if (game=="dance" or game=="pump" or game=="techno") then
 				table.insert(wheel_options, {"FeelingSalty", "TestInput"})
 			end
+		end
 
-			table.insert(wheel_options, {"TakeABreather", "LoadNewSongs"})
+		table.insert(wheel_options, {"TakeABreather", "LoadNewSongs"})
 
-			-- Only display the View Downloads option if we're connected to
-			-- GrooveStats and Auto-Downloads are enabled.
-			if SL.GrooveStats.IsConnected and ThemePrefs.Get("AutoDownloadUnlocks") then
-				table.insert(wheel_options, {"NeedMoreRam", "ViewDownloads"})
-			end
+		-- Only display the View Downloads option if we're connected to
+		-- GrooveStats and Auto-Downloads are enabled.
+		if SL.GrooveStats.IsConnected and ThemePrefs.Get("AutoDownloadUnlocks") then
+			table.insert(wheel_options, {"NeedMoreRam", "ViewDownloads"})
 		end
 
 		-- The relevant Leaderboard.lua actor is only added if these same conditions are met.
@@ -339,33 +340,29 @@ local t = Def.ActorFrame {
 			table.insert(wheel_options, {"NextPlease", "SwitchProfile"})
 		end
 
+			if GAMESTATE:GetCurrentSong() ~= nil then
+			table.insert(wheel_options, {"ImLovinIt", "AddFavorite"})
+		end
+
 		local any_player_has_favorites = false
 		local profileSlot = {
 			["PlayerNumber_P1"] = "ProfileSlot_Player1",
 			["PlayerNumber_P2"] = "ProfileSlot_Player2"
 		}
-		local all_local = true
 		for player in ivalues(GAMESTATE:GetHumanPlayers()) do
 			local profileDir = PROFILEMAN:GetProfileDir(profileSlot["PlayerNumber_"..ToEnumShortString(player)])
 			local path = profileDir .. "favorites.txt"
 			if FILEMAN:DoesFileExist(path) then
 				any_player_has_favorites = true
-			end
-			if PROFILEMAN:ProfileWasLoadedFromMemoryCard(player) then
-				all_local = false
+				break
 			end
 		end
 
-		-- TODO(teejusb): Allow players to add favorites for USBs.
-		if all_local then
-			if GAMESTATE:GetCurrentSong() ~= nil then
-				table.insert(wheel_options, {"ImLovinIt", "AddFavorite"})
-			end
-
-			if any_player_has_favorites then
-				table.insert(wheel_options, {"MixTape", "Favorites"})
-			end
+		if any_player_has_favorites then
+			table.insert(wheel_options, {"MixTape", "Favorites"})
 		end
+
+
 
 		-- Override sick_wheel's default focus_pos, which is math.floor(num_items / 2)
 		--

@@ -94,11 +94,24 @@ local GetScoresRequestProcessor = function(res, params)
 		local personalRecordSet = false
 
 		-- First check to see if the leaderboard even exists.
-		if data and data[playerStr] and data[playerStr]["gsLeaderboard"] and #data[playerStr]["gsLeaderboard"] > 0 then
+		if data and data[playerStr] then
+			local showExScore = SL["P"..i].ActiveModifiers.ShowEXScore and data[playerStr]["exLeaderboard"] ~= nil
+
+			local leaderboardData = nil
+			if showExScore then
+				leaderboardData = data[playerStr]["exLeaderboard"]
+			elseif data[playerStr]["gsLeaderboard"] then
+				leaderboardData = data[playerStr]["gsLeaderboard"]
+			end
+
+			if leaderboardData then
+				foundLeaderboard = true
+			end
+
 			-- And then also ensure that the chart hash matches the currently parsed one.
 			-- It's better to just not display anything than display the wrong scores.
-			if SL["P"..i].Streams.Hash == data[playerStr]["chartHash"] then
-				for gsEntry in ivalues(data[playerStr]["gsLeaderboard"]) do
+			if SL["P"..i].Streams.Hash == data[playerStr]["chartHash"] and leaderboardData then
+				for gsEntry in ivalues(leaderboardData) do
 					if gsEntry["rank"] == 1 then
 						SetNameAndScore(
 							GetMachineTag(gsEntry),
@@ -110,22 +123,34 @@ local GetScoresRequestProcessor = function(res, params)
 					end
 
 					if gsEntry["isSelf"] then
-						-- Let's check if the GS high score is higher than the local high score
-						local player = PlayerNumber[i]
-						local localScore = GetScoreForPlayer(player)
-						-- GS's score entry is a value like 9823, so we need to divide it by 100 to get 98.23
-						local gsScore = gsEntry["score"] / 100
-
-						-- GetPercentDP() returns a value like 0.9823, so we need to multiply it by 100 to get 98.23
-						if not localScore or gsScore >= localScore:GetPercentDP() * 100 then
-							-- It is! Let's use it instead of the local one.
+						-- Always display personal EX score from the site if it's available.
+						-- TODO(teejusb): Grab white count from stats and calculate it to compare local score.
+						if showExScore then
 							SetNameAndScore(
 								GetMachineTag(gsEntry),
-								string.format("%.2f%%", gsScore),
+								string.format("%.2f%%", gsEntry["score"]/100),
 								playerName,
 								playerScore
 							)
 							personalRecordSet = true
+						else
+							-- Let's check if the GS high score is higher than the local high score
+							local player = PlayerNumber[i]
+							local localScore = GetScoreForPlayer(player)
+							-- GS's score entry is a value like 9823, so we need to divide it by 100 to get 98.23
+							local gsScore = gsEntry["score"] / 100
+
+							-- GetPercentDP() returns a value like 0.9823, so we need to multiply it by 100 to get 98.23
+							if not localScore or gsScore >= localScore:GetPercentDP() * 100 then
+								-- It is! Let's use it instead of the local one.
+								SetNameAndScore(
+									GetMachineTag(gsEntry),
+									string.format("%.2f%%", gsScore),
+									playerName,
+									playerScore
+								)
+								personalRecordSet = true
+							end
 						end
 					end
 
@@ -176,10 +201,18 @@ local GetScoresRequestProcessor = function(res, params)
 			end
 		else
 			if data and data[playerStr] then
-				if data[playerStr]["isRanked"] then
-					loadingText:settext("Loaded")
+				if foundLeaderboard then
+					if SL["P"..i].ActiveModifiers.ShowEXScore then
+						loadingText:settext("EX Score")
+					else
+						loadingText:settext("GrooveStats")
+					end
 				else
-					loadingText:settext("Not Ranked")
+					if SL["P"..i].ActiveModifiers.ShowEXScore then
+						loadingText:settext("No EX Data")
+					else
+						loadingText:settext("No Data")
+					end
 				end
 			else
 				-- Just hide the text
