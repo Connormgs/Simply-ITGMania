@@ -178,9 +178,9 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 					elseif data[playerStr]["leaderboard"] then
 						leaderboardData = data[playerStr]["gsLeaderboard"]
 					end
-					
-					if data[playerStr]["gsLeaderboard"] then
-						for gsEntry in ivalues(data[playerStr]["gsLeaderboard"]) do
+
+					if leaderboardData then
+						for gsEntry in ivalues(leaderboardData) do
 							local entry = highScorePane:GetChild("HighScoreList"):GetChild("HighScoreEntry"..entryNum)
 							entry:stoptweening()
 							entry:diffuse(Color.White)
