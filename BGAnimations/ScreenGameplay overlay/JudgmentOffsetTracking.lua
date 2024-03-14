@@ -19,7 +19,7 @@ local hitEarly = false
 local earlyOffset = 0
 
 return Def.Actor{
-	EarlyHitMessageCommand=function(self, params)
+EarlyHitMessageCommand=function(self, params)
 		if SL[ToEnumShortString(player)].ActiveModifiers.TrackRecalc then
 			earlyOffset = params.TapNoteScore == "TapNoteScore_Miss" and "Miss" or params.TapNoteOffset
 			if earlyOffset ~= "Miss" then
@@ -39,7 +39,7 @@ return Def.Actor{
 			-- If the judgment was a Miss, store the string "Miss" as offset instead of the number 0.
 			-- For all other judgments, store the offset value provided by the engine as a number.
 			local offset = params.TapNoteScore == "TapNoteScore_Miss" and "Miss" or params.TapNoteOffset
-			if offset ~= "Miss" then
+if offset ~= "Miss" then
 				local window = DetermineTimingWindow(offset)
 				if window > worst_window then
 					worst_window = window
@@ -83,13 +83,13 @@ return Def.Actor{
 			-- Store judgment offsets (including misses) in an indexed table as they occur.
 			-- Also store the CurMusicSeconds for Evaluation's scatter plot.
 			sequential_offsets[#sequential_offsets+1] = { GAMESTATE:GetCurMusicSeconds(), offset, arrow, isStream, foot, hitEarly, earlyOffset }
-			hitEarly = false
+hitEarly = false
 			earlyOffset = 0
 		end
 	end,
 	OffCommand=function(self)
 		local storage = SL[ToEnumShortString(player)].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1]
 		storage.sequential_offsets = sequential_offsets
-		storage.worst_window = worst_window
+storage.worst_window = worst_window
 	end
 }

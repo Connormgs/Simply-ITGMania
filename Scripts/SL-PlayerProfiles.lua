@@ -52,14 +52,14 @@ local permitted_profile_settings = {
 	BrokenRun            = "boolean",
 	RunTimer             = "boolean",
 	MeasureCounterLookahead = "number",
-	
+	HideLookahead        = "boolean",
 	RainbowMax           = "boolean",
 	ResponsiveColors     = "boolean",
 	ShowLifePercent      = "boolean",
 	
 	MiniIndicator		 = "string",
 	MiniIndicatorColor	 = "string",
-
+	MeasureLines         = "string",
 	ColumnFlashOnMiss    = "boolean",
 	SubtractiveScoring   = "boolean",
 	Pacemaker            = "boolean",
@@ -108,7 +108,7 @@ local permitted_profile_settings = {
 	
 	JudgmentBack         = "boolean",
 	ErrorMSDisplay       = "boolean",
-	GhostTilt            = "boolean",
+	GhostFault           = "boolean",
 	BreakUI              = "boolean",
 
 	GrowCombo			 = "boolean",

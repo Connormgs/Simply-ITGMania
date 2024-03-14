@@ -36,28 +36,7 @@ local fmt = nil
 
 -- how long this song or course is, in seconds
 -- we'll use this to choose a formatting function
-local totalseconds = 0
-
-if GAMESTATE:IsCourseMode() then
-	local trail = GAMESTATE:GetCurrentTrail(player)
-	if trail then
-		totalseconds = TrailUtil.GetTotalSeconds(trail)
-	end
-else
-	local song = GAMESTATE:GetCurrentSong()
-	if song then
-		totalseconds = song:GetLastSecond()
-	end
-end
-
--- totalseconds is initilialzed in the engine as -1
--- https://github.com/stepmania/stepmania/blob/6a645b4710/src/Song.cpp#L80
--- and might not have ever been set to anything meaningful in edge cases
--- e.g. ogg file is 5 seconds, ssc file has 1 tapnote occuring at beat 0
-if totalseconds < 0 then totalseconds = 0 end
-
--- factor in MusicRate
-totalseconds = totalseconds / rate
+local totalseconds = totalLengthSongOrCourse(player)
 
 -- choose the appropriate time-to-string formatting function
 
@@ -88,18 +67,7 @@ end
 local cumulative_seconds = {}
 
 if GAMESTATE:IsCourseMode() then
-	local seconds = 0
-	local trail = GAMESTATE:GetCurrentTrail(player)
-
-	if trail then
-		local entries = trail:GetTrailEntries()
-		for i, entry in ipairs(entries) do
-			-- In the engine, TrailUtil.GetTotalSeconds() adds up song.MusicLengthSeconds
-			-- so let's use the same method here for consistency.
-			seconds = seconds + (entry:GetSong():MusicLengthSeconds() / rate)
-			table.insert(cumulative_seconds, seconds)
-		end
-	end
+	cumulative_seconds = courseLengthBySong(player)
 end
 
 -- use seconds_offset in CourseMode to initialize timer text

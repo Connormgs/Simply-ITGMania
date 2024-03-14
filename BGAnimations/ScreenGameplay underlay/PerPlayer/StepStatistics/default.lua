@@ -10,7 +10,8 @@ local NoteFieldIsCentered = (GetNotefieldX(player) == _screen.cx)
 local stylename = GAMESTATE:GetCurrentStyle():GetName()
 
 if (not IsUltraWide and stylename == "versus")
-	or (SL[pn].ActiveModifiers.DataVisualizations ~= "Step Statistics")
+	or (not ThemePrefs.Get("EnableTournamentMode") and
+	    SL[pn].ActiveModifiers.DataVisualizations ~= "Step Statistics")
 	or (ThemePrefs.Get("EnableTournamentMode") and ThemePrefs.Get("StepStats") == "Hide")
 	or (SL.Global.GameMode == "Casual")
 	or (GetNotefieldWidth() > _screen.w/2)
@@ -87,10 +88,14 @@ af[#af+1] = Def.ActorFrame{
 	end,
 
 	LoadActor("./Banner.lua", player),
+LoadActor("./Banner2.lua", player),
+	LoadActor("./GIF.lua", player),
 	LoadActor("./TapNoteJudgments.lua", {player, true}), -- second argument is if it has labels or not
 	LoadActor("./HoldsMinesRolls.lua", player),
 	LoadActor("./Time.lua", player),
-	LoadActor("./Scorebox.lua", player)
+	LoadActor("./StepsInfo.lua", player),
+	LoadActor("./Scorebox.lua", player),
+	LoadActor("./OffsetCalc.lua", player)
 }
 
 af[#af+1] = LoadActor("./DensityGraph.lua", {player, sidepane_width})

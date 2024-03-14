@@ -40,7 +40,7 @@ return Def.Actor{
 		p2_score = underlay:GetChild("P2Score")
 	end,
 	JudgmentMessageCommand=function(self, params)
-		if params.Player == PLAYER_1 then p1_tj = p1_tj + 1 else p2_tj = p2_tj + 1 end
+if params.Player == PLAYER_1 then p1_tj = p1_tj + 1 else p2_tj = p2_tj + 1 end
 		if not IsEX then
 			-- calculate the percentage DP manually rather than use GetPercentDancePoints.
 			-- That function rounds to the nearest .01%, which is inaccurate on long songs.
@@ -63,18 +63,18 @@ return Def.Actor{
 		end
 	end,
 	WinningCommand=function(self)
-		-- Only compare when total judgments passed is equal
+-- Only compare when total judgments passed is equal
 		if p1_tj == p2_tj then 
-			if p1_dp == p2_dp then
-				try_diffusealpha(p1_score, 1)
-				try_diffusealpha(p2_score, 1)
-			elseif p1_dp > p2_dp then
-				try_diffusealpha(p1_score, 1)
-				try_diffusealpha(p2_score, 0.65)
-			elseif p2_dp > p1_dp then
-				try_diffusealpha(p1_score, 0.65)
-				try_diffusealpha(p2_score, 1)
-			end
+		if p1_dp == p2_dp then
+			try_diffusealpha(p1_score, 1)
+			try_diffusealpha(p2_score, 1)
+		elseif p1_dp > p2_dp then
+			try_diffusealpha(p1_score, 1)
+			try_diffusealpha(p2_score, 0.65)
+		elseif p2_dp > p1_dp then
+			try_diffusealpha(p1_score, 0.65)
+			try_diffusealpha(p2_score, 1)
 		end
 	end
+end
 }

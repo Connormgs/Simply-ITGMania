@@ -17,28 +17,7 @@ t[#t+1] = LoadActor("../_song credit display")..{
 		self:diffusealpha(0):linear(0.3):diffusealpha(1)
 	end;
 };
-t[#t+1] = Def.ActorFrame{
-		Condition=not ThemePrefs.Get("ITG1"),
-		Def.Sprite{
-			Texture=THEME:GetPathG("StageAndCourses/ScreenGameplay","stagew ".. ToEnumShortString(GAMESTATE:GetCurrentStage())),
-			OnCommand=function(self)
-				self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y):cropright(1.3):linear(1):cropright(-0.3)
-			end;
-		},
 
-	
-};
-t[#t+1] = Def.ActorFrame{
-		Condition=not ThemePrefs.Get("ITG1"),
-		Def.Sprite{
-			Texture=THEME:GetPathG("StageAndCourses/ScreenGameplay","stageo ".. ToEnumShortString(GAMESTATE:GetCurrentStage())),
-			OnCommand=function(self)
-				self:x(SCREEN_CENTER_X):y(SCREEN_CENTER_Y):cropright(1.3):linear(1):cropright(-0.3):diffuse(GetCurrentColor(true)) 
-			end;
-		},
-
-		
-};
 
 end
 

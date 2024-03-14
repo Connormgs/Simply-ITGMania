@@ -6,6 +6,50 @@ local mods = SL[ToEnumShortString(player)].ActiveModifiers
 local metrics = SL.Metrics[SL.Global.GameMode]
 -- a flag to determine if we are using a GameMode that utilizes FA+ timing windows
 local FAplus = (metrics.PercentScoreWeightW1 == metrics.PercentScoreWeightW2)
+local columns = {}
+
+local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
+local IsReversedColumn = function(player, columnIndex)
+	local rColumns = {}
+	for i=1, NumColumns do
+		rColumns[#rColumns + 1] = false
+	end
+
+	local opts = GAMESTATE:GetPlayerState(player):GetCurrentPlayerOptions()
+	if opts:Reverse() == 1 then
+		for column,val in ipairs(rColumns) do
+			rColumns[column] = not val
+		end
+	end
+
+	if opts:Alternate() == 1 then
+		for column,val in ipairs(rColumns) do
+			if column % 2 == 0 then
+				rColumns[column] = not val
+			end
+		end
+	end
+
+	if opts:Split() == 1 then
+		for column,val in ipairs(rColumns) do
+			if column > NumColumns / 2 then
+				rColumns[column] = not val
+			end
+		end
+	end
+
+	if opts:Cross() == 1 then
+		local firstChunk = NumColumns / 4
+		local lastChunk = NumColumns - firstChunk
+		for column,val in ipairs(rColumns) do
+			if column > firstChunk and column <= lastChunk then
+				rColumns[column] = not val
+			end
+		end
+	end
+
+	return rColumns[columnIndex]
+end
 
 if mods.ColumnFlashOnMiss then
 	local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions('ModsLevel_Preferred')
@@ -49,7 +93,7 @@ if mods.ColumnFlashOnMiss then
 
 	local y_offset = 80
 	
-	FlashColumn=function(self, params)
+	local FlashColumn=function(self, params)
 		if params.Player == player and (params.Notes or params.Holds) then
 			for i,col in pairs(params.Notes or params.Holds) do
 				local tns = ToEnumShortString(params.TapNoteScore or params.HoldNoteScore)
@@ -84,6 +128,7 @@ if mods.ColumnFlashOnMiss then
 			end
 		end
 	end
+local reverseOffset = THEME:GetMetric("Player", "ReceptorArrowsYReverse")
 
 	local af = Def.ActorFrame{
 		InitCommand=function(self)
@@ -117,6 +162,11 @@ if mods.ColumnFlashOnMiss then
 					:vertalign(top)
 					:setsize(width/NumColumns, _screen.h - y_offset)
 					:fadebottom(0.333)
+
+				if IsReversedColumn(player, ColumnIndex) then
+					self:rotationz(180)
+					self:y(y_offset * 2 + reverseOffset + (width/NumColumns)/2)
+				end
 	        end,
 			FlashCommand=function(self, params)
 				if params.tns == "Miss" or tns == "MissedHold" then

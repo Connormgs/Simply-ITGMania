@@ -3,7 +3,7 @@ local pn = ToEnumShortString(player)
 
 -- get the number of stages that were played
 local NumStages = SL.Global.Stages.PlayedThisGame
-local durationPerSong = 4
+local durationPerSong = 2
 
 local af = Def.ActorFrame{}
 
@@ -22,12 +22,12 @@ for i=1,NumStages do
 		list.Name = "HighScoreList" .. i .. ToEnumShortString(player)
 
 		list.InitCommand=function(self)
-			self:zoom(0.95):y(_screen.cy+60)
+			self:zoom(0.95):y(_screen.cy+999)
 			self:x(_screen.cx + 160 * (player==PLAYER_1 and -1 or 1))
 		end
 		list.OnCommand=function(self)
 			self:visible(false)
-			self:sleep(durationPerSong * (i-1)):queuecommand("Display")
+			self:sleep(durationPerSong + 3):queuecommand("Display")
 		end
 		list.DisplayCommand=function(self)
 			self:visible(true)
@@ -35,7 +35,7 @@ for i=1,NumStages do
 		end
 		list.WaitCommand=function(self)
 			self:visible(false)
-			self:sleep(durationPerSong * (NumStages-1)):queuecommand("Display")
+			self:sleep(durationPerSong + 3):queuecommand("Display")
 		end
 
 		af[#af+1] = list

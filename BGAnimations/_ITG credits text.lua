@@ -153,7 +153,7 @@ local ITGCredits_Table = {
 }
 
 local af = Def.ActorScroller {
-	SecondsPerItem = 0.28,
+	SecondsPerItem = 0.18,
 	NumItemsToDraw = 21,
 	TransformFunction = function( self, offset, itemIndex, numItems) self:y(offset*24) end,
 	OnCommand=function(self)

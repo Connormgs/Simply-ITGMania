@@ -5,7 +5,7 @@ local Players = GAMESTATE:GetHumanPlayers()
 -- The number of stages that were played this game cycle
 local NumStages = SL.Global.Stages.PlayedThisGame
 -- The duration (in seconds) each stage should display onscreen before cycling to the next
-local DurationPerStage = 1
+local DurationPerStage = 2
 ---------------------------------------------------------------------------
 for player in ivalues(Players) do
 	if SL[ToEnumShortString(player)].HighScores.EnteringName then
@@ -93,93 +93,199 @@ local t = Def.ActorFrame {
 		SCREENMAN:GetTopScreen():StartTransitioningScreen("SM_GoToNextScreen")
 	end
 }
-
+t[#t+1] = LoadActor("../ScreenWithMenuElements underlay")
 local path = "/"..THEME:GetCurrentThemeDirectory().."Graphics/_FallbackBanners/"..ThemePrefs.Get("VisualStyle")
 local banner_directory = FILEMAN:DoesFileExist(path) and path or THEME:GetPathG("","_FallbackBanners/Arrows")
-
--- Things that are constantly on the screen (fallback banner + masks)
-t[#t+1] = Def.ActorFrame {
-
-	--fallback banner
-	LoadActor(banner_directory .."/banner"..SL.Global.ActiveColorIndex.." (doubleres).png")..{
-		OnCommand=function(self) self:xy(_screen.cx, 121.5):zoom(0.7) end
-	},
-
-	Def.Quad{
-		Name="LeftMask";
-		InitCommand=function(self) self:horizalign(left) end,
-		OnCommand=function(self) self:xy(0, _screen.cy):zoomto(_screen.cx-272, _screen.h):MaskSource() end
-	},
-
-	Def.Quad{
-		Name="CenterMask",
-		OnCommand=function(self) self:Center():zoomto(110, _screen.h):MaskSource() end
-	},
-
-	Def.Quad{
-		Name="RightMask",
-		InitCommand=function(self) self:horizalign(right) end,
-		OnCommand=function(self) self:xy(_screen.w, _screen.cy):zoomto(_screen.cx-272, _screen.h):MaskSource() end
-	}
-}
-
--- Banner(s) and Title(s)
-for i=1,NumStages do
-
-	local SongOrCourse = SL.Global.Stages.Stats[i].song
-
-	-- Create an ActorFrame for each (Name + Banner) pair
-	-- so that we can display/hide all children simultaneously.
-	local SongNameAndBanner = Def.ActorFrame{
-		InitCommand=function(self) self:visible(false) end,
-		OnCommand=function(self)
-			self:sleep(DurationPerStage * (i-1) )
-			self:queuecommand("Display")
-		end,
-		DisplayCommand=function(self)
-			self:visible(true)
-			self:sleep(DurationPerStage)
-			self:queuecommand("Wait")
-		end,
-		WaitCommand=function(self)
-			self:visible(false)
-			self:sleep(DurationPerStage * (NumStages-1))
-			self:queuecommand("Display")
-		end
-	}
-
-	-- song name
-	SongNameAndBanner[#SongNameAndBanner+1] = LoadFont("Common Normal")..{
-		Name="SongName"..i,
-		InitCommand=function(self) self:xy(_screen.cx, 54):maxwidth(294):shadowlength(0.333) end,
-		OnCommand=function(self)
-			if SongOrCourse then
-				self:settext( GAMESTATE:IsCourseMode() and SongOrCourse:GetDisplayFullTitle() or SongOrCourse:GetDisplayMainTitle() )
-			end
-		end
-	}
-
-	-- song banner
-	SongNameAndBanner[#SongNameAndBanner+1] = Def.Banner{
-		Name="SongBanner"..i,
-		InitCommand=function(self) self:xy(_screen.cx, 121.5) end,
-		OnCommand=function(self)
-			if SongOrCourse then
-				if GAMESTATE:IsCourseMode() then
-					self:LoadFromCourse(SongOrCourse)
-				else
-					self:LoadFromSong(SongOrCourse)
-				end
-				self:setsize(418,164):zoom(0.7)
-			end
-		end
-	}
-
-	-- add each SongNameAndBanner ActorFrame to the primary ActorFrame
-	t[#t+1] = SongNameAndBanner
+local stages,stgindex = {},1
+for i,v in ipairs( STATSMAN:GetAccumPlayedStageStats():GetPlayedSongs() ) do
+	stages[#stages+1] = v
 end
 
 
+local function side(pn)
+	local s = 1
+	if pn == PLAYER_1 then return s end
+	return s*(-1)
+end
+
+local function pnum(pn)
+	if pn == PLAYER_2 then return 2 end
+	return 1
+end
+
+local function TrailOrSteps(pn)
+	if GAMESTATE:IsCourseMode() then return GAMESTATE:GetCurrentTrail(pn) end
+	return GAMESTATE:GetCurrentSteps(pn)
+end
+local stages,stgindex = {},1
+for i,v in ipairs( STATSMAN:GetAccumPlayedStageStats():GetPlayedSongs() ) do
+	stages[#stages+1] = v
+end
+
+local ni=0
+
+for pn in ivalues(GAMESTATE:GetHumanPlayers()) do
+	local MetricsName = "Keyboard" .. PlayerNumberToString(pn)
+	t[#t+1] = LoadActor( THEME:GetPathG("ScreenNameEntryTraditional","Wheel"),pn)..{
+		InitCommand=function(self) self:player(pn) end,
+		OnCommand=function(self)
+			self:xy(
+				pn == PLAYER_1 and SCREEN_CENTER_X-157 or SCREEN_CENTER_X+157,
+				SCREEN_CENTER_Y+90
+			)
+			:addx( pn == PLAYER_1 and -SCREEN_WIDTH or SCREEN_WIDTH )
+			:decelerate(0.5):addx( pn == PLAYER_1 and SCREEN_WIDTH or -SCREEN_WIDTH )
+		end,
+		OffCommand=function(self) self:accelerate(0.5):addx( pn == PLAYER_1 and -SCREEN_WIDTH or SCREEN_WIDTH ) end
+	}
+
+
+
+
+	t[#t+1] = Def.ActorFrame{
+		OnCommand=function(self)
+			self:xy(
+			pn == PLAYER_1 and SCREEN_CENTER_X-214 or SCREEN_CENTER_X+214,
+			SCREEN_CENTER_Y-118
+			)
+			:addx( pn == PLAYER_1 and -SCREEN_WIDTH or SCREEN_WIDTH )
+			:decelerate(0.5):addx( pn == PLAYER_1 and SCREEN_WIDTH or -SCREEN_WIDTH )
+		end,
+		OffCommand=function(self) self:accelerate(0.5):addx( pn == PLAYER_1 and -SCREEN_WIDTH or SCREEN_WIDTH ) end,
+		
+		Def.Sprite{
+			Texture=THEME:GetPathG("NameEntry","Items/BGA score frame"),
+			Condition=not ThemePrefs.Get("ITG1")
+		},
+
+
+
+		Def.BitmapText{
+			Font="_futurist metal",
+			OnCommand=function(self)
+				self:diffuse(PlayerColor(pn))
+				if STATSMAN:GetPlayedStageStats( ni ) and STATSMAN:GetPlayedStageStats( ni ):GetPlayerStageStats(pn) then
+					self:settext( string.format( "%.2f%%", STATSMAN:GetPlayedStageStats( ni ):GetPlayerStageStats(pn):GetPercentDancePoints()*100 ) )
+				end
+			end,
+			ChangeDisplayedFeatMessageCommand=function(self,param)
+				if STATSMAN:GetPlayedStageStats( ni ) and STATSMAN:GetPlayedStageStats( ni ):GetPlayerStageStats(pn) then
+					self:settext( string.format( "%.2f%%", STATSMAN:GetPlayedStageStats( ni ):GetPlayerStageStats(pn):GetPercentDancePoints()*100 ) )
+				end
+			end
+		},
+		LoadActor("name frame")..{
+			OnCommand=function(s)
+				s:xy(40,95)
+			end;
+		}
+	
+	}
+
+	t[#t+1] = Def.ActorFrame{
+	OnCommand=function(self)
+		self:xy(
+			pn == PLAYER_1 and SCREEN_CENTER_X-214 or SCREEN_CENTER_X+214,
+			SCREEN_CENTER_Y-160
+		)
+	end,
+	OffCommand=function(self) self:accelerate(0.5):addx( pn == PLAYER_1 and -SCREEN_WIDTH or SCREEN_WIDTH ) end,
+	ChangeDisplayedFeatMessageCommand=function(self)
+		self:stoptweening():linear(0.2):diffusealpha(0.4):linear(0.2):diffusealpha(1)
+	end,
+		Def.Sprite{
+			Texture=THEME:GetPathG('',ThemePrefs.Get("ITG1") and '_evaluation difficulty icons' or '_difficulty icons'),
+			OnCommand=function(self)
+				self:xy(0,0):animate(0):playcommand("Update")
+			end,
+			UpdateCommand=function(self,parent) self:setstate( SetFrameDifficulty(pn,true) ) end,
+		},	
+		Def.BitmapText{
+			Font="Common Normal",
+			OnCommand=function(self)
+				if ThemePrefs.Get("ITG1") then
+					self:diffuse(Color.Black)
+				end
+				self:zoom(0.5):x( -38*side(pn) )
+				:halign( pnum(pn)-1 ):playcommand("Update")
+			end,
+			ChangeDisplayedFeatMessageCommand=function(self,param)
+				local stats = STATSMAN:GetPlayedStageStats( stgindex ):GetPlayerStageStats(pn):GetPlayedSteps()
+				self:settext( THEME:GetString("Difficulty",ToEnumShortString(stats[1]:GetDifficulty()) ) )
+				if not ThemePrefs.Get("ITG1") then
+					self:diffuse( ContrastingDifficultyColor( stats[1]:GetDifficulty() ) )
+				end
+			end
+		},	
+		Def.BitmapText{
+			Font="Common Normal",
+			OnCommand=function(self)
+				if ThemePrefs.Get("ITG1") then
+					self:diffuse(Color.Black)
+				end
+				self:zoom(0.5):x(36*side(pn)):horizalign(pn == PLAYER_1 and right or left):playcommand("Update")
+			end,
+			ChangeDisplayedFeatMessageCommand=function(self,param)
+				local stats = STATSMAN:GetPlayedStageStats( stgindex ):GetPlayerStageStats(pn):GetPlayedSteps()
+				self:settext( stats[1]:GetMeter() )
+				if not ThemePrefs.Get("ITG1") then
+					self:diffuse( ContrastingDifficultyColor( stats[1]:GetDifficulty() ) )
+				end
+			end
+		}
+	}
+end
+
+
+t[#t+1] = Def.ActorFrame{
+	InitCommand=function(self) self:xy(SCREEN_CENTER_X-1,SCREEN_CENTER_Y-126):zoom( ThemePrefs.Get("ITG1") and 0.9 or 1 ) end,
+	OnCommand=function(self)
+		self:y(SCREEN_TOP-100):decelerate(0.5):y(SCREEN_CENTER_Y-( ThemePrefs.Get("ITG1") and 160 or 138))
+	end,
+	OffCommand=function(self)
+		self:accelerate(0.5):addy(-SCREEN_CENTER_X)
+	end,
+	Def.Sprite{
+		Texture=THEME:GetPathG("ScreenEvaluation banner","frame"),
+		OnCommand=function(self)
+			self:zoom(1.02)
+		end
+	},
+	Def.Sprite{
+		Texture=THEME:GetPathG("Evaluation","banner frame mask"),
+		Condition=not ThemePrefs.Get("ITG1"),
+		OnCommand=function(self)
+			self:zwrite(1):z(1):blend("BlendMode_NoEffect"):zoom(1.02)
+		end
+	},
+
+
+
+	Def.Banner{
+		InitCommand=function(self)
+			self:LoadFromSong( stages[stgindex] )
+		end,
+		OnCommand=function(self)
+			self:scaletoclipped(ThemePrefs.Get("ITG1") and 418/1.6 or 418/2,164/2):ztest(1)
+		end,
+		ChangeDisplayedFeatMessageCommand=function(self,param)
+			stgindex = param.CurrentIndex
+			ni = param.NewIndex
+			self:linear(0.1):diffusealpha(0):queuecommand("UpdateImage")
+		end,
+		UpdateImageCommand=function(self)
+			self:LoadFromSong( stages[ni] ):scaletoclipped(ThemePrefs.Get("ITG1") and 418/1.6 or 418/2,164/2):linear(0.5):diffusealpha(1)
+		end
+	},
+
+	Def.Sprite{
+		Texture=THEME:GetPathG("ScreenEvaluation banner","frame"),
+		Condition=not ThemePrefs.Get("ITG1")
+	},
+	
+
+	
+}
 for player in ivalues(Players) do
 	local pn = ToEnumShortString(player)
 	local x_offset = (player == PLAYER_1 and -120) or 200

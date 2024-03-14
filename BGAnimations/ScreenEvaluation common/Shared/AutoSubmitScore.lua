@@ -13,8 +13,14 @@ end
 
 local GetMachineTag = function(gsEntry)
 	if not gsEntry then return end
+-- Groovestats username.
+	if gsEntry["name"] then
+		-- 4 Characters is the "intended" length.
+		return gsEntry["name"]
+	end
+
 	if gsEntry["machineTag"] then
-		-- Make sure we only use up to 4 characters for space concerns.
+		-- User doesn't have a username (?).
 		return gsEntry["machineTag"]:sub(1, 4):upper()
 	end
 
@@ -65,6 +71,36 @@ local GetJudgmentCounts = function(player)
 	end
 
 	return judgmentCounts
+end
+
+local GetRescoredJudgmentCounts = function(player)
+	local pn = ToEnumShortString(player)
+
+	local translation = {
+		["W0"] = "fantasticPlus",
+		["W1"] = "fantastic",
+		["W2"] = "excellent",
+		["W3"] = "great",
+		["W4"] = "decent",
+		["W5"] = "wayOff",
+	}
+
+	local rescored = {
+		["fantasticPlus"] = 0,
+		["fantastic"] = 0,
+		["excellent"] = 0,
+		["great"] = 0,
+		["decent"] = 0,
+		["wayOff"] = 0
+	}
+	
+	for i=1,GAMESTATE:GetCurrentStyle():ColumnsPerPlayer() do
+		for window, name in pairs(translation) do
+			rescored[name] = rescored[name] + SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].column_judgments[i]["Early"][window]
+		end
+	end
+
+	return rescored
 end
 
 local AttemptDownloads = function(res)
@@ -175,7 +211,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 					local leaderboardData = nil
 					if showExScore then
 						leaderboardData = data[playerStr]["exLeaderboard"]
-					elseif data[playerStr]["leaderboard"] then
+					elseif data[playerStr]["gsLeaderboard"] then
 						leaderboardData = data[playerStr]["gsLeaderboard"]
 					end
 
@@ -213,6 +249,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 							end
 							entryNum = entryNum + 1
 						end
+
 						QRPane:GetChild("QRCode"):queuecommand("Hide")
 						QRPane:GetChild("HelpText"):settext("Score has already been submitted :)")
 						if i == 1 and P1SubmitText then
@@ -307,6 +344,9 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								local soundDir = THEME:GetCurrentThemeDirectory() .. "Sounds/"
 								if personalRank == 1 then
 									recordText:settext("World Record!")
+										if showExScore then
+										worldRecordText = worldRecordText .. " (EX)"
+									end
 									-- Play random sound in Sounds/Evaluation WR/
 									soundDir = soundDir .. "Evaluation WR/"
 									audio_files = findFiles(soundDir)
@@ -328,6 +368,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								-- This will automatically adjust based on the length of the recordText length.
 								GSIcon:xy(recordTextXStart - 5 - GSIconWidth/2, 150)
 								BSIcon:xy(recordTextXStart - 5 - BSIconWidth/2, 150)
+								BSEXIcon:xy(recordTextXStart - BSEXIconWidth/2, recordText:GetY())
 							end
 						end
 					end
@@ -409,6 +450,7 @@ local af = Def.ActorFrame {
 								rate=rate,
 								score=score,
 								judgmentCounts=GetJudgmentCounts(player),
+rescoreCounts=GetRescoredJudgmentCounts(player),
 								usedCmod=(GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil),
 								comment=CreateCommentString(player),
 							}

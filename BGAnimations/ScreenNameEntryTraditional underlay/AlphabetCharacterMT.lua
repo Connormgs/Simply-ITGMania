@@ -16,13 +16,13 @@ local alphabet_character_mt = {
 				HideCommand=function(self) self:linear(0.25):diffusealpha(0) end,
 
 				Def.BitmapText{
-					Font="Wendy/_wendy white",
+					Font="ScreenNameEntryTraditional entry",
 					InitCommand=function(subself)
 						self.bmt = subself
-						subself:zoom(0.5)
-						subself:diffuse(0.75,0.75,0.75,1)
+						subself:zoom(textZoom)
+						subself:shadowlength(4)
 					end,
-					OnCommand=function(self) self:sleep(0.2):linear(0.25) end,
+					OnCommand=function(self) self:sleep(0.2):linear(0.25):addy(-40) end,
 				}
 			}
 

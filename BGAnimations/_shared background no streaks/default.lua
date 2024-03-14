@@ -1,5 +1,5 @@
-local BGOVERLAY = ThemePrefs.Get("ITG1") and "ITG1/bglegacy" or "bgoverlay"
-local streakcolor = ThemePrefs.Get("ITG1") and color("#999983") or color("#832626")
+local BGOVERLAY = ThemePrefs.Get("ITG2") and "ITG2/bglegacy" or "bgoverlay"
+local streakcolor = ThemePrefs.Get("ITG2") and color("#999983") or color("#832626")
 local oldcol
 return Def.ActorFrame{
 	Def.ActorFrame{
@@ -14,17 +14,17 @@ return Def.ActorFrame{
 			
 			LoadActor(BGOVERLAY)..{
 				 InitCommand=function(self)
-					oldcol = ThemePrefs.Get("ITG1")
+					oldcol = ThemePrefs.Get("ITG2")
 					self:vertalign(bottom):zoomtowidth(SCREEN_WIDTH*1.1):zoomy(1.1):rotationy(180):diffuse(GetCurrentColor(true))
 				end;
 				UpdateColoringMessageCommand=function(s)
-					if ThemePrefs.Get("ITG1") ~= oldcol then
+					if ThemePrefs.Get("ITG2") ~= oldcol then
 						s:linear(0.25):queuecommand("LoadNewBG"):diffuse(GetCurrentColor(true))
 					end
 				end;
 				LoadNewBGCommand=function(s)
 					s:Load( THEME:GetPathB("_shared background no","streaks/"..BGOVERLAY) ):linear(0.25):diffuse(GetCurrentColor(true))
-					oldcol = ThemePrefs.Get("ITG1")
+					oldcol = ThemePrefs.Get("ITG2")
 				end;
 			},
 			
@@ -33,13 +33,13 @@ return Def.ActorFrame{
 					self:vertalign(bottom):zoomtowidth(SCREEN_WIDTH*1.1):zoomy(-1.1):diffuse(GetCurrentColor(true)):diffusealpha(0.35)
 				end;
 				UpdateColoringMessageCommand=function(s)
-					if ThemePrefs.Get("ITG1") ~= oldcol then
+					if ThemePrefs.Get("ITG2") ~= oldcol then
 						s:linear(0.25):diffuse(Color.Black):queuecommand("LoadNewBG"):diffuse(GetCurrentColor(true))
 					end
 				end;
 				LoadNewBGCommand=function(s)
 					s:Load( THEME:GetPathB("_shared background no","streaks/"..BGOVERLAY) ):linear(0.25):diffuse(GetCurrentColor(true))
-					oldcol = ThemePrefs.Get("ITG1")
+					oldcol = ThemePrefs.Get("ITG2")
 				end;
 			},
 		},
@@ -51,8 +51,8 @@ return Def.ActorFrame{
 				self:zoom(1.5):y(-200):z(-400):customtexturerect(0.2,0,1.2,1):texcoordvelocity(-0.06,0):diffuse(streakcolor):diffuse(GetCurrentColor(true)):diffusealpha(0.35)
 			end;
 			UpdateColoringMessageCommand=function(s)
-				streakcolor = ThemePrefs.Get("ITG1") and color("#999983") or color("#832626")
-				BGOVERLAY = ThemePrefs.Get("ITG1") and "ITG1/bglegacy" or "bgoverlay"
+				streakcolor = ThemePrefs.Get("ITG2") and color("#999983") or color("#832626")
+				BGOVERLAY = ThemePrefs.Get("ITG2") and "ITG2/bglegacy" or "bgoverlay"
 				s:linear(0.5):diffuse(streakcolor):diffuse(GetCurrentColor(true)):diffusealpha(0.35)
 			end;
 		},

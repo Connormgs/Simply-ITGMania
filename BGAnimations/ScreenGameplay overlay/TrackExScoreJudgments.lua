@@ -41,6 +41,7 @@ return Def.Actor{
 			W0 = 0,
 			W015 = 0,
 			W1 = 0,
+W115 = 0,
 			W2 = 0,
 			W3 = 0,
 			W4 = 0,
@@ -92,6 +93,7 @@ return Def.Actor{
 						storage.ex_counts.W015_total = storage.ex_counts.W015_total + 1
 					elseif is_W015 then
 						if not stats:GetFailed() then
+storage.ex_counts.W1 = storage.ex_counts.W1 + 1
 							storage.ex_counts.W015 = storage.ex_counts.W015 + 1
 							count_updated = true
 						end
@@ -99,6 +101,7 @@ return Def.Actor{
 					else
 						if not stats:GetFailed() then
 							storage.ex_counts.W1 = storage.ex_counts.W1 + 1
+storage.ex_counts.W115 = storage.ex_counts.W115 + 1
 							count_updated = true
 						end
 					end
@@ -148,14 +151,14 @@ return Def.Actor{
 		end
 		if count_updated then
 			-- Broadcast so other elements on ScreenGameplay can process the updated count.
-			local ExScore, actual_points, actual_possible=CalculateExScore(player)
+			local ExScore, actual_points, actual_possible=CalculateExScore(player,storage.ex_counts)
 
 			MESSAGEMAN:Broadcast(
 				"ExCountsChanged",
 				{
 					Player=player, 
 					ExCounts=storage.ex_counts, 
-					ExScore=CalculateExScore(player), 
+					ExScore=CalculateExScore(player,storage.ex_counts), 
 					actual_points=actual_points, 
 					actual_possible=actual_possible 
 				}

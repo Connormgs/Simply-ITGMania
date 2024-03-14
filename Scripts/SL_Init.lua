@@ -28,6 +28,7 @@ local PlayerDefaults = {
 				MeasureCounter = "None",
 				MeasureCounterLeft = true,
 				MeasureCounterUp = false,
+				MeasureLines = "Off",
 				DataVisualizations = "None",
 				StepStatsExtra = "None",
 				TargetScore = "Personal best",
@@ -80,6 +81,7 @@ local PlayerDefaults = {
 
 				-- Information parsed out from the chart.
 				NotesPerMeasure = {},
+EquallySpacedPerMeasure = {},
 				PeakNPS = 0,
 				NPSperMeasure = {},
 				columnCues = {},
@@ -118,6 +120,7 @@ local PlayerDefaults = {
 			self.ApiKey = ""
 			-- Whether or not the player is playing on pad.
 			self.IsPadPlayer = false
+self.Favorites = {}
 		end
 	}
 }
@@ -156,7 +159,7 @@ local GlobalDefaults = {
 				ScreenNameEntry = ThemePrefs.Get("ScreenNameEntryMenuTimer"),
 			}
 			self.TimeAtSessionStart = nil
-			self.SampleMusicLoop = ThemePrefs.Get("SampleMusicLoop")
+			self.SampleMusicLoops = ThemePrefs.Get("SampleMusicLoops")
 
 			self.GameplayReloadCheck = false
 			-- How long to wait before displaying a "cue"
@@ -199,6 +202,14 @@ SL = {
 		"#d6db41", --medium
 		"#ba3049",
 		"#2691c5",
+		"#F7F7F7", --edit
+	},
+DDRDiffColors = {
+		"#2dccef", --beginner
+		"#eaa910", --basic
+		"#ff344d", --difficult
+		"#30d81e", --expert
+		"#e900ff", --challenge
 		"#F7F7F7", --edit
 	},
 	-- These are the original SL colors. They're used for decorative (non-text) elements, like the background hearts:

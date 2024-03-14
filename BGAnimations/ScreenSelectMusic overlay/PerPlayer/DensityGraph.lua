@@ -10,6 +10,11 @@ local height = 64
 local width = IsUsingWideScreen() and 286 or 276
 local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
 local IsWide = (GetScreenAspectRatio() > 4 / 3)
+
+local marquee_index
+local text_table = {}
+local leaving_screen = false
+local breakdown_table = {}
 local af = Def.ActorFrame{
 	InitCommand=function(self)
 		self:visible( GAMESTATE:IsHumanPlayer(player) )

@@ -850,7 +850,7 @@ CalculateExScore = function(player, ex_counts, use_actual_w0_weight)
 
 	-- Use W015 instead of W0, to always calculate EX score based on 15ms blue fantastic window
 	local FAplus = (SL.Metrics[SL.Global.GameMode].PercentScoreWeightW1 == SL.Metrics[SL.Global.GameMode].PercentScoreWeightW2)
-	local keys = FAplus and { "W015", "W115", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" } or { "W015", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
+	local keys = { "W015", "W115", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
 	local counts = ex_counts or SL[ToEnumShortString(player)].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts
 	-- Just for validation, but shouldn't happen in normal gameplay.
 	if counts == nil then return 0 end
@@ -963,4 +963,106 @@ GetColumnMapping = function(player)
 	end
 
 	return column_mapping
+end
+
+-- -----------------------------------------------------------------------
+-- IsGameAndMenuButton() is used to position GameButton labels in [ScreenMapControllers] in metrics.ini
+
+-- list of GameButtons that serve double duty as menu buttons when OnlyDedicatedMenuButtons=0
+local GameAndMenuButtons = {
+	dance = { "Left", "Down", "Up", "Right" },
+	pump  = { "DownLeft", "UpLeft", "Center", "UpRight", "DownRight" },
+	techno= { "Left", "Down", "Up", "Right" },
+	kb7   = { "Key2", "Key3", "Key5", "Key6" },
+	para  = { "Left", "UpLeft", "Right", "UpRight" },
+}
+
+-- local table to serve as per-language lookup
+-- e.g. LocalizedGameButtons.es.Arriba = "Up"
+--      LocalizedGameButtons.en.Up = "Up"
+local LocalizedGameButtons = {}
+
+local DelocalizeGameButton = function(localized_btn)
+	local game = GAMESTATE:GetCurrentGame():GetName()
+	if not GameAndMenuButtons[game] then return false end
+
+	-- if we haven't created a lookup table for the current language yet, do that now
+	local language = THEME:GetCurLanguage()
+	if not LocalizedGameButtons[language] then
+		local t = {}
+		for gb in ivalues(GameAndMenuButtons[game]) do
+			t[THEME:GetString("GameButton", gb)] = gb
+		end
+		LocalizedGameButtons[language] = t
+	end
+
+	-- given a localized string like "Ariba" return a GameButton like "Up"
+	return LocalizedGameButtons[language][localized_btn]
+end
+
+IsGameAndMenuButton = function(localized_btn)
+	if PREFSMAN:GetPreference("OnlyDedicatedMenuButtons") then return false end
+
+	local btn = DelocalizeGameButton(localized_btn)
+	if not btn then return false end
+
+	return FindInTable(btn, GameAndMenuButtons[GAMESTATE:GetCurrentGame():GetName()])
+end
+
+-- -----------------------------------------------------------------------
+-- Returns a stringified form of a player's selected options.
+GetPlayerOptionsString = function(player)
+	-- grab the song options from this PlayerState
+	local PlayerOptions = GAMESTATE:GetPlayerState(player):GetPlayerOptionsArray("ModsLevel_Preferred")
+	local pn = ToEnumShortString(player)
+
+	-- start with an empty string...
+	local optionslist = ""
+
+	-- if the player used an XMod of 1x, it won't be in PlayerOptions list
+	-- so check here, and add it in manually if necessary
+	if SL[pn].ActiveModifiers.SpeedModType == "X" and SL[pn].ActiveModifiers.SpeedMod == 1 then
+		optionslist = "1x, "
+	end
+
+	--  ...and append options to that string as needed
+	for i,option in ipairs(PlayerOptions) do
+
+		-- these don't need to show up in the mods list
+		if option ~= "FailAtEnd" and option ~= "FailImmediateContinue" and option ~= "FailImmediate" then
+			-- 100% Mini will be in the PlayerOptions as just "Mini" so use the value from the SL table instead
+			if option:match("Mini") then
+				option = SL[pn].ActiveModifiers.Mini .. " Mini"
+			end
+
+			if option:match("Cover") then
+				option = THEME:GetString("OptionNames", "Cover")
+			end
+
+			if i < #PlayerOptions then
+				optionslist = optionslist..option..", "
+			else
+				optionslist = optionslist..option
+			end
+		end
+	end
+
+	-- Display TimingWindowScale as a modifier if it's set to anything other than 1
+	local TimingWindowScale = PREFSMAN:GetPreference("TimingWindowScale")
+	if TimingWindowScale ~= 1 then
+		optionslist = optionslist .. ", " .. (ScreenString("TimingWindowScale")):format(TimingWindowScale*100)
+	end
+
+	local substitutions = {
+		["SuperShuffle"] = "Blender",
+		["HyperShuffle"] = "Random",
+		["LRMirror"] = "LR-Mirror",
+		["UDMirror"] = "UD-Mirror",
+	}
+
+	for k,v in pairs(substitutions) do
+		optionslist = optionslist:gsub(k, v)
+	end
+
+	return optionslist
 end

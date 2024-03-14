@@ -22,35 +22,20 @@ local t = Def.ActorFrame{
 	end,
 
 
-	-- the quad behind the playerName
-	Def.Quad{
-		InitCommand=function(self) self:diffuse(0,0,0,0.75):zoomto(300, _screen.h/7) end,
-	},
 
-	-- the quad behind the scrolling alphabet
-	Def.Quad{
-		InitCommand=function(self) self:diffuse(0,0,0,0.5):zoomto(300, _screen.h/10) end,
-		OnCommand=function(self) self:y(58) end
-	},
-
-	-- the quad behind the highscore list
-	Def.Quad{
-		InitCommand=function(self) self:diffuse(0,0,0,0.25):zoomto(300, _screen.h/4) end,
-		OnCommand=function(self) self:y(142) end
-	}
 }
 
 
 t[#t+1] = LoadActor("Cursor.png")..{
 	Name="Cursor",
-	InitCommand=function(self) self:diffuse(PlayerColor(Player)):zoom(0.5) end,
-	OnCommand=function(self) self:visible( CanEnterName ):y(58) end,
+	InitCommand=function(self) self:diffuse(PlayerColor(Player)):zoom(1) end,
+	OnCommand=function(self) self:visible( CanEnterName ):y(20) end,
 	HideCommand=function(self) self:linear(0.25):diffusealpha(0) end
 }
 
-t[#t+1] = LoadFont("Wendy/_wendy white")..{
+t[#t+1] = LoadFont("ScreenNameEntryTraditional entry")..{
 	Name="PlayerName",
-	InitCommand=function(self) self:zoom(0.75):halign(0):xy(-80,0) end,
+	InitCommand=function(self) self:zoom(1):halign(0):xy(-80,-30) end,
 	OnCommand=function(self)
 		self:visible( CanEnterName )
 		self:settext( SL[pn].HighScores.Name or "" )

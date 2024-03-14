@@ -84,11 +84,7 @@ local SetLeaderboardForPlayer = function(player_num, leaderboard, leaderboardDat
 		local entry = leaderboard:GetChild("LeaderboardEntry"..i)
 		-- We didn't get any scores if i is still == 1.
 		if i == 1 then
-			if isRanked then
-				SetEntryText("", "No Scores", "", "", entry)
-			else
-				SetEntryText("", "Chart Not Ranked", "", "", entry)
-			end
+			SetEntryText("", "No Scores", "", "", entry)
 		else
 			-- Empty out the remaining rows.
 			SetEntryText("", "", "", "", entry)
@@ -136,26 +132,18 @@ local LeaderboardRequestProcessor = function(res, master)
 			boogie = true
 		elseif res.headers["bs-leaderboard-player-" .. i] == "BS-EX" then
 			boogie_ex = true
-		end			  
+		end
 
 		if data[playerStr] then
 			master[pn].isRanked = data[playerStr]["isRanked"]
 
-			-- First add the main GrooveStats leaderboard.
+			-- First add the main leaderboard.
 			if boogie then
 				if data[playerStr]["gsLeaderboard"] then
 					leaderboardList[#leaderboardList + 1] = {
 						Name="BoogieStats",
 						Data=DeepCopy(data[playerStr]["gsLeaderboard"]),
 						IsEX=false
-					}
-					master[pn]["LeaderboardIndex"] = 1
-				end
-				if data[playerStr]["exLeaderboard"] then
-					leaderboardList[#leaderboardList + 1] = {
-						Name="GrooveStats",
-						Data=DeepCopy(data[playerStr]["exLeaderboard"]),
-						IsEX=true
 					}
 					master[pn]["LeaderboardIndex"] = 1
 				end
@@ -168,12 +156,41 @@ local LeaderboardRequestProcessor = function(res, master)
 					}
 					master[pn]["LeaderboardIndex"] = 1
 				end
-			else
+			elseif SL["P"..i].ActiveModifiers.ShowEXScore then
+				-- If the player is using EX scoring, then we want to display the EX leaderboard first.
+				if data[playerStr]["exLeaderboard"] then
+					leaderboardList[#leaderboardList + 1] = {
+						Name="GrooveStats",
+						Data=DeepCopy(data[playerStr]["exLeaderboard"]),
+						IsEX=true
+					}
+					master[pn]["LeaderboardIndex"] = 1
+				end
+
 				if data[playerStr]["gsLeaderboard"] then
 					leaderboardList[#leaderboardList + 1] = {
 						Name="GrooveStats",
 						Data=DeepCopy(data[playerStr]["gsLeaderboard"]),
 						IsEX=false
+					}
+					master[pn]["LeaderboardIndex"] = 1
+				end
+			else
+				-- Display the main GrooveStats leaderboard first if player is not using EX scoring.
+				if data[playerStr]["gsLeaderboard"] then
+					leaderboardList[#leaderboardList + 1] = {
+						Name="GrooveStats",
+						Data=DeepCopy(data[playerStr]["gsLeaderboard"]),
+						IsEX=false
+					}
+					master[pn]["LeaderboardIndex"] = 1
+				end
+				
+				if data[playerStr]["exLeaderboard"] then
+					leaderboardList[#leaderboardList + 1] = {
+						Name="GrooveStats",
+						Data=DeepCopy(data[playerStr]["exLeaderboard"]),
+						IsEX=true
 					}
 					master[pn]["LeaderboardIndex"] = 1
 				end
@@ -313,7 +330,7 @@ local af = Def.ActorFrame{
 	}
 }
 
-local paneWidth1Player = 370
+local paneWidth1Player = 330
 local paneWidth2Player = 230
 local paneWidth = (GAMESTATE:GetNumSidesJoined() == 1) and paneWidth1Player or paneWidth2Player
 local paneHeight = 360
@@ -550,9 +567,8 @@ for player in ivalues( PlayerNumber ) do
 				InitCommand=function(self)
 					self:horizalign(center)
 					self:maxwidth(130)
-					self:x(-paneWidth2Player/2 + 80)
+					self:x(-paneWidth2Player/2 + 100)
 					self:diffuse(Color.White)
-					self:zoom(0.75)
 				end,
 				ResetEntryMessageCommand=function(self)
 					self:settext(i==1 and "Loading" or "")
@@ -565,9 +581,8 @@ for player in ivalues( PlayerNumber ) do
 				Text="",
 				InitCommand=function(self)
 					self:horizalign(right)
-					self:x(paneWidth2Player/2-borderWidth-8)
+					self:x(paneWidth2Player/2-borderWidth)
 					self:diffuse(Color.White)
-					self:zoom(0.7)
 				end,
 				ResetEntryMessageCommand=function(self)
 					self:settext("")
@@ -579,9 +594,8 @@ for player in ivalues( PlayerNumber ) do
 				Text="",
 				InitCommand=function(self)
 					self:horizalign(right)
-					self:x(paneWidth2Player/2 + 125 - borderWidth)
+					self:x(paneWidth2Player/2 + 100 - borderWidth)
 					self:diffuse(Color.White)
-					self:zoom(0.65)
 				end,
 				ResetEntryMessageCommand=function(self)
 					self:settext("")

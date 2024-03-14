@@ -30,7 +30,7 @@ local lookAhead = mods.MeasureCounterLookahead
 local InitializeMeasureCounter = function()
 	-- SL[pn].Streams is initially set (and updated in CourseMode)
 	-- in ./ScreenGameplay in/MeasureCounterAndModsLevel.lua
-	SL[pn].MeasuresCompleted = 0
+SL[pn].MeasuresCompleted = 0
 	streams = SL[pn].Streams
 	streamIndex = 1
 	prevMeasure = -1
@@ -86,16 +86,16 @@ local GetTextForMeasure = function(currBeat, currMeasure, Measures, streamIndex,
 
 	local text = ""
 	if Measures[streamIndex].isBreak then
-		if mods.MeasureCounterLookahead > 0 then
-			if not isLookAhead then
-				local remainingRest = currStreamLength - currCount + 1
+if mods.MeasureCounterLookahead > 0 then
+		if not isLookAhead then
+			local remainingRest = currStreamLength - currCount + 1
 
-				-- Ensure that the rest count is in range of the total length.
-				text = "(" .. remainingRest .. ")"
-			else
-				text = "(" .. currStreamLength .. ")"
-			end
+			-- Ensure that the rest count is in range of the total length.
+			text = "(" .. remainingRest .. ")"
+		else
+			text = "(" .. currStreamLength .. ")"
 		end
+end
 	else
 		if not isLookAhead and currCount ~= 0 then
 			text = tostring(currCount .. "/" .. currStreamLength)
@@ -114,7 +114,7 @@ local Update = function(self, delta)
 	-- 1. Does PlayerState:GetSongPosition() take split timing into consideration?  Do we need to?
 	-- 2. This assumes each measure is comprised of exactly 4 beats.  Is it safe to assume this?
 	local currMeasure = (math.floor(PlayerState:GetSongPosition():GetSongBeatVisible()))/4
-	local currBeat = (math.floor(PlayerState:GetSongPosition():GetSongBeatVisible()))
+local currBeat = (math.floor(PlayerState:GetSongPosition():GetSongBeatVisible()))
 
 	-- If a new measure has occurred
 	if currMeasure > prevMeasure then
@@ -152,7 +152,7 @@ local Update = function(self, delta)
 				if not isLookAhead then
 					if string.find(text, "/") then
 						bmt[adjustedIndex]:diffuse(1, 1, 1, 1)
-						-- if streams.Measures[streamIndex] and not streams.Measures[streamIndex].isBreak then
+-- if streams.Measures[streamIndex] and not streams.Measures[streamIndex].isBreak then
 						SL[pn].MeasuresCompleted = SL[pn].MeasuresCompleted + 0.25
 						-- end
 					else
@@ -203,7 +203,7 @@ for i=lookAhead+1,1,-1 do
 			local width = GetNotefieldWidth()
 			local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
 			local columnWidth = width/NumColumns
-			if mods.MeasureCounterLeft then
+if mods.MeasureCounterLeft then
 				columnWidth = columnWidth*4/3
 			end
 

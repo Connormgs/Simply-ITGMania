@@ -92,6 +92,7 @@ local GetScoresRequestProcessor = function(res, params)
 		local rivalNum = 1
 		local worldRecordSet = false
 		local personalRecordSet = false
+		local foundLeaderboard = false
 
 		-- First check to see if the leaderboard even exists.
 		if data and data[playerStr] then
@@ -324,7 +325,7 @@ af[#af+1] = RequestResponseActor(17, 50)..{
 				GetScoresRequestProcessor(res, params)
 			else
 				self:playcommand("MakeGrooveStatsRequest", {
-					endpoint="player-leaderboards.php?"..NETWORK:EncodeQueryParameters(query),
+					endpoint="player-scores.php?"..NETWORK:EncodeQueryParameters(query),
 					method="GET",
 					headers=headers,
 					timeout=10,

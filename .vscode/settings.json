@@ -1,0 +1,17 @@
+{
+    "Lua.diagnostics.globals": [
+        "LoadActor",
+        "THEME",
+        "right",
+        "left",
+        "Blend",
+        "Def",
+        "NOTESKIN",
+        "GAMESTATE",
+        "ColorLightTone",
+        "SCREEN_WIDTH",
+        "bottom",
+        "Color",
+        "color"
+    ]
+}

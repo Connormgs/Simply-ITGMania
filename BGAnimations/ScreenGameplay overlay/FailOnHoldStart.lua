@@ -1,7 +1,15 @@
 -- Check if the player gave up before the song properly ended.
 
 local af = Def.ActorFrame{
-	OffCommand=function(self)
+JudgmentMessageCommand=function(self, params)
+		if params.Player == nil then return end
+		
+		if IsAutoplay(params.Player) then
+			local pss = STATSMAN:GetCurStageStats():GetPlayerStageStats(params.Player)
+			pss:FailPlayer()
+		end
+	end,
+		OffCommand=function(self)
 		-- In OutFox and newer versions of SM 5.1 there is the GaveUp()
 		-- function available. For SM 5.0.12 and older SM 5.1 versions
 		-- we do the best we can by checking the song position. It

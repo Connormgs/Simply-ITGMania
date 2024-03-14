@@ -24,7 +24,7 @@ SL_CustomPrefs.Get = function()
 	local day = DayOfMonth()
 	local today = year * 10000 + month * 100 + day
 
-	if today >= 20230620 then
+	if today >= 20230619 then
 		visualStyleChoices[#visualStyleChoices+1] = "😈"
 		visualStyleValues[#visualStyleValues+1] = "SRPG7"
 	else
@@ -73,8 +73,7 @@ SL_CustomPrefs.Get = function()
 			Choices = {
 				THEME:GetString("ScreenSelectPlayMode", "Casual"),
 				THEME:GetString("ScreenSelectPlayMode", "ITG"),
-				THEME:GetString("ScreenSelectPlayMode", "FA+"),
-			},
+							},
 			Values = { "Casual", "ITG" }
 		},
 		AutoStyle =
@@ -119,6 +118,12 @@ SL_CustomPrefs.Get = function()
 			Default = false,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values	= { true, false }
+		},
+SampleMusicLoops =
+		{
+			Default = true,
+			Choices = { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values  = { true, false }
 		},
 		RescoreEarlyHits = {
 			Default = true,
@@ -253,7 +258,28 @@ SL_CustomPrefs.Get = function()
 		{
 			Default = "",
 		},
+-- - - - - - - - - - - - - - - - - - - -
+		EnableTournamentMode = {
+			Default = false,
+			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values  = { true, false }
+		},
 
+		ScoringSystem = {
+			Default = "EX",
+			Choices  = { "EX", "ITG" }
+		},
+
+		StepStats = {
+			Default = "Show",
+			Choices =  { "Show", "Hide" },
+		},
+
+		EnforceNoCmod = {
+			Default = true,
+			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
+			Values  = { true, false }
+		},
 		-- - - - - - - - - - - - - - - - - - - -
 		EnableGrooveStats = {
 			Default = false,
@@ -278,12 +304,7 @@ SL_CustomPrefs.Get = function()
 		-- - - - - - - - - - - - - - - - - - - -
 		-- new Zmod stuff
 		-- - - - - - - - - - - - - - - - - - - -
-		TournamentMode = {
-			Default = "Off",
-			Choices = { THEME:GetString("ThemePrefs","Off"), THEME:GetString("ThemePrefs", "EX"), THEME:GetString("ThemePrefs", "ITG") },
-			Values  = { "Off", "EX", "ITG" }
-		},
-
+	
 		EnableBoogieStats = {
 			Default = false,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
@@ -295,12 +316,7 @@ SL_CustomPrefs.Get = function()
 			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega") },
 			Values = { "Common", "Mega" }
 		},
-		SampleMusicLoop =
-		{
-			Default = true,
-			Choices = { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
-			Values  = { true, false }
-		},
+		
 		MusicWheelGS =
 		{
 			Default = "Scorebox",
@@ -314,9 +330,8 @@ SL_CustomPrefs.Get = function()
 		},
 		ITGDiffColors =
 		{
-			Default = false,
-			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
-			Values  = { true, false }
+			Default = "Simply Love",
+			Choices = { "Simply Love", "ITG", "DDR" }
 		},
 		AnimateBanners =
 		{
@@ -335,6 +350,10 @@ SL_CustomPrefs.Get = function()
 			Default = false,
 			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
 			Values = { true, false }
+		},
+		StepStats = {
+			Default = "Show",
+			Choices =  { "Show", "Hide" },
 		}
 	}
 end

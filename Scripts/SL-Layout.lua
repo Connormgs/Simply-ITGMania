@@ -59,8 +59,8 @@ function GetGameplayLayout(player, reverse)
 	else
 		layout.SubtractiveScoring = { y = topY - 8 }
 		topY = topY - 16
-	end
-
+end
+	
     -- Move the combo counter out of the way if it overlaps with any gameplay
     -- element.
     if reverse then
