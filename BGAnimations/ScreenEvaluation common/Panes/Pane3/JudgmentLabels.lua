@@ -1,8 +1,21 @@
 local player = ...
 local pn = ToEnumShortString(player)
+
+local TapNoteScores = { Types={'W1', 'W2', 'W3', 'W4', 'W5', 'Miss'}, Names={} }
+if SL[pn].ActiveModifiers.ShowFaPlusWindow then
+	TapNoteScores = { Types={'W1', 'W1', 'W2', 'W3', 'W4', 'W5', 'Miss'}, Names={} }
+end
+local tns_string = "TapNoteScore" .. (SL.Global.GameMode=="ITG" and "" or SL.Global.GameMode)
+-- get TNS names appropriate for the current GameMode, localized to the current language
+for i, judgment in ipairs(TapNoteScores.Types) do
+	TapNoteScores.Names[#TapNoteScores.Names+1] = THEME:GetString(tns_string, judgment)
+end
+	
 local mods = SL[pn].ActiveModifiers
 local IsNotWide = (GetScreenAspectRatio() < 16 / 9)
 local IsWide = (GetScreenAspectRatio() > 4 / 3)
+local track_missbcheld = mods.MissBecauseHeld
+local track_earlyjudgments = mods.TrackEarlyJudgments
 local TapNoteScores = {Types={}, Names={}}
 local Colors = {}
 if mods.ShowFaPlusWindow and mods.ShowFaPlusPane then
@@ -71,6 +84,7 @@ t[#t+1] = Def.Sprite{
 	end,
 }
 local miss_bmt
+local judge_bmt = {}
 
 local windows = SL[pn].ActiveModifiers.TimingWindows
 
@@ -82,9 +96,14 @@ for i=1, #TapNoteScores.Types do
 		local window = TapNoteScores.Types[i]
 		local label = TapNoteScores.Names[i]
 
+		if i == 1 and SL[pn].ActiveModifiers.ShowFaPlusWindow then
+			label = THEME:GetString("TapNoteScoreFA+", "W1")
+		end
+
 		t[#t+1] = LoadFont("Common Normal")..{
 			Text=label:upper(),
 			InitCommand=function(self)
+				judge_bmt[i] = self
 				self:zoom(0.5):horizalign(right):maxwidth(65/self:GetZoom())
 					:x( (player == PLAYER_1 and -195) or -71 )
 					:y( i * row_height )
@@ -93,6 +112,45 @@ for i=1, #TapNoteScores.Types do
 				if i == #TapNoteScores.Types then miss_bmt = self end
 			end
 		}
+
+		if track_earlyjudgments and i ~= #TapNoteScores.Types and i > 1 then
+			t[#t+1] = LoadFont("Common Normal")..{
+				Text=ScreenString("Early"),
+				InitCommand=function(self)
+					self:y(140):zoom(0.6):halign(1)
+						:x( (player == PLAYER_1 and -195) or -71 )
+						:y( i * row_height - 5 )
+					if SL[pn].ActiveModifiers.ShowFaPlusWindow and i <= 5 then
+						self:diffuse(SL.JudgmentColors["FA+"][i])
+					elseif SL[pn].ActiveModifiers.ShowFaPlusWindow then
+						self:diffuse( SL.JudgmentColors[SL.Global.GameMode][i-1] )
+					else
+						self:diffuse( SL.JudgmentColors[SL.Global.GameMode][i] )
+					end
+				end,
+				OnCommand=function(self)
+					self:x( math.max(-180, judge_bmt[i]:GetX() - judge_bmt[i]:GetWidth()/1.15) )
+				end
+			}
+			
+			if TapNoteScores.Types[i] == 'W4' or TapNoteScores.Types[i] == 'W5' then
+				t[#t+1] = LoadFont("Common Normal")..{
+					Text="(All)",
+					InitCommand=function(self)
+						self:y(140):zoom(0.6):halign(1)
+							:x( (player == PLAYER_1 and -130) or -28 )
+							:y( i * row_height - 10 )
+						if SL[pn].ActiveModifiers.ShowFaPlusWindow and i <= 5 then
+							self:diffuse(SL.JudgmentColors["FA+"][i])
+						elseif SL[pn].ActiveModifiers.ShowFaPlusWindow then
+							self:diffuse( SL.JudgmentColors[SL.Global.GameMode][i-1] )
+						else
+							self:diffuse( SL.JudgmentColors[SL.Global.GameMode][i] )
+						end
+					end
+				}
+			end
+		end
 	end
 end
 

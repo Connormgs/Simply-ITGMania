@@ -46,6 +46,8 @@ local std_dev = 0
 local max_error = 0
 local count = 0
 
+local max_error = 0 -- Temporary fix for non rounded max error until mainline SL fixes it
+
 for t in ivalues(sequential_offsets) do
 	-- the first value in t is CurrentMusicSeconds when the offset occurred, which we don't need here
 	-- the second value in t is the offset value or the string "Miss"

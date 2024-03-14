@@ -94,8 +94,19 @@ for i=1,#TapNoteScores.Types do
 				self:x(-218)
 			self:y((i-1)*20 -20)
 			self:addy(140)
-			
-			
+			if SL[pn].ActiveModifiers.SmallerWhite then
+				self:playcommand("Marquee")
+			end
+		end,
+		MarqueeCommand=function(self)
+			if display15 then
+				self:settext(("%04.0f"):format(number15))
+				display15 = false
+			else
+				self:settext(("%04.0f"):format(number))
+				display15 = true
+			end
+			self:sleep(2):queuecommand("Marquee")	
 		end
 	}
 
