@@ -24,13 +24,6 @@ local GetMachineTag = function(gsEntry)
 		return gsEntry["machineTag"]:sub(1, 4):upper()
 	end
 
-	-- User doesn't have a machineTag set. We'll "make" one based off of
-	-- their name.
-	if gsEntry["name"] then
-		-- 4 Characters is the "intended" length.
-		return gsEntry["name"]:sub(1,4):upper()
-	end
-
 	return ""
 end
 
@@ -343,10 +336,11 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3):addy(115)
 								local soundDir = THEME:GetCurrentThemeDirectory() .. "Sounds/"
 								if personalRank == 1 then
-									recordText:settext("World Record!")
+									local worldRecordText = "World Record!"
 										if showExScore then
 										worldRecordText = worldRecordText .. " (EX)"
 									end
+recordText:settext(worldRecordText)
 									-- Play random sound in Sounds/Evaluation WR/
 									soundDir = soundDir .. "Evaluation WR/"
 									audio_files = findFiles(soundDir)
@@ -365,6 +359,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								local recordTextXStart = recordText:GetX() - recordText:GetWidth()*recordText:GetZoom()/2
 								local GSIconWidth = GSIcon:GetWidth()*GSIcon:GetZoom()
 								local BSIconWidth = BSIcon:GetWidth()*BSIcon:GetZoom()
+local BSEXIconWidth = BSEXIcon:GetWidth()*BSEXIcon:GetZoom()
 								-- This will automatically adjust based on the length of the recordText length.
 								GSIcon:xy(recordTextXStart - 5 - GSIconWidth/2, 150)
 								BSIcon:xy(recordTextXStart - 5 - BSIconWidth/2, 150)
@@ -383,16 +378,8 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 					entry:stoptweening()
 					-- We didn't get any scores if i is still == 1.
 					if j == 1 then
-						if data and data[playerStr] then
-							if data[playerStr]["isRanked"] then
-								SetEntryText("", "No Scores", "", "", entry)
-							else
-								SetEntryText("", "Chart Not Ranked", "", "", entry)
-							end
-						else
-							SetEntryText("", "No Scores", "", "", entry)
-						end
-					else
+													SetEntryText("", "No Scores", "", "", entry)
+											else
 						-- Empty out the remaining rows.
 						SetEntryText("---", "----", "------", "----------", entry)
 					end
@@ -504,10 +491,7 @@ af[#af+1] = LoadFont("Common Normal").. {
 		self:zoom(0.8)
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_1))
 	end,
-	ChartNotRankedCommand=function(self)
-		self:settext("Chart Not Ranked")
-	end,
-	SubmitCommand=function(self)
+		SubmitCommand=function(self)
 		self:settext("Submitted!")
 	end,
 	SubmitFailedCommand=function(self)
@@ -529,10 +513,7 @@ af[#af+1] = LoadFont("Common Normal").. {
 		self:zoom(0.8)
 		self:visible(GAMESTATE:IsSideJoined(PLAYER_2))
 	end,
-	ChartNotRankedCommand=function(self)
-		self:settext("Chart Not Ranked")
-	end,
-	SubmitCommand=function(self)
+		SubmitCommand=function(self)
 		self:settext("Submitted!")
 	end,
 	SubmitFailedCommand=function(self)
