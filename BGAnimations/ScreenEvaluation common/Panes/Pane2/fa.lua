@@ -60,7 +60,13 @@ local windows = {SL[pn].ActiveModifiers.TimingWindows[1]}
 for v in ivalues(SL[pn].ActiveModifiers.TimingWindows) do
 	windows[#windows + 1] = v
 end
-
+local maxCount = 1
+local counts = GetExJudgmentCounts(player)
+for i=1, #TapNoteScores.Types do
+	local window = TapNoteScores.Types[i]
+	local number = counts[window] or 0
+	if number > maxCount then maxCount = number end
+end
 --  labels: W1, W2, W3, W4, W5, Miss
 for i=1, #TapNoteScores.Types do
 	-- no need to add BitmapText actors for TimingWindows that were turned off
@@ -76,7 +82,7 @@ for i=1, #TapNoteScores.Types do
 				
 			end
 		}
-		if i==1 and SL[pn].ActiveModifiers.SmallerWhite then
+if i==1 and SL[pn].ActiveModifiers.SmallerWhite then
 			local show15 = false
 			t[#t+1] = LoadFont("Common Normal")..{
 				Text="10ms",
@@ -90,7 +96,6 @@ for i=1, #TapNoteScores.Types do
 						finalZoom = 0.6 - 0.1*(length-4)
 						self:x( (controller == PLAYER_1 and finalPos) or -finalPos ):zoom(finalZoom)
 					end
-					self:y(i*926-99)
 					-- diffuse the JudgmentLabels the appropriate colors for the current GameMode
 					self:diffuse( TapNoteScores.Colors[i] )
 					self:playcommand("Marquee")
@@ -109,7 +114,6 @@ for i=1, #TapNoteScores.Types do
 			}
 		end
 	end
-
 	
 end
 

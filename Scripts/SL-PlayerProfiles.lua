@@ -52,14 +52,16 @@ local permitted_profile_settings = {
 	BrokenRun            = "boolean",
 	RunTimer             = "boolean",
 	MeasureCounterLookahead = "number",
-	HideLookahead        = "boolean",
+	
 	RainbowMax           = "boolean",
 	ResponsiveColors     = "boolean",
 	ShowLifePercent      = "boolean",
 	
 	MiniIndicator		 = "string",
 	MiniIndicatorColor	 = "string",
+
 	MeasureLines         = "string",
+
 	ColumnFlashOnMiss    = "boolean",
 	SubtractiveScoring   = "boolean",
 	Pacemaker            = "boolean",
@@ -85,12 +87,14 @@ local permitted_profile_settings = {
 
 	HideEarlyDecentWayOffJudgments = "boolean",
 	HideEarlyDecentWayOffFlash     = "boolean",
-
-	VisualDelay          = "string",
 	
 	PackBanner           = "boolean",
 	StepInfo             = "boolean",
 	DisplayScorebox      = "boolean",
+	
+	SBITGScore           = "boolean",
+	SBEXScore            = "boolean",
+	SBEvents             = "boolean",
 	
 	FlashMiss            = "boolean",
 	FlashWayOff          = "boolean",
@@ -99,16 +103,17 @@ local permitted_profile_settings = {
 	FlashExcellent       = "boolean",
 	FlashFantastic       = "boolean",
 	
-	BeatBars			 = "string",
 	TiltMultiplier       = "number",
 	
 	ComboColors			 = "string",
 	ComboMode			 = "string",
 	TimerMode            = "string",
+	RailBalance          = "string",
 	
 	JudgmentBack         = "boolean",
 	ErrorMSDisplay       = "boolean",
 	GhostFault           = "boolean",
+	SplitWhites          = "boolean",
 	BreakUI              = "boolean",
 
 	GrowCombo			 = "boolean",

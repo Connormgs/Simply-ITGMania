@@ -55,6 +55,12 @@ local PlayerDefaults = {
 				ShowFaPlusWindow = false,
 				ShowEXScore = false,
 				ShowFaPlusPane = true,
+
+				PackBanner = false,
+				StepInfo = false,
+				SBITGScore = true,
+				SBEXScore = true,
+				SBEvents = true,
 				
 				FlashMiss = true,
 				FlashWayOff = false,
@@ -67,6 +73,7 @@ local PlayerDefaults = {
 				ComboColors = "Glow",
 				ComboMode = "FullCombo",
 				TimerMode = "Time",
+RailBalance = "No",
 
 				NoteFieldOffsetX = 0,
 				NoteFieldOffsetY = 0,
@@ -495,10 +502,6 @@ DDRDiffColors = {
 		-- be loaded before this file.
 		UnlocksCache = LoadUnlocksCache(),
 	},
-	-- Bar measure display
-	ShowBeatBars = false,
-	BarMeasureAlpha = 0.50,
-	Bar4thAlpha=0.25,
 	-- Stores all active/failed downloads.
 	-- Each entry is keyed on a string UUID which maps to a table with the
 	-- following keys:

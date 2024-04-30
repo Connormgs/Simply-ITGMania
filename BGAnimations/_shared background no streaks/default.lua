@@ -14,32 +14,32 @@ return Def.ActorFrame{
 			
 			LoadActor(BGOVERLAY)..{
 				 InitCommand=function(self)
-					oldcol = ThemePrefs.Get("ITG2")
-					self:vertalign(bottom):zoomtowidth(SCREEN_WIDTH*1.1):zoomy(1.1):rotationy(180):diffuse(GetCurrentColor(true))
+					
+					self:vertalign(bottom):zoomtowidth(SCREEN_WIDTH*1.1):zoomy(1.1):rotationy(180):diffuse(GetCurrentColor(true)):diffusealpha(1)
 				end;
 				UpdateColoringMessageCommand=function(s)
-					if ThemePrefs.Get("ITG2") ~= oldcol then
-						s:linear(0.25):queuecommand("LoadNewBG"):diffuse(GetCurrentColor(true))
-					end
+					
+						s:linear(0.25):queuecommand("LoadNewBG"):diffuse(GetCurrentColor(true)):diffusealpha(1)
+					
 				end;
 				LoadNewBGCommand=function(s)
-					s:Load( THEME:GetPathB("_shared background no","streaks/"..BGOVERLAY) ):linear(0.25):diffuse(GetCurrentColor(true))
-					oldcol = ThemePrefs.Get("ITG2")
+					s:Load( THEME:GetPathB("_shared background no","streaks/"..BGOVERLAY) ):linear(0.25):diffuse(GetCurrentColor(true)):diffusealpha(1)
+					
 				end;
 			},
 			
 			LoadActor(BGOVERLAY)..{
 				 InitCommand=function(self)
-					self:vertalign(bottom):zoomtowidth(SCREEN_WIDTH*1.1):zoomy(-1.1):diffuse(GetCurrentColor(true)):diffusealpha(0.35)
+					self:vertalign(bottom):zoomtowidth(SCREEN_WIDTH*1.1):zoomy(-1.1):diffuse(GetCurrentColor(true)):diffusealpha(0.35):diffusealpha(1)
 				end;
 				UpdateColoringMessageCommand=function(s)
-					if ThemePrefs.Get("ITG2") ~= oldcol then
-						s:linear(0.25):diffuse(Color.Black):queuecommand("LoadNewBG"):diffuse(GetCurrentColor(true))
-					end
+					
+						s:linear(0.25):queuecommand("LoadNewBG"):diffuse(GetCurrentColor(true)):diffusealpha(1)
+					
 				end;
 				LoadNewBGCommand=function(s)
-					s:Load( THEME:GetPathB("_shared background no","streaks/"..BGOVERLAY) ):linear(0.25):diffuse(GetCurrentColor(true))
-					oldcol = ThemePrefs.Get("ITG2")
+					s:Load( THEME:GetPathB("_shared background no","streaks/"..BGOVERLAY) ):linear(0.25):diffuse(GetCurrentColor(true)):diffusealpha(1)
+					
 				end;
 			},
 		},

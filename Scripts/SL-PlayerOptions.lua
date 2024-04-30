@@ -447,9 +447,6 @@ local Overrides = {
 				return { "ShowFaPlusWindow" }
 			end
 
-			if SL.Global.GameMode == "FA+" then
-				return { "ShowEXScore", "SmallerWhite" }
-			end
 			return { "ShowFaPlusWindow", "ShowEXScore", "ShowFaPlusPane", "SmallerWhite" }
 		end,
 		LoadSelections = function(self, list, pn)
@@ -479,6 +476,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 				mods.ShowFaPlusWindow = list[1]
 				mods.ShowEXScore = ThemePrefs.Get("ScoringSystem") == "EX"
 				mods.ShowFaPlusPane = true
+				mods.SmallerWhite = false
 				-- Default to FA+ pane in Tournament Mode
 				sl_pn.EvalPanePrimary = 2
 				return
@@ -572,6 +570,11 @@ if ThemePrefs.Get("EnableTournamentMode") then
 			return values
 		end,
 	},
+-------------------------------------------------------------------------
+	ScoreBoxOptions = {
+		SelectType = "SelectMultiple",
+		Values = { "SBITGScore", "SBEXScore", "SBEvents" },
+	},
 	-------------------------------------------------------------------------
 	StepStatsExtra = {
 		Choices = function()
@@ -588,7 +591,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 	},
 	-------------------------------------------------------------------------
 	TargetScore = {
-		Values = { "SpecifiedValue", "Machine best", "Personal best" }
+		Values = { "SpecifiedValue", "Machine best", "Personal best", "Ghost Data" }
 	},
 	-------------------------------------------------------------------------
 	TargetScoreNumber = {
@@ -633,9 +636,6 @@ if ThemePrefs.Get("EnableTournamentMode") then
 			local vals = {}
 			if IsUsingWideScreen() then
 				vals = { "JudgmentTilt", "ColumnCues", "ColumnCountdown" }
-				if IsServiceAllowed(SL.GrooveStats.GetScores) then
-					vals[#vals+1] = "DisplayScorebox"
-				end
 			else
 				vals = { "JudgmentTilt", "ColumnCues", "ColumnCountdown", "ShowHeldMiss" }
 			end
@@ -647,16 +647,6 @@ if ThemePrefs.Get("EnableTournamentMode") then
 		SelectType = "SelectMultiple",
 		Values = function()
 			local vals = {  "TrackEarlyJudgments", "TrackRecalc", "TrackFoot", "ScaleGraph" }
-			return vals
-		end
-	},
-	GameplayExtrasC = {
-		SelectType = "SelectMultiple",
-		Values = function()
-			local vals = {}
-			if not IsUsingWideScreen() and IsServiceAllowed(SL.GrooveStats.GetScores) then
-				vals = { "DisplayScorebox" }
-			end
 			return vals
 		end
 	},
@@ -959,10 +949,6 @@ if ThemePrefs.Get("EnableTournamentMode") then
 		Values = { "FlashMiss", "FlashWayOff", "FlashDecent", "FlashGreat", "FlashExcellent", "FlashFantastic" }
 	},
 	-------------------------------------------------------------------------
-	BeatBars = {
-		Choices = { "None", "Measures", "Beats" },
-	},
-	-------------------------------------------------------------------------
 	TiltMultiplier = {
 		Choices = { 0.25, 0.5, 1, 1.5, 2, 2.5, 3 },
 	},
@@ -978,10 +964,14 @@ if ThemePrefs.Get("EnableTournamentMode") then
 	TimerMode = {
 		Values = { "Time", "Measures" }
 	},
+-------------------------------------------------------------------------
+	RailBalance = {
+		Values = { "No", "What" }
+	},
 	-------------------------------------------------------------------------
 	ExtraAesthetics = {
 		SelectType = "SelectMultiple",
-		Values = { "JudgmentBack", "ErrorMSDisplay", "GhostFault", "BreakUI" }
+		Values = { "JudgmentBack", "ErrorMSDisplay", "GhostFault", "SplitWhites", "BreakUI" }
 	},
 	-------------------------------------------------------------------------
 	ScreenAfterPlayerOptions = {

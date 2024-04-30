@@ -112,8 +112,8 @@ RequestResponseActor = function(x, y)
 				method=method,
 				body=body,
 				headers=headers,
-				connectTimeout=timeout/2,
-				transferTimeout=timeout/2,
+				connectTimeout=timeout,
+				transferTimeout=timeout,
 				onResponse=function(response)
 					self.request_handler = nil
 					-- If we get a permanent error, make sure we "disconnect" from
@@ -525,7 +525,7 @@ CreateCommentString = function(player)
 			local suffix = i == 6 and "m" or suffixes[i]
 			
 			if i == 1 then
-				number = counts["W115"]
+				number = counts["W1"]
 			end
 			
 			if number ~= 0 then

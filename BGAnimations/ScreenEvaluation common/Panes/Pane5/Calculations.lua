@@ -129,7 +129,9 @@ for offset=-worst_window, worst_window, 0.001 do
 
 		if mods.ShowFaPlusWindow and mods.ShowFaPlusPane then
 			abs_offset = math.abs(offset)
-			if abs_offset > GetTimingWindow(1, "FA+") and abs_offset <= GetTimingWindow(2, "FA+") then
+			if mods.SmallerWhite and abs_offset > GetTimingWindow(1, "FA+", true) and abs_offset <= GetTimingWindow(1, "FA+", false) then
+				c = BlendColors(SL.JudgmentColors["FA+"][2], colors[1])
+			elseif abs_offset > GetTimingWindow(1, "FA+") and abs_offset <= GetTimingWindow(2, "FA+") then
 				c = SL.JudgmentColors["FA+"][2]
 			end
 		end
@@ -164,14 +166,14 @@ af[#af+1] = Def.ActorMultiVertex{
 -- BitmapText actors for text
 local bmts = Def.ActorFrame{}
 bmts.InitCommand=function(self) self:y(-pane_height+32) end
-local pad = 32
+local pad = 40
 
 -- avg_timing_error value with "ms" label
 bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.2fms"):format(avg_timing_error),
 	InitCommand=function(self)
-		self:x(pad):zoom(0.62)
+		self:x(pad):zoom(0.8)
 	end,
 }
 
@@ -180,7 +182,7 @@ bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.2fms"):format(avg_offset),
 	InitCommand=function(self)
-		self:x(pad + (pane_width-2*pad)/3):zoom(0.62)
+		self:x(pad + (pane_width-2*pad)/3):zoom(0.8)
 	end,
 }
 
@@ -189,7 +191,7 @@ bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.2fms"):format(std_dev * 3),
 	InitCommand=function(self)
-		self:x(pad + (pane_width-2*pad)/3 * 2-10):zoom(0.62)
+		self:x(pad + (pane_width-2*pad)/3 * 2):zoom(0.8)
 	end,
 }
 
@@ -198,7 +200,7 @@ bmts[#bmts+1] = Def.BitmapText{
 	Font="Common Normal",
 	Text=("%.2fms"):format(max_error),
 	InitCommand=function(self)
-		self:x(pane_width-pad-12):zoom(0.62)
+		self:x(pane_width-pad):zoom(0.8)
 	end,
 }
 

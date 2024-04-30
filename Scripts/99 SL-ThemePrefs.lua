@@ -287,8 +287,6 @@ SampleMusicLoops =
 			Values  = { true, false }
 		},
 
-
-
 		AutoDownloadUnlocks = {
 			Default = false,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
@@ -304,11 +302,16 @@ SampleMusicLoops =
 		-- - - - - - - - - - - - - - - - - - - -
 		-- new Zmod stuff
 		-- - - - - - - - - - - - - - - - - - - -
-	
-		EnableBoogieStats = {
+			EnableBoogieStats = {
 			Default = false,
 			Choices =  { THEME:GetString("ThemePrefs","Yes"), THEME:GetString("ThemePrefs", "No") },
 			Values  = { true, false }
+		},
+
+CloseFolderCodes = {
+			Default = "None",
+			Choices = { "None", "Up-Down", "Down-Up", "Select-MenuUp" },
+			Values = { "Off", "CloseFolder1", "CloseFolder2", "CloseFolder3" },
 		},
 
 		ThemeFont = {
@@ -316,8 +319,7 @@ SampleMusicLoops =
 			Choices = { THEME:GetString("ThemePrefs","Wendy"), THEME:GetString("ThemePrefs", "Mega") },
 			Values = { "Common", "Mega" }
 		},
-		
-		MusicWheelGS =
+				MusicWheelGS =
 		{
 			Default = "Scorebox",
 			Choices = { "Scorebox", "Pane", "Off" }
@@ -350,11 +352,7 @@ SampleMusicLoops =
 			Default = false,
 			Choices = { THEME:GetString("ThemePrefs", "On"), THEME:GetString("ThemePrefs", "Off") },
 			Values = { true, false }
-		},
-		StepStats = {
-			Default = "Show",
-			Choices =  { "Show", "Hide" },
-		}
+				}
 	}
 end
 

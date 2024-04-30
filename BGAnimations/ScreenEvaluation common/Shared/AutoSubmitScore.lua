@@ -45,11 +45,7 @@ local GetJudgmentCounts = function(player)
 		["Rolls"] = "rollsHeld",
 		["totalRolls"] = "totalRolls"
 	}
-	local translation15 = {
-		["W015"] = "fantasticPlus",
-		["W115"] = "fantastic"
-	}
-
+	
 	local judgmentCounts = {}
 
 	for key, value in pairs(counts) do
@@ -57,12 +53,7 @@ local GetJudgmentCounts = function(player)
 			judgmentCounts[translation[key]] = value
 		end
 	end
-	for key, value in pairs(counts) do
-		if translation15[key] ~= nil then
-			judgmentCounts[translation15[key]] = value
-		end
-	end
-
+	
 	return judgmentCounts
 end
 
@@ -160,8 +151,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 	if panes then
 		local data = JsonDecode(res.body)
 		local headers = res.headers
-	
-		for i=1,2 do
+			for i=1,2 do
 			local playerStr = "player"..i
 			local entryNum = 1
 			local rivalNum = 1
@@ -295,6 +285,8 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								ParseGroovestatsDate(gsEntry["date"]),
 								entry
 							)
+-- ITL leaderboard is EX scores, so highlight them blue.
+							entry:GetChild("Score"):diffuse(SL.JudgmentColors["FA+"][1])
 							if gsEntry["isRival"] then
 								entry:diffuse(color("#BD94FF"))
 								itlRival = itlRival + 1
@@ -333,7 +325,7 @@ local AutoSubmitRequestProcessor = function(res, overlay)
 								elseif boogie_ex then BSEXIcon:visible(true)
 								else GSIcon:visible(true) end
 
-								recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3):addy(115)
+								recordText:diffuseshift():effectcolor1(Color.White):effectcolor2(Color.Yellow):effectperiod(3)
 								local soundDir = THEME:GetCurrentThemeDirectory() .. "Sounds/"
 								if personalRank == 1 then
 									local worldRecordText = "World Record!"
@@ -361,8 +353,8 @@ recordText:settext(worldRecordText)
 								local BSIconWidth = BSIcon:GetWidth()*BSIcon:GetZoom()
 local BSEXIconWidth = BSEXIcon:GetWidth()*BSEXIcon:GetZoom()
 								-- This will automatically adjust based on the length of the recordText length.
-								GSIcon:xy(recordTextXStart - 5 - GSIconWidth/2, 150)
-								BSIcon:xy(recordTextXStart - 5 - BSIconWidth/2, 150)
+								GSIcon:xy(recordTextXStart - GSIconWidth/2, recordText:GetY())
+								BSIcon:xy(recordTextXStart - BSIconWidth/2, recordText:GetY())
 								BSEXIcon:xy(recordTextXStart - BSEXIconWidth/2, recordText:GetY())
 							end
 						end

@@ -2,7 +2,7 @@
 
 local player = ...
 local NumPlayers = #GAMESTATE:GetHumanPlayers()
-local stats = SessionDataForStatistics(player)
+
 local pane_spacing = 10
 local small_pane_w = 300
 

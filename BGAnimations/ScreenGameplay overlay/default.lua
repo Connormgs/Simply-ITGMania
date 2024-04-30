@@ -356,6 +356,7 @@ for player in ivalues( GAMESTATE:GetHumanPlayers() ) do
 	t[#t+1] = LoadActor("./TrackFailTime.lua", player)
 	t[#t+1] = LoadActor("./NotefieldMods.lua", player)
 	t[#t+1] = LoadActor("./PerColumnJudgmentGraphics.lua", player)
+	t[#t+1] = LoadActor("./TrackGhostData.lua", player)
 	-- FIXME: refactor PerColumnJudgmentTracking to not be inside this loop
 	--        the Lua input callback logic shouldn't be duplicated for each player
 	t[#t+1] = LoadActor("./PerColumnJudgmentTracking.lua", player)

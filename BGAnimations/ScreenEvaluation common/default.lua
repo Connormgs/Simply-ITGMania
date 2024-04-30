@@ -203,7 +203,7 @@ LoadFont("_eurostile normal")..{
 
 -- code for triggering a screenshot and animating a "screenshot" texture
 t[#t+1] = LoadActor("./Shared/ScreenshotHandler.lua")
-
+t[#t+1] = LoadActor("./Shared/RestartHandler.lua")
 -- the title of the song and its graphical banner, if there is one
 t[#t+1] = LoadActor("./Shared/TitleAndBanner.lua")
 
@@ -235,14 +235,16 @@ for player in ivalues(Players) do
 	t[#t+1] = LoadActor("./PerPlayer/Upper/default.lua", player)
 	-- the per-player lower half of ScreenEvaluation, including:
 	-- judgment scatterplot, modifier list, disqualified text
+--t[#t+1] = LoadActor("./PerPlayer/Lower/default.lua", player)
 
-
+	t[#t+1] = LoadActor("./PerPlayer/SaveGhostData.lua", player)
 	-- Generate the .itl file for the player.
 	-- When the event isn't active, this actor is nil.
 	t[#t+1] = LoadActor("./PerPlayer/ItlFile.lua", player)
 
 	-- Generate the .rpg file for the player to keep track of best rate mod on the songwheel
 	-- When the event isn't active, this actor is nil.
+t[#t+1] = LoadActor("./PerPlayer/RpgRatemod.lua", player)
 
 	
 end
