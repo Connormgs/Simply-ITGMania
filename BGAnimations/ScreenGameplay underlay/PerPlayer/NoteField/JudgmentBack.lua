@@ -173,8 +173,16 @@ return Def.ActorFrame{
 				local direction = param.TapNoteOffset < 0 and -1 or 1
 				sprite:rotationz(direction * offset)
 			end
-			-- this should match the custom JudgmentTween() from SL for 3.95
-			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			if mods.JudgmentAnimation == 'Default' then
+				-- this should match the custom JudgmentTween() from SL for 3.95
+				sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			elseif mods.JudgmentAnimation == 'Still' then
+				-- this should match the behaviour of Etterna
+				sprite:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+			elseif mods.JudgmentAnimation == 'ITG' then
+				-- this should match the behaviour of ITG2/ITG3
+				sprite:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			end
 		end
 	end,
 	JudgmentMessageCommand=function(self, param)
@@ -297,8 +305,16 @@ return Def.ActorFrame{
 			local direction = param.TapNoteOffset < 0 and -1 or 1
 			SCREENMAN:GetTopScreen():GetChild("Player"..ToEnumShortString(player)):GetChild("NoteField"):rotationz(direction * offset)
 		end
-		-- this should match the custom JudgmentTween() from SL for 3.95
-		sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		if mods.JudgmentAnimation == 'Default' then
+			-- this should match the custom JudgmentTween() from SL for 3.95
+			sprite:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		elseif mods.JudgmentAnimation == 'Still' then
+			-- this should match the behaviour of Etterna
+			sprite:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+		elseif mods.JudgmentAnimation == 'ITG' then
+			-- this should match the behaviour of ITG2/ITG3
+			sprite:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+		end
 		
 		if mods.SplitWhites and mods.ShowFaPlusWindow and tns == "W1" and not IsW010Judgment(param, player) and not IsAutoplay(player) then
 			local splitFrame = 1
@@ -307,12 +323,30 @@ return Def.ActorFrame{
 				if not param.Early then splitFrame = splitFrame + 1 end
 			end
 			spriteGhost:visible(true):setstate(splitFrame):diffusealpha(0.5):finishtweening()
-			spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			if mods.JudgmentAnimation == 'Default' then
+				-- this should match the custom JudgmentTween() from SL for 3.95
+				spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			elseif mods.JudgmentAnimation == 'Still' then
+				-- this should match the behaviour of Etterna
+				spriteGhost:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+			elseif mods.JudgmentAnimation == 'ITG' then
+				-- this should match the behaviour of ITG2/ITG3
+				spriteGhost:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			end
 		elseif tns == "W4" or tns == "W5" and mods.GhostFault then
 			self:playcommand("ResetFault")
 			spriteGhost:visible(true):setstate(frame)
 			spriteGhost:diffusealpha(0.5)
-			spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):linear(0.5):diffusealpha(0)
+			if mods.JudgmentAnimation == 'Default' then
+				-- this should match the custom JudgmentTween() from SL for 3.95
+				spriteGhost:zoom(0.8):decelerate(0.1):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			elseif mods.JudgmentAnimation == 'Still' then
+				-- this should match the behaviour of Etterna
+				spriteGhost:zoom(0.75):sleep(0.9):linear(0):zoom(0)
+			elseif mods.JudgmentAnimation == 'ITG' then
+				-- this should match the behaviour of ITG2/ITG3
+				spriteGhost:zoom(1):decelerate(0.2):zoom(0.75):sleep(0.6):accelerate(0.2):zoom(0)
+			end
 		else
 			spriteGhost:visible(false):finishtweening()
 		end
@@ -338,44 +372,6 @@ return Def.ActorFrame{
 		ResetCommand=function(self) self:finishtweening():stopeffect():visible(false) end
 	},
 	
-	LoadFont(font)..{
-        Text = "",
-        InitCommand = function(self)
-            self:zoom(1):shadowlength(1):y(-35)
-			if mods.ComboFont == "Wendy" or mods.ComboFont == "Wendy Cursed" then
-				self:zoom(0.5)
-			end
-        end,
-        JudgmentMessageCommand = function(self, params)
-            if params.Player ~= player then return end
-            if not params.Notes then return end
-			if not mods.ShowHeldMiss then return end
-
-			local isHeld = false
-			for col,tapnote in pairs(params.Notes) do
-				local tnt = ToEnumShortString(tapnote:GetTapNoteType())
-				if tnt == "Tap" or tnt == "HoldHead" or tnt == "Lift" then
-					local tns = ToEnumShortString(params.TapNoteScore)
-					if tnt ~= "Lift" and tns == "Miss" and tapnote:GetTapNoteResult():GetHeld() then
-						isHeld = true
-					end
-				end
-			end
-			
-			if isHeld then
-				self:finishtweening()
-				self:diffusealpha(1)
-					:settext("HELD")
-					:diffuse(color("#ff0000"))
-					:sleep(0.5)
-					:diffusealpha(0)
-			else
-				self:finishtweening()
-				self:diffusealpha(0)
-			end
-        end
-    },
-	
 	Def.Sprite{
 		Name="GhostJudgment",
 		InitCommand=function(self)
@@ -384,9 +380,13 @@ return Def.ActorFrame{
 			-- frame displays based on what judgment the player earns
 			self:animate(false):visible(false)
 
-			local mini = mods.Mini:gsub("%%","") / 100
-			self:addx((mods.NoteFieldOffsetX * (1 + mini)) * 2)
-			self:addy((mods.NoteFieldOffsetY * (1 + mini)) * 2)
+			local opts = GAMESTATE:GetPlayerState(player):GetCurrentPlayerOptions()
+			local width = GetNotefieldWidth()
+			local NumColumns = GAMESTATE:GetCurrentStyle():ColumnsPerPlayer()
+			local judgmentY = _screen.cy + (opts:Reverse() ~= 0 and 30 or -30)
+			-- self:xy(GetNotefieldX(player), judgmentY)
+			local mini = mods.Mini:gsub("%%","")/100
+			self:zoom(math.min(math.max((2 - mini)/2, 0.35),1))
 			
 			-- if we are on ScreenEdit, judgment graphic is always "Love"
 			-- because ScreenEdit is a mess and not worth bothering with.

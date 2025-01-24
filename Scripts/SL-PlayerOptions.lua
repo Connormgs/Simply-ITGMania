@@ -322,6 +322,29 @@ local Overrides = {
 		end
 	},
 	-------------------------------------------------------------------------
+	Spacing = {
+		Choices = function()
+			local first	= -100
+			local last 	= 100
+			local step 	= 1
+
+			return stringify( range(first, last, step), "%g%%")
+		end,
+		SaveSelections = function(self, list, pn)
+			local mods, playeroptions = GetModsAndPlayerOptions(pn)
+
+			for i=1,#self.Choices do
+				if list[i] then
+					mods.Spacing = self.Choices[i]
+				end
+			end
+
+			-- to make the arrows smaller, pass Mini() a value between 0 and 1
+			-- (to make the arrows bigger, pass Mini() a value larger than 1)
+			playeroptions:Flip( -mods.Spacing:gsub("%%","")/100 )
+		end
+	},
+	-------------------------------------------------------------------------
 	MusicRate = {
 		Choices = function()
 			local first	= 0.05
@@ -437,7 +460,7 @@ local Overrides = {
 	FaPlus = {
 		SelectType = "SelectMultiple",
 		Values = function()
--- 1. Still allow the player to toggle the FA+ window during gameplay in Tournament Mode since
+			-- 1. Still allow the player to toggle the FA+ window during gameplay in Tournament Mode since
 			--    some might find it distracting. We should still display it in step stats if it's enabled
 			--    though.
 			-- 2. EX score/ITG score is forced in Tournament Mode so remove the option.
@@ -451,7 +474,7 @@ local Overrides = {
 		end,
 		LoadSelections = function(self, list, pn)
 			local mods = SL[ToEnumShortString(pn)].ActiveModifiers
-if ThemePrefs.Get("EnableTournamentMode") then
+			if ThemePrefs.Get("EnableTournamentMode") then
 				list[1] = mods.ShowFaPlusWindow or false
 				return list
 			end
@@ -460,7 +483,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 				list[1] = mods.ShowEXScore or false
 				list[2] = mods.SmallerWhite or false
 				return list
-			end
+			end		
 
 			list[1] = mods.ShowFaPlusWindow or false
 			list[2] = mods.ShowEXScore or false
@@ -550,7 +573,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 			or (notefieldwidth and notefieldwidth > _screen.w/2)
 			-- if the notefield is centered with 4:3 aspect ratio
 			or (mpn and GetNotefieldX(mpn) == _screen.cx and not IsUsingWideScreen())
--- Tournament Mode always enforces whether to display/hide step stats so remove that as an option.
+			-- Tournament Mode always enforces whether to display/hide step stats so remove that as an option.
 			or ThemePrefs.Get("EnableTournamentMode")
 			then
 				table.remove(choices, 3)
@@ -570,7 +593,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 			return values
 		end,
 	},
--------------------------------------------------------------------------
+	-------------------------------------------------------------------------
 	ScoreBoxOptions = {
 		SelectType = "SelectMultiple",
 		Values = { "SBITGScore", "SBEXScore", "SBEvents" },
@@ -620,7 +643,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 		SelectType = "SelectMultiple",
 		Values = function()
 			-- GameplayExtras will be presented as a single OptionRow when WideScreen
-			local vals = { "ColumnFlashOnMiss", "Pacemaker", "NPSGraphAtTop", "ShowHeldMiss" }
+			local vals = { "ColumnFlashOnMiss", "Pacemaker", "NPSGraphAtTop" }
 
 			-- if not WideScreen (traditional DDR cabinets running at 640x480)
 			-- remove the last two choices to be appended an additional OptionRow (GameplayExtrasB below).
@@ -652,7 +675,8 @@ if ThemePrefs.Get("EnableTournamentMode") then
 	},
 	-------------------------------------------------------------------------
 	ErrorBar = {
-		Values = { "None", "Colorful", "Monochrome", "Text", "Highlight" },
+		SelectType = "SelectMultiple",
+		Values = { "Colorful", "Monochrome", "Text", "Highlight", "Average" },
 	},
 	-------------------------------------------------------------------------
 	ErrorBarOptions = {
@@ -740,7 +764,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 			playeroptions:VisualDelay( mods.VisualDelay:gsub("ms","")/1000 )
 		end
 	},
--------------------------------------------------------------------------
+	-------------------------------------------------------------------------
 	VisualDelay = {
 		Choices = function()
 			local first	= -100
@@ -769,15 +793,6 @@ if ThemePrefs.Get("EnableTournamentMode") then
 	-------------------------------------------------------------------------
 	MeasureLines = {
 		Values = { "Off", "Measure", "Quarter", "Eighth" },
-		SaveSelections = function(self, list, pn)
-			local mods, playeroptions = GetModsAndPlayerOptions(pn)
-
-			for i=1,#self.Choices do
-				if list[i] then
-					mods.MeasureLines = self.Choices[i]
-				end
-			end
-		end
 	},
 	-------------------------------------------------------------------------
 	VisualDelay = {
@@ -884,7 +899,7 @@ if ThemePrefs.Get("EnableTournamentMode") then
 		LayoutType = "ShowOneInRow",
 		ExportOnChange = true,
 		Choices = function()
-			local first	= -50
+			local first	= 0
 			local last 	= 50
 			local step 	= 1
 
@@ -964,7 +979,11 @@ if ThemePrefs.Get("EnableTournamentMode") then
 	TimerMode = {
 		Values = { "Time", "Measures" }
 	},
--------------------------------------------------------------------------
+	-------------------------------------------------------------------------
+	JudgmentAnimation = {
+		Choices = { "Default", "Still", "ITG" }
+	},
+	-------------------------------------------------------------------------
 	RailBalance = {
 		Values = { "No", "What" }
 	},

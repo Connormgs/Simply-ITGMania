@@ -40,12 +40,9 @@ end
 -- -----------------------------------------------------------------------
 -- get timing window in milliseconds
 
-GetTimingWindow = function(n, mode, tenms)
+GetTimingWindow = function(n, mode)
 	local prefs = SL.Preferences[mode or SL.Global.GameMode]
 	local scale = PREFSMAN:GetPreference("TimingWindowScale")
-	if mode == "FA+" and tenms and n == 1 then
-		return 0.0085 * scale + prefs.TimingWindowAdd
-	end
 	return prefs["TimingWindowSecondsW"..n] * scale + prefs.TimingWindowAdd
 end
 
@@ -81,14 +78,8 @@ GetWorstJudgment = function(offsets)
 				worst_judgment = judgment
 			end
 		end
-		if i[6] then
-			local judgment = DetermineTimingWindow(i[7])
-			if worst_judgment < judgment then
-				worst_judgment = judgment
-			end
-		end
 	end
-	
+
 	return worst_judgment
 end
 
@@ -446,9 +437,9 @@ GetStepsCredit = function(player)
 		-- credit
 		if steps:GetAuthorCredit() ~= "" then t[#t+1] = steps:GetAuthorCredit() end
 		-- description
-		if steps:GetDescription() ~= "" and steps:GetDescription() ~= steps:GetAuthorCredit() then t[#t+1] = steps:GetDescription() end
+		if steps:GetDescription() ~= "" then t[#t+1] = steps:GetDescription() end
 		-- chart name
-		if steps:GetChartName() ~= "" and steps:GetChartName() ~= steps:GetAuthorCredit() and steps:GetChartName() ~= steps:GetDescription() then t[#t+1] = steps:GetChartName() end
+		if steps:GetChartName() ~= "" then t[#t+1] = steps:GetChartName() end
 	end
 
 	return t
@@ -543,19 +534,6 @@ GetHoldJudgments = function()
 	return hold_graphics
 end
 
-GetHeldMissGraphics = function()
-	local path = THEME:GetCurrentThemeDirectory().."Graphics/_HeldMiss/"
-	local files = FILEMAN:GetDirListing(path)
-	local held_miss = {}
-
-	for i,filename in ipairs(files) do
-			table.insert(held_miss, filename)
-	end
-	held_miss[#held_miss+1] = "None"
-
-	return held_miss
-end
-
 
 -- -----------------------------------------------------------------------
 -- GetComboFonts returns a table of strings that match valid ComboFonts for use in Gameplay
@@ -621,42 +599,12 @@ end
 IsW0Judgment = function(params, player)
 	if params.Player ~= player then return false end
 	if params.HoldNoteScore then return false end
-	
+
 	-- Only check/update FA+ count if we received a TNS in the top window.
 	if params.TapNoteScore == "TapNoteScore_W1" and SL.Global.GameMode == "ITG"  then
 		local prefs = SL.Preferences["FA+"]
 		local scale = PREFSMAN:GetPreference("TimingWindowScale")
-		local pn = ToEnumShortString(player)
 		local W0 = prefs["TimingWindowSecondsW1"] * scale + prefs["TimingWindowAdd"]
-
-		local offset = math.abs(params.TapNoteOffset)
-		if offset <= W0 then
-			return true
-		end
-	elseif params.TapNoteScore == "TapNoteScore_W1" and SL.Global.GameMode == "FA+" then
-		local prefs = SL.Preferences["FA+"]
-		local scale = PREFSMAN:GetPreference("TimingWindowScale")
-		local pn = ToEnumShortString(player)
-		local W0 = prefs["TimingWindowSecondsW1"] * scale + prefs["TimingWindowAdd"]
-	
-				local offset = math.abs(params.TapNoteOffset)
-		if offset <= W0 then
-			return true
-		end
-	end
-	return false
-end
-
-IsW010Judgment = function(params, player)
-	if params.Player ~= player then return false end
-	if params.HoldNoteScore then return false end
-	
-	-- Only check/update FA+ count if we received a TNS in the top window.
-	if params.TapNoteScore == "TapNoteScore_W1" and SL.Global.GameMode == "ITG"  then
-		local prefs = SL.Preferences["FA+"]
-		local scale = PREFSMAN:GetPreference("TimingWindowScale")
-		local pn = ToEnumShortString(player)
-		local W0 = 0.0085 * scale + prefs["TimingWindowAdd"]
 
 		local offset = math.abs(params.TapNoteOffset)
 		if offset <= W0 then
@@ -701,24 +649,40 @@ GetExJudgmentCounts = function(player)
 	local counts = {}
 
 	local TNS = { "W1", "W2", "W3", "W4", "W5", "Miss" }
-	
+
+	if SL.Global.GameMode == "FA+" then
+		for window in ivalues(TNS) do
+			adjusted_window = window
+			-- In FA+ mode, we need to shift the windows up 1 so that the key we're using is accurate.
+			-- E.g. W1 window becomes W0, W2 becomes W1, etc.
+			if window ~= "Miss" then
+				adjusted_window = "W"..(tonumber(window:sub(-1))-1)
+			end
+
+			-- Get the count.
+			local number = stats:GetTapNoteScores( "TapNoteScore_"..window )
+			-- For the last window (Decent) in FA+ mode...
+			if window == "W5" then
+				-- Only populate if the window is still active.
+				if SL[pn].ActiveModifiers.TimingWindows[5] then
+					counts[adjusted_window] = number
+				end
+			else
+				counts[adjusted_window] = number
+			end
+		end
+	elseif SL.Global.GameMode == "ITG" then
 		for window in ivalues(TNS) do
 			-- Get the count.
 			local number = stats:GetTapNoteScores( "TapNoteScore_"..window )
 			-- We need to extract the W0 count in ITG mode.
 			if window == "W1" then
 				local faPlus = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts.W0_total
-				local faPlus10 = SL[pn].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts.W010_total
 				-- Subtract FA+ count from the overall fantastic window count.
-				local number10 = number - faPlus10
 				number = number - faPlus
-				
 				-- Populate the two numbers.
 				counts["W0"] = faPlus
-				counts["W010"] = faPlus10
 				counts["W1"] = number
-				counts["W110"] = number10
-				
 			else
 				if ((window ~= "W4" and window ~= "W5") or
 						-- Only populate decent and way off windows if they're active.
@@ -728,8 +692,9 @@ GetExJudgmentCounts = function(player)
 				end
 			end
 		end
-		counts["totalSteps"] = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_TapsAndHolds" )
-	
+	end
+	counts["totalSteps"] = StepsOrTrail:GetRadarValues(player):GetValue( "RadarCategory_TapsAndHolds" )
+
 	local RadarCategory = { "Holds", "Mines", "Rolls" }
 
 	local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions("ModsLevel_Preferred")
@@ -804,7 +769,6 @@ CalculateExScore = function(player, ex_counts, use_actual_w0_weight)
 		total_points = total_points + totalMines * SL.ExWeights["HitMine"];
 	end
 
-		local FAplus = (SL.Metrics[SL.Global.GameMode].PercentScoreWeightW1 == SL.Metrics[SL.Global.GameMode].PercentScoreWeightW2)
 	local keys = { "W0", "W1", "W2", "W3", "W4", "W5", "Miss", "Held", "LetGo", "HitMine" }
 	local counts = ex_counts or SL[ToEnumShortString(player)].Stages.Stats[SL.Global.Stages.PlayedThisGame + 1].ex_counts
 	-- Just for validation, but shouldn't happen in normal gameplay.
@@ -813,14 +777,8 @@ CalculateExScore = function(player, ex_counts, use_actual_w0_weight)
 	for key in ivalues(keys) do
 		local value = counts[key]
 		if value ~= nil then
-							total_points = total_points + value * SL.ExWeights[key]
-			end
+			total_points = total_points + value * SL.ExWeights[key]
 		end
-		
-	-- Run calculation for ex_counts custom keys
-	if ex_counts and counts["Holds"] and counts["Rolls"] and counts["Mines"] then
-		total_points = total_points + ((counts["Holds"] + counts["Rolls"]) * SL.ExWeights["Held"])
-		total_points = total_points + (counts["Mines"] * SL.ExWeights["HitMine"])
 	end
 
 	return math.max(0, math.floor(total_points/total_possible * 10000) / 100), total_points, total_possible
@@ -833,13 +791,13 @@ end
 GetColumnMapping = function(player)
 	local po = GAMESTATE:GetPlayerState(player):GetPlayerOptions('ModsLevel_Preferred')
 
-	local shuffle = po:Shuffle() or po:SoftShuffle() or po:SuperShuffle() 
+	local shuffle = po:Shuffle() or po:SoftShuffle() or po:SuperShuffle()
 	local notes_inserted = (po:Wide() or po:Skippy() or po:Quick() or po:Echo() or
 													po:BMRize() or po:Stomp() or po:Big())
 	local notes_removed = (po:Little()  or po:NoHolds() or po:NoStretch() or
-													po:NoHands() or po:NoJumps() or po:NoFakes() or 
+													po:NoHands() or po:NoJumps() or po:NoFakes() or
 													po:NoLifts() or po:NoQuads() or po:NoRolls())
-	
+
 	-- If shuffle is used or notes were inserted/removed, we can't compute it
 	-- return early
 	-- TODO(teejusb): Add support for Backwards()
@@ -852,6 +810,8 @@ GetColumnMapping = function(player)
 	local left = po:Left()
 	local right = po:Right()
 	local mirror = po:Mirror()
+	local udmirror = po:UDMirror()
+	local lrmirror = po:LRMirror()
 
 	-- Combining flip and invert results in unusual spacing so ignore it.
 	if flip and invert then
@@ -896,14 +856,27 @@ GetColumnMapping = function(player)
 		column_mapping = {column_mapping[4], column_mapping[3], column_mapping[2], column_mapping[1]}
 	end
 
+	if udmirror then
+		column_mapping = {column_mapping[1], column_mapping[3], column_mapping[2], column_mapping[4]}
+	end
+
+	if lrmirror then
+		column_mapping = {column_mapping[4], column_mapping[2], column_mapping[3], column_mapping[1]}
+	end
+
 	if num_columns == 8 then
 		for i=1,4 do
 			column_mapping[4+i] = column_mapping[i] + 4
 		end
 
-		-- We only need to apply the following if exactly one of flip or mirror is active
-		-- since they otherwise cancel each other out
-		if (not flip and mirror) or (flip and not mirror) then
+		-- Flip, Mirror. and LRMirror all swap left and right sides.
+		-- If an odd number of them are set then swap.
+		local swapCount = 0
+		if flip then swapCount = swapCount + 1 end
+		if mirror then swapCount = swapCount + 1 end
+		if lrmirror then swapCount = swapCount + 1 end
+
+		if swapCount % 2 == 1 then
 			for i=1,4 do
 				column_mapping[i] = column_mapping[i] + 4
 				column_mapping[i+4] = column_mapping[i+4] - 4
@@ -960,9 +933,10 @@ end
 
 -- -----------------------------------------------------------------------
 -- Returns a stringified form of a player's selected options.
-GetPlayerOptionsString = function(player)
+GetPlayerOptionsString = function(player, modsLevel)
+	local modsLevel = modsLevel or "ModsLevel_Preferred"
 	-- grab the song options from this PlayerState
-	local PlayerOptions = GAMESTATE:GetPlayerState(player):GetPlayerOptionsArray("ModsLevel_Preferred")
+	local PlayerOptions = GAMESTATE:GetPlayerState(player):GetPlayerOptionsArray(modsLevel)
 	local pn = ToEnumShortString(player)
 
 	-- start with an empty string...

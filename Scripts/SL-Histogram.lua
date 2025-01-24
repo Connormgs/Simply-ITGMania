@@ -1,17 +1,16 @@
-local function gen_vertices(player, width, height, Steps, desaturation)
-	local Song
+local function gen_vertices(player, width, height, desaturation)
+	local Song, Steps
 	local first_step_has_occurred = false
 	local pn = ToEnumShortString(player)
 
-	if not Steps then 
-		if GAMESTATE:IsCourseMode() then
-			local TrailEntry = GAMESTATE:GetCurrentTrail(player):GetTrailEntry(GAMESTATE:GetCourseSongIndex())
-			Steps = TrailEntry:GetSteps()
-		else
-			Steps = GAMESTATE:GetCurrentSteps(player)
-		end
+	if GAMESTATE:IsCourseMode() then
+		local TrailEntry = GAMESTATE:GetCurrentTrail(player):GetTrailEntry(GAMESTATE:GetCourseSongIndex())
+		Steps = TrailEntry:GetSteps()
+		Song = TrailEntry:GetSong()
+	else
+		Steps = GAMESTATE:GetCurrentSteps(player)
+		Song = GAMESTATE:GetCurrentSong()
 	end
-	Song = SONGMAN:GetSongFromSteps(Steps)
 	
 	if not Steps or not Song then return {} end
 
@@ -107,27 +106,17 @@ local function gen_vertices(player, width, height, Steps, desaturation)
 	return verts
 end
 
-local function TotalCourseLength(player)
-    -- utility for graph stuff because i ended up doing this a lot
-    -- i use this method instead of TrailUtil.GetTotalSeconds because that leaves unused time at the end in graphs
-    local trail = GAMESTATE:GetCurrentTrail(player)
-    local t = 0
-    for te in ivalues(trail:GetTrailEntries()) do
-        t = t + te:GetSong():GetLastSecond()
-    end
-
-    return t
-end
-
--- FIXME: add inline comments explaining the intent/purpose of this code
+-- This function interpolates between two vertices based on a given offset
 function interpolate_vert(v1, v2, offset)
-	local ratio = (offset - v1[1][1]) / (v2[1][1] - v1[1][1])
-	local y = v1[1][2] * (1 - ratio) + v2[1][2] * ratio
-	local color = lerp_color(ratio, v1[2], v2[2])
-
-	return {{offset, y, 0}, color}
+    -- Calculate the ratio of the offset to the difference in x-coordinates of the two vertices
+    local ratio = (offset - v1[1][1]) / (v2[1][1] - v1[1][1])
+    -- Interpolate the y-coordinate based on the ratio
+    local y = v1[1][2] * (1 - ratio) + v2[1][2] * ratio
+    -- Interpolate the color based on the ratio
+    local color = lerp_color(ratio, v1[2], v2[2])
+    -- Return the interpolated vertex and color as a table
+    return {{offset, y, 0}, color}
 end
-
 
 function NPS_Histogram(player, width, height, desaturation)
 	local pn = ToEnumShortString(player)
@@ -142,50 +131,12 @@ function NPS_Histogram(player, width, height, desaturation)
 			-- we've reached a new song, so reset the vertices for the density graph
 			-- this will occur at the start of each new song in CourseMode
 			-- and at the start of "normal" gameplay
-			local verts = gen_vertices(player, width, height, nil, desaturation)
+			local verts = gen_vertices(player, width, height, desaturation)
 			self:SetNumVertices(#verts):SetVertices(verts)
 		end
 	}
 
 	return amv
-end
-
--- set of density graphs for a course
--- one little issue here is that varying nps per song isn't reflected by the relative height of each chart
--- honestly too big of a hassle for me to mess with right now
-function NPS_Histogram_Static_Course(player, width, height, desaturation)
-	local pn = ToEnumShortString(player)
-	local af = Def.ActorFrame{}
-	local trail = GAMESTATE:GetCurrentTrail(pn)
-	
-	-- first get the total time
-	local totaltime = TotalCourseLength(player) / SL.Global.ActiveModifiers.MusicRate
-	
-	-- build a table of offsets and widths (doing one loop with everything in InitCommand will just use
-	-- the last value whatever local variable in the loop was once the actors execute)
-	local curx = 0
-	local ptable = {}
-	for te in ivalues(trail:GetTrailEntries()) do
-		local w = (te:GetSong():GetLastSecond() / SL.Global.ActiveModifiers.MusicRate / totaltime) * width
-		table.insert(ptable, {curx, w, te:GetSteps()})
-		curx = curx + w
-	end
-	for i, pos in ipairs(ptable) do
-		-- add density graph amv
-		af[#af+1] = Def.ActorMultiVertex{
-			InitCommand = function(self)
-				self:x(pos[1])
-				self:SetDrawState({Mode="DrawMode_QuadStrip"})
-				self:queuecommand("SetVertices")
-			end,
-			SetVerticesCommand = function(self)
-				local verts = gen_vertices(player, pos[2], height, pos[3], desaturation)
-				self:SetNumVertices(#verts):SetVertices(verts)
-			end
-		}
-	end
-
-	return af
 end
 
 
@@ -205,7 +156,7 @@ function Scrolling_NPS_Histogram(player, width, height, desaturation)
 		end,
 
 		LoadCurrentSong=function(self, scaled_width)
-			verts = gen_vertices(player, scaled_width, height, nil, desaturation)
+			verts = gen_vertices(player, scaled_width, height, desaturation)
 
 			left_idx = 1
 			right_idx = 2

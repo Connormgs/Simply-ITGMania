@@ -33,7 +33,7 @@ return Def.Actor{
 
 		storage.grade = pss:GetGrade()
 		storage.score = pss:GetPercentDancePoints()
-		storage.exscore = CalculateExScore(player, GetExJudgmentCounts(player))
+		storage.exscore = CalculateExScore(player)
 		storage.judgments = {
 			W1 = pss:GetTapNoteScores(TNSTypes[1]),
 			W2 = pss:GetTapNoteScores(TNSTypes[2]),
@@ -47,10 +47,8 @@ return Def.Actor{
 			local counts = GetExJudgmentCounts(player)
 			storage.judgments.W0 = counts.W0
 			storage.judgments.W1 = counts.W1
-			storage.faplus = true
 			storage.showex = mods.ShowEXScore
 		else
-			storage.faplus = false
 			storage.showex = false
 		end
 
